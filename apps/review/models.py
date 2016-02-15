@@ -247,7 +247,7 @@ class Feedback(models.Model):
         dinner_time = self.get_time(constants.DINNER_TIME)
         late_night_time = self.get_time(constants.LATE_NIGHT_TIME)
 
-        created_at = self.get_converted_time(self.created_at.strftime(constants.DATE_FORMAT))
+        created_at = self.created_at.time()
 
         if created_at >= start_time and created_at < breakfast_time:
             return constants.segments[constants.BREAKFAST_TIME]
@@ -257,7 +257,9 @@ class Feedback(models.Model):
             return constants.segments[constants.SNACK_TIME]
         elif created_at >= snack_time and created_at < dinner_time:
             return constants.segments[constants.DINNER_TIME]
-        elif created_at >= dinner_time and created_at < late_night_time:
+        elif created_at >= dinner_time:
+            return constants.segments[constants.LATE_NIGHT_TIME]
+        elif created_at < start_time:
             return constants.segments[constants.LATE_NIGHT_TIME]
         return ""
 
@@ -268,7 +270,7 @@ class Feedback(models.Model):
         close_shift = self.get_time(constants.CLOSE_SHIFT_TIME)
         over_night_shift = self.get_time(constants.OVERNIGHT_SHIFT_TIME)
 
-        created_at = self.get_converted_time(self.created_at.strftime(constants.DATE_FORMAT))
+        created_at = self.created_at.time()
 
         if created_at >= start_time and created_at < breakfast_shift:
             return constants.shifts[constants.BREAKFAST_TIME]
@@ -276,7 +278,9 @@ class Feedback(models.Model):
             return constants.shifts[constants.OPEN_SHIFT_TIME]
         elif created_at >= open_shift and created_at < close_shift:
             return constants.shifts[constants.CLOSE_SHIFT_TIME]
-        elif created_at >= close_shift and created_at < over_night_shift:
+        elif created_at >= close_shift:
+            return constants.shifts[constants.OVERNIGHT_SHIFT_TIME]
+        elif created_at < start_time:
             return constants.shifts[constants.OVERNIGHT_SHIFT_TIME]
         return ""
 

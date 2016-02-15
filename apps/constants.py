@@ -89,6 +89,7 @@ shifts = {
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 ONLY_DATE_FORMAT = "%Y-%m-%d"
 ONLY_DATE_FORMAT_02 = "%d-%m-%y"
+TIME_FORMAT = "%H:%M:%S"
 
 #------------ Action Constants -------------
 PROCESSED = 2

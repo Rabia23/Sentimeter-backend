@@ -135,6 +135,7 @@ def get_next_day(date_from, date_to):
     date_to = current_tz.localize(datetime.strptime(date_to + " 23:59:59", constants.DATE_FORMAT))
 
     next_date_to = str((date_to + timedelta(days=1)).date())
-    next_date_from = str((date_from + timedelta(days=1)).date())
+    next_date_from = str((date_to + timedelta(days=1)).date())
 
     return next_date_from, next_date_to
+
