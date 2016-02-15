@@ -699,6 +699,14 @@ class LiveDashboardView(APIView):
 
         return feedback_records_list
 
+    def _get_opportunity_analysis(self, date_from, date_to):
+        feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to)
+        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+                annotate(count=Count('option_id'))
+
+        list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_3), feedback_options_dict)
+        return {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
+
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         try:
@@ -715,6 +723,7 @@ class LiveDashboardView(APIView):
                 "top_rankings": self._get_top_rankings(),
                 "leaderboard_view": self._get_leaderboard_view(date_from_str, date_to_str),
                 "concerns": self._get_top_concers(),
+                "strength": self._get_opportunity_analysis(date_from_str, date_to_str),
             }
 
             return Response(response_json(True, data, None))

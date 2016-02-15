@@ -14,11 +14,11 @@ from apps.redis_queue import RedisQueue
 
 
 class FeedbackView(APIView):
+
     def get(self, request, format=None):
         feedback = Feedback.objects.all()
         serializer = FeedbackSerializer(feedback, many=True)
         return Response(response_json(True, serializer.data, None))
-
 
     @transaction.atomic
     def post(self, request, format=None):
