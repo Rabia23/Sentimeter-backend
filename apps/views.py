@@ -675,10 +675,8 @@ class LiveDashboardView(APIView):
         positive_negative_feedback = Feedback.get_feedback_type_count(date_from, date_to)
         qsc_count = FeedbackOption.get_qsc_count(date_from, date_to)
 
-        concerns = Concern.objects.filter(is_active=True).order_by("-count")[:1]
-
         return {'overall_experience': overall_experience,
-                'top_concern': concerns.first().keyword.capitalize(),
+                'top_segment': self._get_top_segment(date_from, date_to),
                 'positive_negative_feedback': positive_negative_feedback,
                 'qsc_count': qsc_count}
 
@@ -734,9 +732,9 @@ class LiveDashboardView(APIView):
                 "overall_feedback": self._get_overall_feedback(date_from_str, date_to_str),
                 "overall_rating": self._get_overall_rating(str((now - timedelta(days=constants.NO_OF_DAYS)).date()), date_to_str),
                 "complaint_view": self._get_complaint_view(date_from_str, date_to_str),
-                "top_rankings": self._get_top_rankings(),
+                "top_rankings": self._get_top_rankings(date_from_str, date_to_str),
                 "leaderboard_view": self._get_leaderboard_view(date_from_str, date_to_str),
-                "top_segment": self._get_top_segment(date_from_str, date_to_str),
+                "concerns": self._get_top_concers(),
                 "strength": self._get_opportunity_analysis(date_from_str, date_to_str),
             }
 
