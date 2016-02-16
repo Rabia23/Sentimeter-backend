@@ -57,32 +57,32 @@ BRANCH_FEEDBACK_TARGET = 10
 
 
 #------------ Segment Constants -------------
-STARTING_TIME = "06:00"
-BREAKFAST_TIME = "11:00"
-LUNCH_TIME = "15:00"
-SNACK_TIME = "19:00"
-DINNER_TIME = "23:00"
-LATE_NIGHT_TIME = "06:00"
+STARTING_TIME = "01:00"
+BREAKFAST_TIME = "06:00"
+LUNCH_TIME = "10:00"
+SNACK_TIME = "14:00"
+DINNER_TIME = "18:00"
+LATE_NIGHT_TIME = "01:00"
 
 segments = {
-    "11:00": "Breakfast",
-    "15:00": "Lunch",
-    "19:00": "Snack",
-    "23:00": "Dinner",
-    "06:00": "Late Night",
+    "06:00": "Breakfast",
+    "10:00": "Lunch",
+    "14:00": "Snack",
+    "18:00": "Dinner",
+    "01:00": "Late Night",
 }
 
 #------------ Shift Constants -------------
-BREAKFAST_SHIFT_TIME = "11:00"
-OPEN_SHIFT_TIME = "19:00"
+BREAKFAST_SHIFT_TIME = "06:00"
+OPEN_SHIFT_TIME = "14:00"
 CLOSE_SHIFT_TIME = "02:00"
-OVERNIGHT_SHIFT_TIME = "06:00"
+OVERNIGHT_SHIFT_TIME = "01:00"
 
 shifts = {
-    "11:00": "Breakfast",
-    "19:00": "Open",
+    "06:00": "Breakfast",
+    "14:00": "Open",
     "02:00": "Close",
-    "06:00": "Overnight",
+    "01:00": "Overnight",
 }
 
 #------------ Date Format Constants -------------
