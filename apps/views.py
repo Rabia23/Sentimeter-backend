@@ -1,3 +1,4 @@
+import operator
 from django.contrib.auth import authenticate
 from django.db.models import Count
 from rest_framework.authtoken.models import Token
@@ -8,7 +9,7 @@ from apps.branch.models import Branch
 from apps.city.models import City
 from apps.option.models import Option
 from apps.option.utils import generate_missing_options, generate_missing_sub_options, generate_option_groups, \
-    generate_segmentation_with_options
+    generate_segmentation_with_options, generate_segmentation
 from apps.person.enum import UserRolesEnum
 from apps.person.models import UserInfo
 from apps.promotion.models import Promotion
@@ -635,6 +636,19 @@ class LiveDashboardView(APIView):
         concerns = [concern.to_dict() for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]]
         return {'concern_count': len(concerns), 'concern_list': concerns}
 
+    def _get_top_segment(self, date_from, date_to):
+        question = Question.objects.get(type=constants.TYPE_1)
+
+        options = question.options.all()
+        feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to)
+
+        next_date_from, next_date_to = get_next_day(date_from, date_to)
+        feedback_options_next_day = FeedbackOption.manager.options(options).date(next_date_from, next_date_to)
+
+        feedback_segmented_list = generate_segmentation(feedback_options, feedback_options_next_day)
+        feedback_segmented_counts = [segment["option_count"] for segment in feedback_segmented_list]
+        return feedback_segmented_list[feedback_segmented_counts.index(max(feedback_segmented_counts))]
+
     def _get_overall_feedback(self, date_from, date_to):
         feedback_options = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to)
         feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
@@ -722,7 +736,7 @@ class LiveDashboardView(APIView):
                 "complaint_view": self._get_complaint_view(date_from_str, date_to_str),
                 "top_rankings": self._get_top_rankings(),
                 "leaderboard_view": self._get_leaderboard_view(date_from_str, date_to_str),
-                "concerns": self._get_top_concers(),
+                "top_segment": self._get_top_segment(date_from_str, date_to_str),
                 "strength": self._get_opportunity_analysis(date_from_str, date_to_str),
             }
 

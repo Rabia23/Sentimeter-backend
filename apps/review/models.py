@@ -239,6 +239,13 @@ class Feedback(models.Model):
         if options:
             return options
 
+    def next_day_feedback(self):
+        created_at = self.created_at.time()
+        dinner_time = self.get_time(constants.DINNER_TIME)
+        if created_at >= dinner_time:
+            return False
+        return True
+
     def get_segment(self):
         start_time = self.get_time(constants.STARTING_TIME)
         breakfast_time = self.get_time(constants.BREAKFAST_TIME)

@@ -80,7 +80,7 @@ def generate_segmentation(data, data_next_day):
         segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
 
         if segment == constants.LATE_NIGHT_TIME:
-            segment_feedbacks += [feedback_option for feedback_option in data_next_day if feedback_option.feedback.get_segment() == constants.segments[segment]]
+            segment_feedbacks += [feedback_option for feedback_option in data_next_day if feedback_option.feedback.next_day_feedback()]
 
         segments_list.append({
             "segment_end_time": segment,
@@ -96,7 +96,7 @@ def generate_segmentation_with_options(data, data_next_day, options):
         segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
 
         if segment == constants.LATE_NIGHT_TIME:
-            segment_feedbacks += [feedback_option for feedback_option in data_next_day if feedback_option.feedback.get_segment() == constants.segments[segment]]
+            segment_feedbacks += [feedback_option for feedback_option in data_next_day if feedback_option.feedback.next_day_feedback()]
 
         segments_list.append({
             "segment_end_time": segment,

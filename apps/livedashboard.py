@@ -4,7 +4,7 @@ __author__ = 'aamish'
 
 from django.db.models import Count
 from apps.area.models import Area
-from apps.option.utils import generate_missing_options, generate_segmentation_with_options
+from apps.option.utils import generate_missing_options, generate_segmentation_with_options, generate_segmentation
 from apps.question.models import Question
 from apps.review.models import FeedbackOption, Feedback, Concern
 from apps.review.utils import generate_missing_actions
@@ -41,6 +41,20 @@ def get_complaint_view(date_from, date_to):
 def get_top_concers():
     concerns = [concern.to_dict() for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]]
     return {'concern_count': len(concerns), 'concern_list': concerns}
+
+
+def get_top_segment(date_from, date_to):
+    question = Question.objects.get(type=constants.TYPE_1)
+
+    options = question.options.all()
+    feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to)
+
+    next_date_from, next_date_to = get_next_day(date_from, date_to)
+    feedback_options_next_day = FeedbackOption.manager.options(options).date(next_date_from, next_date_to)
+
+    feedback_segmented_list = generate_segmentation(feedback_options, feedback_options_next_day)
+    feedback_segmented_counts = [segment["option_count"] for segment in feedback_segmented_list]
+    return feedback_segmented_list[feedback_segmented_counts.index(max(feedback_segmented_counts))]
 
 
 def get_overall_feedback(date_from, date_to):
@@ -133,7 +147,7 @@ def get_live_record():
         "complaint_view": get_complaint_view(date_from_str, date_to_str),
         "top_rankings": get_top_rankings(),
         "leaderboard_view": get_leaderboard_view(date_from_str, date_to_str),
-        "concerns": get_top_concers(),
+        "top_segment": get_top_segment(date_from_str, date_to_str),
         "strength": get_opportunity_analysis(date_from_str, date_to_str),
     }
 
