@@ -49,10 +49,7 @@ def get_top_segment(date_from, date_to):
     options = question.options.all()
     feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to)
 
-    next_date_from, next_date_to = get_next_day(date_from, date_to)
-    feedback_options_next_day = FeedbackOption.manager.options(options).date(next_date_from, next_date_to)
-
-    feedback_segmented_list = generate_segmentation(feedback_options, feedback_options_next_day)
+    feedback_segmented_list = generate_segmentation(feedback_options)
     feedback_segmented_counts = [segment["option_count"] for segment in feedback_segmented_list]
     return feedback_segmented_list[feedback_segmented_counts.index(max(feedback_segmented_counts))]
 
@@ -71,11 +68,8 @@ def get_segmentation_rating(date_from, date_to):
 
     options = question.options.all()
 
-    next_date_from, next_date_to = get_next_day(date_from, date_to)
-    feedback_options_next_day = FeedbackOption.manager.options(options).date(next_date_from, next_date_to)
-
     feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to)
-    feedback_segmented_list = generate_segmentation_with_options(feedback_options, feedback_options_next_day, options)
+    feedback_segmented_list = generate_segmentation_with_options(feedback_options, options)
 
     return {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list}
 
