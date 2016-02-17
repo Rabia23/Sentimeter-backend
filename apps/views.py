@@ -40,7 +40,9 @@ class LoginView(APIView):
         password = get_data_param(request, 'password', None)
         user = authenticate(username=username, password=password)
         if user:
-            if user.info.first() and (user.info.first().role == UserRolesEnum.GRO or user.info.first().is_active == False):
+            if not user.info.first():
+                return Response(response_json(False, None, 'User has no permission to login'))
+            elif user.info.first() and not user.info.first().has_permission():
                 return Response(response_json(False, None, 'User has no permission to login'))
             else:
                 token = Token.objects.get_or_create(user=user)

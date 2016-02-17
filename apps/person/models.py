@@ -54,6 +54,15 @@ class UserInfo(models.Model):
     def __str__(self):
         return self.user.first_name + " " + self.user.last_name
 
+    def has_permission(self):
+        if self.role == UserRolesEnum.GRO or self.is_active == False:
+            return False
+        elif self.role == UserRolesEnum.BRANCH_MANAGER and not self.branch:
+            return False
+        elif self.role == UserRolesEnum.OPERATIONAL_CONSULTANT and not self.region:
+            return False
+        return True
+
     @staticmethod
     def get_person_dict(role, id):
         data = {}
