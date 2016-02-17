@@ -9,7 +9,7 @@ from apps.parse import ParseHelper
 from apps.person.enum import UserRolesEnum
 from apps.person.models import UserInfo
 from apps.region.models import Region
-from apps.utils import get_data_param, get_param, get_default_param, response_json
+from apps.utils import get_data_param, get_param, get_default_param, response_json, create_user
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 
@@ -64,12 +64,9 @@ class UserView(APIView):
                 parent = parent_user.info.first() if parent_user else None
                 region = Region.objects.get(pk=region_id) if region_id else None
 
-                user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email)
-                user.set_password(password)
-                user.save()
-
                 if branch and parent:
                     if role == UserRolesEnum.GRO:
+                        user = create_user(username, first_name, last_name, email, password)
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.GRO,
                                                             branch=branch, parent=parent)
                         parse_helper = ParseHelper()
@@ -77,36 +74,41 @@ class UserView(APIView):
                         return Response(response_json(True, user_info.to_dict(), None))
                     elif role == UserRolesEnum.BRANCH_MANAGER:
                         if not branch.is_associated():
+                            user = create_user(username, first_name, last_name, email, password)
                             user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.BRANCH_MANAGER,
                                                         branch=branch, parent=parent)
                             return Response(response_json(True, user_info.to_dict(), None))
                         else:
-                            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+                            return Response(response_json(False, None, "Branch already Associated"))
                 elif region and parent:
                     if role == UserRolesEnum.OPERATIONAL_CONSULTANT:
                         if not region.is_associated():
+                            user = create_user(username, first_name, last_name, email, password)
                             user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.OPERATIONAL_CONSULTANT,
                                                         region=region, parent=parent)
                             return Response(response_json(True, user_info.to_dict(), None))
                         else:
-                            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+                            return Response(response_json(False, None, "Region already Associated"))
                 elif parent:
                     if role == UserRolesEnum.OPERATIONAL_MANAGER:
+                        user = create_user(username, first_name, last_name, email, password)
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no,
                                             role=UserRolesEnum.OPERATIONAL_MANAGER, parent=parent)
                         return Response(response_json(True, user_info.to_dict(), None))
                     elif role == UserRolesEnum.ASSISTANT_DIRECTOR:
+                        user = create_user(username, first_name, last_name, email, password)
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no,
                                             role=UserRolesEnum.ASSISTANT_DIRECTOR, parent=parent)
                         return Response(response_json(True, user_info.to_dict(), None))
                 else:
                     if role == UserRolesEnum.DIRECTOR:
+                        user = create_user(username, first_name, last_name, email, password)
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.DIRECTOR)
                         return Response(response_json(True, user_info.to_dict(), None))
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except IntegrityError as e:
-            return Response(response_json(False, None, constants.TEXT_ALREADY_EXISTS))
+            return Response(response_json(False, None, "Username" + constants.TEXT_ALREADY_EXISTS))
 
     @method_decorator(my_login_required)
     @transaction.atomic()

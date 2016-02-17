@@ -139,3 +139,11 @@ def get_next_day(date_from, date_to):
 
     return next_date_from, next_date_to
 
+
+def create_user(username, first_name, last_name, email, password):
+    user = User.objects.create(username=username, first_name=first_name, last_name=last_name, email=email)
+    user.set_password(password)
+    user.save()
+
+    return user
+
