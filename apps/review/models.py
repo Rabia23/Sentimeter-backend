@@ -460,14 +460,14 @@ class FeedbackOption(models.Model):
 
     @staticmethod
     def get_qsc_count(date_from=None, date_to=None):
-        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).values('option_id').annotate(count=Count("option_id"))
+        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).values('option_id', 'option__text').annotate(count=Count("option_id"))
 
         qsc_list = []
         for dict in dict_list:
             option = Option.objects.get(pk=dict["option_id"])
             qsc_list.append({"count": dict["count"], "option__text": option.text, "option__id": option.id})
 
-        qsc_list = generate_missing_options(Question.objects.get(type=constants.TYPE_2), None, False)
+        qsc_list = generate_missing_options(Question.objects.get(type=constants.TYPE_2), dict_list, False)
 
         return qsc_list
 
