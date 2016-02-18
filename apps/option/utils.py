@@ -35,8 +35,12 @@ def get_related_option(data):
 
 
 def generate_missing_options(question, data, is_parent_needed=True):
-    list_feedback_option_ids = [item['option_id'] for item in data]
-    list_feedback = list(data)
+    list_feedback_option_ids = []
+    list_feedback = []
+
+    if data:
+        list_feedback_option_ids = [item['option_id'] for item in data]
+        list_feedback = list(data)
 
     for option in question.options.all():
         if option.id not in list_feedback_option_ids:

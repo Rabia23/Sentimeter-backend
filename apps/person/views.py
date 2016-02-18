@@ -146,6 +146,11 @@ class UserView(APIView):
                 user_info.region_id = region.id if region else user_info.region_id
                 user_info.phone_no = phone_no if phone_no else user_info.phone_no
                 user_info.save()
+
+            if user_info.role == UserRolesEnum.GRO:
+                parse_helper = ParseHelper()
+                parse_helper.item_update(user_info, new_password)
+
             return Response(response_json(True, user_info.to_dict(), None))
 
         except User.DoesNotExist as e:

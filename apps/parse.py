@@ -45,3 +45,33 @@ class ParseHelper():
             })
         )
         return response
+
+    def item_update(self, obj, new_password):
+        if new_password:
+            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj['objectId'], json.dumps({
+                    "first_name": obj.user.first_name,
+                    "last_name": obj.user.last_name,
+                    "username": obj.user.username,
+                    "password": new_password,
+                    "gro_id": obj.user.id,
+                    "branch_id": obj.branch_id,
+                })
+            )
+        else:
+            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj['objectId'], json.dumps({
+                    "first_name": obj.user.first_name,
+                    "last_name": obj.user.last_name,
+                    "username": obj.user.username,
+                    "gro_id": obj.user.id,
+                    "branch_id": obj.branch_id,
+                })
+            )
+        return response
+
+    def item_delete(self, object_id):
+        response = self.make_request('DELETE', "application/json", '/1/classes/Gro/%s' % object_id, '')
+        return response
+
+    def item_get(self, object_id):
+        response = self.make_request('GET', "application/json", '/1/classes/Gro/%s' % object_id, '')
+        return response

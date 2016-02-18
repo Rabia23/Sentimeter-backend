@@ -4,6 +4,7 @@ from django.db.models.aggregates import Count
 from apps.branch.models import Branch
 from apps.city.models import City
 from apps.option.models import Option
+from apps.option.utils import generate_missing_options
 from apps.question.models import Question
 from apps import constants
 from datetime import datetime
@@ -454,7 +455,7 @@ class FeedbackOption(models.Model):
         if dict:
             dict = dict.latest("count")
             option = Option.objects.get(pk=dict["option_id"])
-            result = {"count": dict["count"], "option_text": option.text, "option_id": option.id}
+            result = {"count": dict["count"], "option__text": option.text, "option__id": option.id}
         return result
 
     @staticmethod
@@ -464,7 +465,9 @@ class FeedbackOption(models.Model):
         qsc_list = []
         for dict in dict_list:
             option = Option.objects.get(pk=dict["option_id"])
-            qsc_list.append({"count": dict["count"], "option_text": option.text, "option_id": option.id})
+            qsc_list.append({"count": dict["count"], "option__text": option.text, "option__id": option.id})
+
+        qsc_list = generate_missing_options(Question.objects.get(type=constants.TYPE_2), None, False)
 
         return qsc_list
 
