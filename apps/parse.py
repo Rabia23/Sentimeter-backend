@@ -44,11 +44,11 @@ class ParseHelper():
                 "branch_id": obj.branch_id,
             })
         )
-        return response
+        return response['objectId']
 
     def item_update(self, obj, new_password):
         if new_password:
-            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj['objectId'], json.dumps({
+            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj.objectId, json.dumps({
                     "first_name": obj.user.first_name,
                     "last_name": obj.user.last_name,
                     "username": obj.user.username,
@@ -58,7 +58,7 @@ class ParseHelper():
                 })
             )
         else:
-            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj['objectId'], json.dumps({
+            response = self.make_request('PUT', "application/json", '/1/classes/Gro/%s' % obj.objectId, json.dumps({
                     "first_name": obj.user.first_name,
                     "last_name": obj.user.last_name,
                     "username": obj.user.username,
@@ -68,10 +68,11 @@ class ParseHelper():
             )
         return response
 
-    def item_delete(self, object_id):
-        response = self.make_request('DELETE', "application/json", '/1/classes/Gro/%s' % object_id, '')
-        return response
+    def get_by_username(self, username):
+        params = urllib.urlencode({"where":json.dumps({
+                "brand_id": brand_id,
+            })
+        })
 
-    def item_get(self, object_id):
-        response = self.make_request('GET', "application/json", '/1/classes/Gro/%s' % object_id, '')
+        response = self.make_request('GET', "application/json", '/1/classes/Brands/%s' % params, '')
         return response

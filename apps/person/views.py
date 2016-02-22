@@ -70,7 +70,8 @@ class UserView(APIView):
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.GRO,
                                                             branch=branch, parent=parent)
                         parse_helper = ParseHelper()
-                        parse_helper.item_add(user_info, password)
+                        user_info.objectId = parse_helper.item_add(user_info, password)
+                        user_info.save()
                         return Response(response_json(True, user_info.to_dict(), None))
                     elif role == UserRolesEnum.BRANCH_MANAGER:
                         if not branch.is_associated():
