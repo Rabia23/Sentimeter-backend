@@ -10,6 +10,7 @@ from apps.question import urls as question_urls
 from apps.option import urls as option_urls
 from apps.review import urls as review_urls
 from apps.person import urls as person_urls
+from apps.questionnaire import urls as questionnaire_urls
 from apps import urls as api_urls
 from apps.dashboard import urls as dashboard_urls
 
@@ -25,6 +26,7 @@ urlpatterns = [
     url(r'^api/', include(option_urls)),
     url(r'^api/', include(review_urls)),
     url(r'^api/', include(person_urls)),
+    url(r'^api/', include(questionnaire_urls)),
     url(r'^api/', include(api_urls)),
     url(r'^dashboard/', include(dashboard_urls)),
     url(r'^swagger/', include('rest_framework_swagger.urls')),

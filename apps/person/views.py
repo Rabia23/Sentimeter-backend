@@ -108,7 +108,7 @@ class UserView(APIView):
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except IntegrityError as e:
-            return Response(response_json(False, None, "Username" + constants.TEXT_ALREADY_EXISTS))
+            return Response(response_json(False, None, "Username " + constants.TEXT_ALREADY_EXISTS))
 
     @method_decorator(my_login_required)
     @transaction.atomic()
