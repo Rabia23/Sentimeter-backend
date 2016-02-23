@@ -27,6 +27,7 @@ urlpatterns = patterns('',
                        url(r'^manage_user/$', views.ManageUserView.as_view()),
                        url(r'^opportunity_analysis/$', views.OpportunityAnalysisView.as_view()),
                        url(r'^promotion_detail/$', views.PromotionDetailView.as_view()),
+                       url(r'^questionnaire_detail/$', views.QuestionnaireDetailView.as_view()),
 )
 
 

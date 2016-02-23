@@ -15,6 +15,8 @@ from apps.person.models import UserInfo
 from apps.promotion.models import Promotion
 from apps.promotion.serializers import PromotionSerializer
 from apps.question.models import Question
+from apps.questionnaire.models import Questionnaire
+from apps.questionnaire.serializers import QuestionnaireSerializer
 from apps.region.models import Region
 from apps.review.models import FeedbackOption, Feedback, Concern
 from apps.review.serializers import FeedbackSerializer
@@ -830,6 +832,35 @@ class PromotionDetailView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
+class QuestionnaireDetailView(APIView):
+    
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
+        try:
+            region_id, city_id, branch_id = get_user_data(user)
+            id = get_param(request, 'id', None)
+
+            questionnaire = Questionnaire.objects.get(pk=id)
+            questions = questionnaire.questions.all().order_by("-created_at")
+
+            question_data_list = []
+            for question in questions:
+                total_count = 0
+                feedback_options = FeedbackOption.manager.promotion_options(question).filters(region_id, city_id, branch_id)
+                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+                                    annotate(count=Count('option_id'))
+                list_feedback = generate_missing_options(question, filtered_feedback)
+                for feedback_count in list_feedback:
+                    total_count += int(feedback_count["count"])
+                question_data_list.append({'question': question.text, 'total_count': total_count, 'type': question.type, 'feedbacks': list_feedback})
+
+            data = {'question': questions.count(), 'questionnaire': QuestionnaireSerializer(questionnaire).data, 'analysis': question_data_list}
+            return Response(response_json(True, data, None))
+
+        except Questionnaire.DoesNotExist as e:
+            return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
 

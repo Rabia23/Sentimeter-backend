@@ -1,3 +1,4 @@
+from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.branch.models import Branch
@@ -5,13 +6,22 @@ from apps.question.models import Question
 from apps import constants
 from apps.questionnaire.models import Questionnaire
 from apps.questionnaire.serializers import QuestionnaireSerializer
-from apps.utils import save, response, response_json
+from apps.utils import save, response, response_json, get_user_data
 from django.db import transaction
+from apps.decorators import my_login_required
 
 
 class QuestionnaireView(APIView):
-    def get(self, request, format=None):
-        questionnaires = Questionnaire.objects.all().order_by("-created_at")
+
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
+        region_id, city_id, branch_id = get_user_data(user)
+        if branch_id:
+            questionnaires = Questionnaire.objects.filter(branch=branch_id).order_by("-created_at")
+        elif region_id:
+            questionnaires = Questionnaire.objects.filter(branch__city__region__exact=region_id).order_by("-created_at")
+        else:
+            questionnaires = Questionnaire.objects.all().order_by("-created_at")
         serializer = QuestionnaireSerializer(questionnaires, many=True)
         return Response(response_json(True, serializer.data, None))
 
