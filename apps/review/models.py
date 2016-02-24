@@ -11,6 +11,7 @@ from datetime import datetime
 from dateutil import tz
 from django.utils import timezone
 from apps.region.models import Region
+from apps.review.enum import ActionStatusEnum
 
 
 class FeedbackQuerySet(models.QuerySet):
@@ -187,10 +188,12 @@ class Feedback(models.Model):
     def comment_exists(self):
         return True if self.comment else False
 
-    def mark_deferred_if_positive_and_no_comment(self):
-        if not self.is_negative() or not self.comment_exists():
-            self.action_taken = constants.DEFERRED
-            self.save()
+    def mark_feedback_status(self):
+        if not self.is_negative():
+            self.action_taken = ActionStatusEnum.NOACTIONNEEDED
+        else:
+            self.action_taken = ActionStatusEnum.UNPORCESSED
+        self.save()
 
     def is_bad(self):
         options = self.feedback_option.filter(option__score=constants.BAD_SCORE)

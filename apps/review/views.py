@@ -55,7 +55,7 @@ class FeedbackView(APIView):
                     if not feedback_option:
                         FeedbackOption(feedback=feedback, option=option).save()
 
-            feedback.mark_deferred_if_positive_and_no_comment()
+            feedback.mark_feedback_status()
             feedback.keyword_analysis()
 
             q = RedisQueue('feedback_redis_queue')

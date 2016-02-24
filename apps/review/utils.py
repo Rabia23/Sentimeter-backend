@@ -1,4 +1,5 @@
 from apps import constants
+from apps.review.enum import ActionStatusEnum
 from apps.utils import make_request
 
 __author__ = 'aamish'
@@ -13,17 +14,22 @@ def generate_missing_actions(data):
     list_actions = [item['action_taken'] for item in data]
     list_feedback = list(data)
 
-    if constants.UNPROCESSED not in list_actions:
+    if ActionStatusEnum.UNPORCESSED not in list_actions:
         list_feedback.append(
-            {'count': 0, 'action_taken': constants.UNPROCESSED}
+            {'count': 0, 'action_taken': ActionStatusEnum.UNPORCESSED}
         )
-    if constants.PROCESSED not in list_actions:
+    if ActionStatusEnum.RECOVERED not in list_actions:
         list_feedback.append(
-            {'count': 0, 'action_taken': constants.PROCESSED}
+            {'count': 0, 'action_taken': ActionStatusEnum.RECOVERED}
         )
-    if constants.DEFERRED not in list_actions:
+    if ActionStatusEnum.UNRECOVERABLE not in list_actions:
         list_feedback.append(
-            {'count': 0, 'action_taken': constants.DEFERRED}
+            {'count': 0, 'action_taken': ActionStatusEnum.UNRECOVERABLE}
+        )
+
+    if ActionStatusEnum.NOACTIONNEEDED not in list_actions:
+        list_feedback.append(
+            {'count': 0, 'action_taken': ActionStatusEnum.NOACTIONNEEDED}
         )
 
     return list_feedback
