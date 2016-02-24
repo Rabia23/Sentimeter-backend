@@ -310,8 +310,9 @@ class CommentsView(APIView):
         try:
             region_id, city_id, branch_id = get_user_data(user)
             page = int(get_param(request, 'page', 1))
+            status_id = get_param(request, 'status_id', None)
 
-            feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments()
+            feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments(status_id)
             paginator = Paginator(feedback, constants.COMMENTS_PER_PAGE)
 
             feedback_comments = [feedback.feedback_comment_dict() for feedback in paginator.page(page)]
