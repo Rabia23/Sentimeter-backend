@@ -20,7 +20,7 @@ import json
 def get_complaint_view(date_from, date_to):
     complaint_view_list = []
 
-    feedback = Feedback.manager.date(date_from, date_to).normal_feedback()
+    feedback = Feedback.manager.date(date_from, date_to)
     filtered_feedback = feedback.values('action_taken').annotate(count=Count('action_taken'))
     filtered_feedback = generate_missing_actions(filtered_feedback)
 
