@@ -502,7 +502,7 @@ class ActionAnalysisView(APIView):
                     objects = Area.objects.all()
 
             for object in objects:
-                feedback = Feedback.manager.related_filters(type, object).date(date_from, date_to).normal_feedback()
+                feedback = Feedback.manager.related_filters(type, object).date(date_from, date_to)
                 filtered_feedback = feedback.values('action_taken').annotate(count=Count('action_taken'))
                 filtered_feedback = generate_missing_actions(filtered_feedback)
 

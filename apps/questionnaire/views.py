@@ -17,9 +17,9 @@ class QuestionnaireView(APIView):
     def get(self, request, user, format=None):
         region_id, city_id, branch_id = get_user_data(user)
         if branch_id:
-            questionnaires = Questionnaire.objects.filter(branch=branch_id).order_by("-created_at")
+            questionnaires = Questionnaire.objects.filter(branch=branch_id).order_by("created_at")
         elif region_id:
-            questionnaires = Questionnaire.objects.filter(branch__city__region__exact=region_id).order_by("-created_at")
+            questionnaires = Questionnaire.objects.filter(branch__city__region__exact=region_id).order_by("created_at")
         else:
             questionnaires = Questionnaire.objects.all().order_by("-created_at")
         serializer = QuestionnaireSerializer(questionnaires, many=True)
