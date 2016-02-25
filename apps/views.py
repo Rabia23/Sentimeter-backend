@@ -842,7 +842,7 @@ class QuestionnaireDetailView(APIView):
             id = get_param(request, 'id', None)
 
             questionnaire = Questionnaire.objects.get(pk=id)
-            questions = questionnaire.questions.all().order_by("-created_at")
+            questions = questionnaire.questions.all().order_by("created_at")
 
             question_data_list = []
             for question in questions:
