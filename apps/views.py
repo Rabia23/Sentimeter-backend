@@ -620,7 +620,7 @@ class LiveDashboardView(APIView):
         complaint_view_list.append({'object': {"id": "", "name": "Pakistan", "objectId": ""}, 'data': data})
 
         for object in Area.objects.all():
-            feedback = Feedback.manager.date(date_from, date_to).related_filters(0, object).normal_feedback()
+            feedback = Feedback.manager.date(date_from, date_to).related_filters(0, object)
             filtered_feedback = feedback.values('action_taken').annotate(count=Count('action_taken'))
             filtered_feedback = generate_missing_actions(filtered_feedback)
 
