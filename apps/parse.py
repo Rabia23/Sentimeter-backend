@@ -67,12 +67,3 @@ class ParseHelper():
                 })
             )
         return response
-
-    def get_by_username(self, username):
-        params = urllib.urlencode({"where":json.dumps({
-                "brand_id": brand_id,
-            })
-        })
-
-        response = self.make_request('GET', "application/json", '/1/classes/Brands/%s' % params, '')
-        return response

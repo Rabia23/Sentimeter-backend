@@ -7,6 +7,7 @@ from apps.option.utils import option_get, get_related_option
 from apps.person.utils import user_get, get_related_user
 from apps.review.models import Feedback, FeedbackOption
 from apps.review.serializers import FeedbackSerializer
+from lively import settings
 from lively._celery import send_negative_feedback_email
 from apps import constants
 from apps.utils import save, response, response_json
@@ -73,6 +74,7 @@ class FeedbackView(APIView):
                     "customer_email": feedback.customer_email(),
                     "problems": feedback.problems(),
                     "comment": feedback.comment,
+                    "server_link": settings.server_url,
                 }
 
                 # send_negative_feedback_email(feedback_json)
