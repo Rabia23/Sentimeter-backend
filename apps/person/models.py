@@ -89,7 +89,7 @@ class UserInfo(models.Model):
 
     @staticmethod
     def get_people_dict(role):
-        data = [user_info.to_dict() for user_info in UserInfo.objects.filter(role=role).order_by("-created_at")]
+        data = [user_info.to_dict() for user_info in UserInfo.objects.filter(role=role, is_active=True).order_by("-created_at")]
         return data
 
     @staticmethod
