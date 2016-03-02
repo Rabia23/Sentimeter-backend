@@ -85,10 +85,10 @@ class Feedback(models.Model):
     user = models.ForeignKey(User, related_name='feedback', null=True, blank=True)
     branch = models.ForeignKey(Branch, related_name='feedback')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated_at = models.DateTimeField(db_index=True, null=True, blank=True)
 
     objects = models.Manager()
     manager = FeedbackManager()
-
 
     def __str__(self):
         return self.objectId
@@ -342,6 +342,7 @@ class Feedback(models.Model):
                 "action_taken": self.action_taken,
                 "email": self.customer_email(),
                 "created_at": self.created_at,
+                "updated_at": self.updated_at,
             }
             return feedback
         except Exception as e:

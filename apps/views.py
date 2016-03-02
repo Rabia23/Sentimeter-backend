@@ -448,6 +448,7 @@ class ActionTakenView(APIView):
             if feedback_id and action_id and valid_action_id(action_id):
                 feedback = Feedback.objects.get(pk=feedback_id)
 
+                feedback.updated_at = datetime.now()
                 feedback.action_taken = action_id
                 feedback.save()
 
@@ -806,17 +807,23 @@ class PromotionDetailView(APIView):
 
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
+        now = datetime.now()
+
         try:
             region_id, city_id, branch_id = get_user_data(user)
             id = get_param(request, 'id', None)
-            
+
+            date_to = get_param(request, 'date_to', str(now.date()))
+            date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
+
             promotion = Promotion.objects.get(pk=id)
             questions = promotion.questions.all().order_by("-created_at")
 
             question_data_list = []
             for question in questions:
                 total_count = 0
-                feedback_options = FeedbackOption.manager.promotion_options(question).filters(region_id, city_id, branch_id)
+                feedback_options = FeedbackOption.manager.promotion_options(question).\
+                    filters(region_id, city_id, branch_id).date(date_from, date_to)
                 filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
                                     annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(question, filtered_feedback)
@@ -837,9 +844,14 @@ class QuestionnaireDetailView(APIView):
     
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
+        now = datetime.now()
+
         try:
             region_id, city_id, branch_id = get_user_data(user)
             id = get_param(request, 'id', None)
+
+            date_to = get_param(request, 'date_to', str(now.date()))
+            date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
             questionnaire = Questionnaire.objects.get(pk=id)
             questions = questionnaire.questions.all().order_by("created_at")
@@ -847,7 +859,8 @@ class QuestionnaireDetailView(APIView):
             question_data_list = []
             for question in questions:
                 total_count = 0
-                feedback_options = FeedbackOption.manager.promotion_options(question).filters(region_id, city_id, branch_id)
+                feedback_options = FeedbackOption.manager.promotion_options(question).\
+                    filters(region_id, city_id, branch_id).date(date_from, date_to)
                 filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
                                     annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(question, filtered_feedback)
@@ -860,6 +873,16 @@ class QuestionnaireDetailView(APIView):
 
         except Questionnaire.DoesNotExist as e:
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+
+class CommentsSearchView(APIView):
+
+    # @method_decorator(my_login_required)
+    def get(self, request, format=None):
+        try:
+            return Response(response_json(True, None, None))
         except Exception as e:
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
