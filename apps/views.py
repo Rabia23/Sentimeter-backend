@@ -1,4 +1,3 @@
-import operator
 from django.contrib.auth import authenticate
 from django.db.models import Count
 from rest_framework.authtoken.models import Token
@@ -33,6 +32,7 @@ from apps.utils import get_param, get_data_param, get_user_data, get_user_role, 
 from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta
 from apps import constants
+from haystack.query import SearchQuerySet
 
 
 class LoginView(APIView):
@@ -882,7 +882,11 @@ class CommentsSearchView(APIView):
     # @method_decorator(my_login_required)
     def get(self, request, format=None):
         try:
-            return Response(response_json(True, None, None))
+            text = get_param(request, 'text', None)
+            all_results = Feedback.objects.filter(comment__icontains=text)
+
+            data = [result.feedback_comment_dict() for result in all_results]
+            return Response(response_json(True, data, None))
         except Exception as e:
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 

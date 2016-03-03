@@ -6,12 +6,14 @@ from apps.livedashboard import get_live_record
 from apps.option.utils import option_get, get_related_option
 from apps.person.utils import user_get, get_related_user
 from apps.review.models import Feedback, FeedbackOption
-from apps.review.serializers import FeedbackSerializer
+from apps.review.serializers import FeedbackSerializer, FeedbackSearchSerializer
 from lively import settings
 from lively._celery import send_negative_feedback_email
 from apps import constants
 from apps.utils import save, response, response_json
 from apps.redis_queue import RedisQueue
+from rest_framework.mixins import ListModelMixin
+from drf_haystack.generics import HaystackGenericAPIView
 
 
 class FeedbackView(APIView):
@@ -82,6 +84,13 @@ class FeedbackView(APIView):
 
             return response(data)
 
+
+class SearchView(ListModelMixin, HaystackGenericAPIView):
+
+    serializer_class = FeedbackSearchSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 
 
