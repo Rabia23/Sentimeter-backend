@@ -55,6 +55,11 @@ class FeedbackQuerySet(models.QuerySet):
         return self.filter(feedback_option__option__score__in=comment_type). \
                    exclude(comment__isnull=True).exclude(comment__exact='').order_by('-id')[:3]
 
+    def action(self, action):
+        if action:
+            return self.filter(action_taken=action)
+        return self.all()
+
     def comments(self, status=None):
         if status:
             return self.filter(comment__isnull=False, action_taken=status).exclude(comment__exact='').order_by('-id')
