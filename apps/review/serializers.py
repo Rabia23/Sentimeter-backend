@@ -34,5 +34,5 @@ class FeedbackSearchSerializer(HaystackSerializer):
         # NOTE: Make sure you don't confuse these with model attributes. These
         # fields belong to the search index!
         fields = [
-            "text", "comment",
+            "text", "comment", "id", "action_taken", "branch", "region"
         ]

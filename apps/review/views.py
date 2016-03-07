@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -90,7 +91,15 @@ class SearchView(ListModelMixin, HaystackGenericAPIView):
     serializer_class = FeedbackSearchSerializer
 
     def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+        # page = 1
+        elements = self.list(request, *args, **kwargs)
+
+        # abc = tuple(elements.data)
+        # paginator = Paginator(abc, constants.COMMENTS_PER_PAGE)
+
+        # id_list = [element["id"] for element in paginator.page(page)]
+
+        return elements
 
 
 

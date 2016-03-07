@@ -18,7 +18,7 @@ from apps.questionnaire.models import Questionnaire
 from apps.questionnaire.serializers import QuestionnaireSerializer
 from apps.region.models import Region
 from apps.review.models import FeedbackOption, Feedback, Concern
-from apps.review.serializers import FeedbackSerializer
+from apps.review.serializers import FeedbackSerializer, FeedbackSearchSerializer
 from apps.review.utils import generate_missing_actions, valid_action_id
 from apps.serializers import ObjectSerializer, FeedbackCommentSerializer
 from apps import constants
@@ -32,7 +32,8 @@ from apps.utils import get_param, get_data_param, get_user_data, get_user_role, 
 from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta
 from apps import constants
-from haystack.query import SearchQuerySet
+from rest_framework.mixins import ListModelMixin
+from drf_haystack.generics import HaystackGenericAPIView
 
 
 class LoginView(APIView):
@@ -303,23 +304,26 @@ class PositiveNegativeFeedbackView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
-class CommentsView(APIView):
+class CommentsView(ListModelMixin, HaystackGenericAPIView):
+
+    serializer_class = FeedbackSearchSerializer
 
     @method_decorator(my_login_required)
-    def get(self, request, user, format=None):
+    def get(self, request, user, format=None, *args, **kwargs):
         try:
             region_id, city_id, branch_id = get_user_data(user)
-            page = int(get_param(request, 'page', 1))
-            status_id = get_param(request, 'status_id', None)
 
-            feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments(status_id)
-            paginator = Paginator(feedback, constants.COMMENTS_PER_PAGE)
+            elements = self.list(request, *args, **kwargs)
 
-            feedback_comments = [feedback.feedback_comment_dict() for feedback in paginator.page(page)]
+            id_list = [element["id"] for element in elements.data['results']]
+
+            feedback = Feedback.objects.filter(id__in=id_list)
+
+            feedback_comments = [feedback.feedback_comment_dict() for feedback in feedback]
 
             data = {'feedback_count': feedback.count(),
                     'feedbacks': feedback_comments,
-                    'is_last_page': paginator.num_pages == int(page)}
+                    'is_last_page': False}
             return Response(response_json(True, data, None))
 
         except Exception as e:
