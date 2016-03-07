@@ -310,24 +310,20 @@ class CommentsView(ListModelMixin, HaystackGenericAPIView):
 
     @method_decorator(my_login_required)
     def get(self, request, user, format=None, *args, **kwargs):
-        try:
-            region_id, city_id, branch_id = get_user_data(user)
+        region_id, city_id, branch_id = get_user_data(user)
 
-            elements = self.list(request, *args, **kwargs)
+        elements = self.list(request, *args, **kwargs)
 
-            id_list = [element["id"] for element in elements.data['results']]
+        id_list = [element["id"] for element in elements.data['results']]
 
-            feedback = Feedback.objects.filter(id__in=id_list)
+        feedback = Feedback.objects.filter(id__in=id_list)
 
-            feedback_comments = [feedback.feedback_comment_dict() for feedback in feedback]
+        feedback_comments = [feedback.feedback_comment_dict() for feedback in feedback]
 
-            data = {'feedback_count': feedback.count(),
-                    'feedbacks': feedback_comments,
-                    'is_last_page': False}
-            return Response(response_json(True, data, None))
-
-        except Exception as e:
-            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+        data = {'feedback_count': feedback.count(),
+                'feedbacks': feedback_comments,
+                'is_last_page': False}
+        return Response(response_json(True, data, None))
 
 
 class MapView(APIView):

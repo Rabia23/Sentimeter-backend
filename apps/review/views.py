@@ -86,20 +86,5 @@ class FeedbackView(APIView):
             return response(data)
 
 
-class SearchView(ListModelMixin, HaystackGenericAPIView):
-
-    serializer_class = FeedbackSearchSerializer
-
-    def get(self, request, *args, **kwargs):
-        # page = 1
-        elements = self.list(request, *args, **kwargs)
-
-        # abc = tuple(elements.data)
-        # paginator = Paginator(abc, constants.COMMENTS_PER_PAGE)
-
-        # id_list = [element["id"] for element in paginator.page(page)]
-
-        return elements
-
 
 
