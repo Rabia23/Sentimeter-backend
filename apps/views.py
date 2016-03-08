@@ -312,7 +312,7 @@ class CommentsView(APIView):
         page = int(get_param(request, 'page', 1))
         action_taken = get_param(request, 'action_taken', None)
 
-        feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments().action(action_taken)
+        feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments().action(action_taken).order_by("-created_at")
         paginator = Paginator(feedback, constants.COMMENTS_PER_PAGE)
 
         feedback_comments = [feedback.feedback_comment_dict() for feedback in paginator.page(page)]
@@ -335,7 +335,7 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
 
         id_list = [element["id"] for element in elements.data['results']]
 
-        feedback = Feedback.objects.filter(id__in=id_list)
+        feedback = Feedback.objects.filter(id__in=id_list).order_by("-created_at")
 
         feedback_comments = [feedback.feedback_comment_dict() for feedback in feedback]
 
