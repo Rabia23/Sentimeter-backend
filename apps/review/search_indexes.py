@@ -12,13 +12,9 @@ class FeedbackIndex(indexes.SearchIndex, indexes.Indexable):
 
     branch = indexes.IntegerField()
     region = indexes.IntegerField()
-    autocomplete = indexes.EdgeNgramField()
 
-    @staticmethod
-    def prepare_autocomplete(obj):
-        return " ".join((
-            str(obj.comment), str(obj.action_taken)
-        ))
+    def get_updated_field(self):
+        return "updated"
 
     def prepare_branch(self, obj):
         return obj.branch.id

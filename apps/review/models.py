@@ -91,6 +91,7 @@ class Feedback(models.Model):
     branch = models.ForeignKey(Branch, related_name='feedback')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(db_index=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
     manager = FeedbackManager()
