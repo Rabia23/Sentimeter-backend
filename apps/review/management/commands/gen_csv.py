@@ -13,9 +13,9 @@ class Command(BaseCommand):
         file = open('eggs.csv','w')
         try:
             writer = csv.writer(file)
-            writer.writerow( ('Title 1', 'Title 2', 'Title 3') )
-            for i in range(10):
-                writer.writerow( (i+1, chr(ord('a') + i), '08/%02d/07' % (i+1)) )
+            writer.writerow(('Feedback Id', 'Comment', 'Action Taken'))
+            for feedback in Feedback.objects.all():
+                writer.writerow((feedback.id, feedback.comment, feedback.action_taken))
         finally:
             file.close()
 

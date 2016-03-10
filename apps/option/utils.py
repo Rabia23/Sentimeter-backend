@@ -49,12 +49,14 @@ def generate_missing_options(question, data, is_parent_needed=True):
                                       'option_id': option.id,
                                       'option__text': option.text,
                                       'option__parent_id': option.parent_id,
-                                      'option__score': option.score})
+                                      'option__score': option.score,
+                                      'option__color_code': option.color_code})
             else:
                 list_feedback.append({'count': 0,
                                       'option_id': option.id,
                                       'option__text': option.text,
-                                      'option__score': option.score})
+                                      'option__score': option.score,
+                                      'option__color_code': option.color_code})
 
     return list_feedback
 
@@ -69,11 +71,13 @@ def generate_missing_sub_options(option, data, is_parent_needed=True):
                 list_feedback.append({'count': 0,
                                       'option_id': option.id,
                                       'option__text': option.text,
-                                      'option__parent_id': option.parent_id})
+                                      'option__parent_id': option.parent_id,
+                                      'option__color_code': option.color_code})
             else:
                 list_feedback.append({'count': 0,
                                       'option_id': option.id,
-                                      'option__text': option.text})
+                                      'option__text': option.text,
+                                      'option__color_code': option.color_code})
 
     return list_feedback
 

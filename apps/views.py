@@ -70,7 +70,7 @@ class OverallFeedbackView(APIView):
 
             feedback_options = FeedbackOption.manager.question(constants.TYPE_1).\
                                             date(date_from, date_to).filters(region_id, city_id, branch_id)
-            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
                 annotate(count=Count('option_id'))
             list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_1), feedback_options_dict)
 
@@ -130,7 +130,7 @@ class FeedbackAnalysisView(APIView):
             for object in objects:
                 related_feedback_options = feedback_options.related_filters(type, object)
                 filtered_feedback_options = related_feedback_options.values(
-                    'option_id', 'option__text', 'option__parent_id').annotate(count=Count('option_id'))
+                    'option_id', 'option__text', 'option__parent_id', 'option__color_code').annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(Question.objects.get(type=question_type), filtered_feedback_options)
 
                 data = {'feedback_count': related_feedback_options.count(), 'feedbacks': list_feedback}
@@ -163,7 +163,7 @@ class FeedbackAnalysisBreakdownView(APIView):
             if option.is_parent():
                 feedback_options = FeedbackOption.manager.children(option).feedback(option).\
                                         filters(region_id, city_id, branch_id, area_id).date(date_from, date_to)
-                list_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id').\
+                list_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
                     annotate(count=Count('option_id'))
 
                 data = {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
@@ -232,7 +232,7 @@ class OverallRatingView(APIView):
 
                 feedback_options = feedback_options.children(option) if option else feedback_options.\
                                         question_parent_options(question)
-                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id').\
+                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
                                         annotate(count=Count('option_id'))
                 list_feedback = generate_missing_sub_options(option_id, filtered_feedback) if option else \
                                     generate_missing_options(question, filtered_feedback)
@@ -272,7 +272,7 @@ class CategoryPerformanceView(APIView):
                 feedback_options = FeedbackOption.manager.question_parent_options(question).\
                                                 date(date_from, date_to).filters(region_id, city_id, branch_id)
 
-            filtered_feedback_options = feedback_options.values('option_id', 'option__text', 'option__parent_id').\
+            filtered_feedback_options = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
                                             annotate(count=Count('option_id'))
             list_feedback = generate_missing_sub_options(option_id, filtered_feedback_options) if option else \
                                 generate_missing_options(question, filtered_feedback_options)
@@ -665,7 +665,7 @@ class LiveDashboardView(APIView):
 
     def _get_overall_feedback(self, date_from, date_to):
         feedback_options = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to)
-        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
             annotate(count=Count('option_id'))
         list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_1), feedback_options_dict)
 
@@ -710,7 +710,7 @@ class LiveDashboardView(APIView):
         for single_date in rrule.rrule(rule, dtstart=date_from, until=date_to):
             feedback_options = FeedbackOption.manager.date(str(single_date.date()), str(single_date.date()))
             feedback_options = feedback_options.question_parent_options(question)
-            filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id').\
+            filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
                                     annotate(count=Count('option_id'))
             list_feedback = generate_missing_options(question, filtered_feedback)
 
@@ -724,7 +724,7 @@ class LiveDashboardView(APIView):
 
     def _get_opportunity_analysis(self, date_from, date_to):
         feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to)
-        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
                 annotate(count=Count('option_id'))
 
         list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_3), feedback_options_dict)
@@ -810,7 +810,7 @@ class OpportunityAnalysisView(APIView):
 
             feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to).\
                 filters(region_id, city_id, branch_id)
-            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
                 annotate(count=Count('option_id'))
 
             list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_3), feedback_options_dict)
@@ -843,7 +843,7 @@ class PromotionDetailView(APIView):
                 total_count = 0
                 feedback_options = FeedbackOption.manager.promotion_options(question).\
                     filters(region_id, city_id, branch_id).date(date_from, date_to)
-                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
                                     annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(question, filtered_feedback)
                 for feedback_count in list_feedback:
@@ -880,7 +880,7 @@ class QuestionnaireDetailView(APIView):
                 total_count = 0
                 feedback_options = FeedbackOption.manager.promotion_options(question).\
                     filters(region_id, city_id, branch_id).date(date_from, date_to)
-                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
+                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
                                     annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(question, filtered_feedback)
                 for feedback_count in list_feedback:
