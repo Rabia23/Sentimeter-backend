@@ -9,6 +9,7 @@ class Option(models.Model):
     question = models.ForeignKey(Question, related_name='options', null=True, blank=True)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     isActive = models.BooleanField(default=True, db_index=True)
+    color_code = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
@@ -20,6 +21,7 @@ class Option(models.Model):
             "isActive": self.isActive,
             "objectId": self.objectId,
             "score": self.score,
+            "color_code": self.color_code,
             "created_at": self.created_at,
             "children": [child.to_dict() for child in self.children.all()]
         }

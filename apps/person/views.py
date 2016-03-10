@@ -205,3 +205,12 @@ class DisassociateBranchRegionView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except User.DoesNotExist as e:
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
+
+
+class BranchGroView(APIView):
+    def get(self, request, format=None):
+        branch_id = get_param(request, 'branch_id', None)
+
+        users = UserInfo.objects.filter(branch=branch_id, is_active=True)
+        data = [user.to_dict() for user in users]
+        return Response(response_json(True, data, None))
