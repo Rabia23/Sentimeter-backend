@@ -117,6 +117,7 @@ def generate_option_groups(data, options):
             "option__text": option.text,
             "option_id": option.id,
             "segment_list": segment_list,
+            "option__color_code": option.color_code,
         })
     return option_groups
 
@@ -129,5 +130,6 @@ def generate_option_group(data, options):
             "option__text": option.text,
             "option_id": option.id,
             "count": len(list),
+            "option__color_code": option.color_code,
         })
     return option_groups
