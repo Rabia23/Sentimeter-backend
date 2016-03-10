@@ -4,15 +4,20 @@ from apps.option.utils import option_get, get_related_option
 from apps.question.models import Question
 from apps.question.serializers import QuestionSerializer
 from apps import constants
-from apps.utils import save, response, response_json
+from apps.utils import save, response, response_json, get_param
 from django.db import transaction
 
 
 class QuestionView(APIView):
     def get(self, request, format=None):
-        questions = Question.objects.all()
-        serializer = QuestionSerializer(questions, many=True)
-        return Response(response_json(True, serializer.data, None))
+        genre_type = get_param(request, 'genre_type', None)
+
+        if genre_type:
+            questions = Question.objects.filter(genreType=genre_type)
+        else:
+            questions = Question.objects.all()
+        data = [question.to_dict() for question in questions]
+        return Response(response_json(True, data, None))
 
     @transaction.atomic
     def post(self, request, format=None):

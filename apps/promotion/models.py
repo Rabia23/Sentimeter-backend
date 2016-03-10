@@ -10,6 +10,16 @@ class Promotion(models.Model):
     def __str__(self):
         return self.title
 
+    def to_dict(self):
+        promotion = {
+            "title": self.title,
+            "isActive": self.isActive,
+            "objectId": self.objectId,
+            "created_at": self.created_at,
+            "questions": [question.to_dict() for question in self.questions.all()]
+        }
+        return promotion
+
     @staticmethod
     def get_if_exists(object_id):
         promotion = Promotion.objects.filter(objectId=object_id).first()

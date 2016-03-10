@@ -16,6 +16,18 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
+    def to_dict(self):
+        question = {
+            "text": self.text,
+            "isActive": self.isActive,
+            "type": self.type,
+            "objectId": self.objectId,
+            "genreType": self.genreType,
+            "created_at": self.created_at,
+            "options": [option.to_dict() for option in self.options.all()]
+        }
+        return question
+
     @staticmethod
     def get_if_exists(object_id):
         question = Question.objects.filter(objectId=object_id).first()

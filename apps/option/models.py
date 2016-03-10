@@ -14,6 +14,17 @@ class Option(models.Model):
     def __str__(self):
         return self.text
 
+    def to_dict(self):
+        option = {
+            "text": self.text,
+            "isActive": self.isActive,
+            "objectId": self.objectId,
+            "score": self.score,
+            "created_at": self.created_at,
+            "children": [child.to_dict() for child in self.children.all()]
+        }
+        return option
+
     @staticmethod
     def get_if_exists(object_id):
         option = Option.objects.filter(objectId=object_id).first()

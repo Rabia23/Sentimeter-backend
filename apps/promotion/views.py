@@ -29,3 +29,12 @@ class PromotionView(APIView):
                 Question.objects.filter(objectId__in=question_object_ids).update(promotion=promotion)
 
             return response(data)
+
+
+class PromotionQuestionsView(APIView):
+    def get(self, request, format=None):
+        promotion = Promotion.objects.filter(isActive=True).first()
+        data = None
+        if promotion:
+            data = promotion.to_dict()
+        return Response(response_json(True, data, None))

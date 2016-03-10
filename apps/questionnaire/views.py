@@ -6,7 +6,7 @@ from apps.question.models import Question
 from apps import constants
 from apps.questionnaire.models import Questionnaire
 from apps.questionnaire.serializers import QuestionnaireSerializer
-from apps.utils import save, response, response_json, get_user_data
+from apps.utils import save, response, response_json, get_user_data, get_param
 from django.db import transaction
 from apps.decorators import my_login_required
 
@@ -44,3 +44,13 @@ class QuestionnaireView(APIView):
                 Question.objects.filter(objectId__in=question_object_ids).update(questionnaire=questionnaire)
 
             return response(data)
+
+
+class QuestionnaireQuestionsView(APIView):
+    def get(self, request, format=None):
+        branch_id = get_param(request, 'branch_id', None)
+        questionnaire = Questionnaire.objects.filter(isActive=True, branch=branch_id).first()
+        data = None
+        if questionnaire:
+            data = questionnaire.to_dict()
+        return Response(response_json(True, data, None))
