@@ -20,7 +20,7 @@ class Command(BaseCommand):
                                  feedback.action_taken,
                                  feedback.gro_name,
                                  feedback.branch.name,
-                                 [str(feedback_option.option.text) for feedback_option in feedback.feedback_option.all()]))
+                                 [str(feedback_option.option.text.decode('utf-8')) for feedback_option in feedback.feedback_option.all()]))
         finally:
             file.close()
 
