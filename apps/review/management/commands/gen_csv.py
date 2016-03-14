@@ -13,9 +13,9 @@ class Command(BaseCommand):
         file = open('eggs.csv','w')
         try:
             writer = csv.writer(file)
-            writer.writerow(('Feedback Id', 'Comment', 'Action Taken'))
+            writer.writerow(('Feedback Id', 'Comment', 'Action Taken', 'gro'))
             for feedback in Feedback.objects.all():
-                writer.writerow((feedback.id, feedback.comment, feedback.action_taken))
+                writer.writerow((feedback.id, feedback.comment, feedback.action_taken, ))
         finally:
             file.close()
 
