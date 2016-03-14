@@ -337,17 +337,17 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
         action_taken = get_param(request, 'action_taken', None)
 
         if text:
-            all_results = SearchQuerySet().filter(comment__icontains=text).order_by('created_at')
+            all_results = SearchQuerySet().filter(comment__icontains=text).order_by('-created_at')
         else:
-            all_results = SearchQuerySet().exclude(_missing_='comment').order_by('created_at')
+            all_results = SearchQuerySet().exclude(_missing_='comment').order_by('-created_at')
 
         if action_taken:
-            all_results = all_results.filter(action_taken=Exact(int(action_taken))).order_by('created_at')
+            all_results = all_results.filter(action_taken=Exact(int(action_taken))).order_by('-created_at')
 
         if region_id:
-            all_results = all_results.filter(region=Exact(region_id)).order_by('created_at')
+            all_results = all_results.filter(region=Exact(region_id)).order_by('-created_at')
         elif branch_id:
-            all_results = all_results.filter(branch=Exact(branch_id)).order_by('created_at')
+            all_results = all_results.filter(branch=Exact(branch_id)).order_by('-created_at')
 
         paginator = Paginator(all_results, constants.COMMENTS_PER_PAGE)
         id_list = [element.id for element in paginator.page(page)]
