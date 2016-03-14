@@ -9,6 +9,7 @@ class FeedbackIndex(indexes.SearchIndex, indexes.Indexable):
     id = indexes.IntegerField(model_attr="id")
     action_taken = indexes.IntegerField(model_attr="action_taken")
     comment = indexes.CharField(model_attr="comment", null=True, default=None)
+    created_at = indexes.DateTimeField(model_attr="created_at")
 
     branch = indexes.IntegerField()
     region = indexes.IntegerField()

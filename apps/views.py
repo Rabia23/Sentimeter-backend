@@ -34,7 +34,8 @@ from datetime import datetime, timedelta
 from apps import constants
 from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
-
+from haystack.query import SearchQuerySet
+from haystack.inputs import AutoQuery, Exact, Clean
 
 class LoginView(APIView):
 
@@ -331,9 +332,22 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
     def get(self, request, user, format=None, *args, **kwargs):
         region_id, city_id, branch_id = get_user_data(user)
 
-        elements = self.list(request, *args, **kwargs)
+        text = get_param(request, 'text', None)
+        page = int(get_param(request, 'page', 1))
+        action_taken = get_param(request, 'action_taken', None)
 
-        id_list = [element["id"] for element in elements.data['results']]
+        if text:
+            all_results = SearchQuerySet().filter(comment__icontains=text, action_taken=Exact(int(action_taken))).order_by('created_at')
+        else:
+            all_results = SearchQuerySet().filter(action_taken=Exact(int(action_taken))).exclude(_missing_='comment').order_by('created_at')
+
+        if region_id:
+            all_results = all_results.filter(region=Exact(region_id)).order_by('created_at')
+        elif branch_id:
+            all_results = all_results.filter(branch=Exact(branch_id)).order_by('created_at')
+
+        paginator = Paginator(all_results, constants.COMMENTS_PER_PAGE)
+        id_list = [element.id for element in paginator.page(page)]
 
         feedback = Feedback.objects.filter(id__in=id_list).order_by("-created_at")
 
@@ -341,7 +355,7 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
 
         data = {'feedback_count': feedback.count(),
                 'feedbacks': feedback_comments,
-                'is_last_page': False}
+                'is_last_page': paginator.num_pages == int(page)}
         return Response(response_json(True, data, None))
 
 
