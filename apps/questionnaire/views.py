@@ -6,7 +6,7 @@ from apps.question.models import Question
 from apps import constants
 from apps.questionnaire.models import Questionnaire
 from apps.questionnaire.serializers import QuestionnaireSerializer
-from apps.utils import save, response, response_json, get_user_data, get_param
+from apps.utils import save, response, response_json, get_user_data, get_param, get_data_param
 from django.db import transaction
 from apps.decorators import my_login_required
 
@@ -54,3 +54,17 @@ class QuestionnaireQuestionsView(APIView):
         if questionnaire:
             data = questionnaire.to_dict()
         return Response(response_json(True, data, None))
+
+
+class QuestionnaireAddView(APIView):
+
+    @transaction.atomic
+    def post(self, request, format=None):
+        title = get_data_param(request, 'title', None)
+
+        questionnaire = Questionnaire.get_if_exists_by_title(title)
+        serializer = QuestionnaireSerializer(questionnaire, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(response_json(True, serializer.data, None))
+        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))

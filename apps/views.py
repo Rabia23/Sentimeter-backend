@@ -913,18 +913,27 @@ class QuestionnaireDetailView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
-class CommentsSearchView(APIView):
+class ClientQuestionsView(APIView):
 
     # @method_decorator(my_login_required)
     def get(self, request, format=None):
+        promotion = None
         try:
-            text = get_param(request, 'text', None)
-            all_results = Feedback.objects.filter(comment__icontains=text)
+            branch_id = get_param(request, 'branch_id', None)
+            normal_questions = Question.objects.filter(genreType=0)
 
-            data = [result.feedback_comment_dict() for result in all_results]
+            questionnaire = Questionnaire.objects.filter(branch=branch_id).first()
+            if not questionnaire:
+                promotion = Promotion.objects.filter(isActive=True).first()
+
+            data = {'questions': [question.to_dict() for question in normal_questions],
+                    'questionnaire': questionnaire.to_dict() if questionnaire else None,
+                    'promotion': promotion.to_dict() if promotion and not questionnaire else None}
             return Response(response_json(True, data, None))
+
+        except Branch.DoesNotExist as e:
+            return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
-
 
 

@@ -4,7 +4,7 @@ from apps.promotion.models import Promotion
 from apps.promotion.serializers import PromotionSerializer
 from apps.question.models import Question
 from apps import constants
-from apps.utils import save, response, response_json
+from apps.utils import save, response, response_json, get_data_param
 from django.db import transaction
 
 
@@ -38,3 +38,17 @@ class PromotionQuestionsView(APIView):
         if promotion:
             data = promotion.to_dict()
         return Response(response_json(True, data, None))
+
+
+class PromotionAddView(APIView):
+
+    @transaction.atomic
+    def post(self, request, format=None):
+        title = get_data_param(request, 'title', None)
+
+        promotion = Promotion.get_if_exists_by_title(title)
+        serializer = PromotionSerializer(promotion, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(response_json(True, serializer.data, None))
+        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))

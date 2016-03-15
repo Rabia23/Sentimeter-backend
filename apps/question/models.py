@@ -7,7 +7,7 @@ class Question(models.Model):
     text = models.CharField(max_length=255)
     isActive = models.BooleanField(default=True, db_index=True)
     type = models.IntegerField(db_index=True)
-    objectId = models.CharField(max_length=20, db_index=True)
+    objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)
     genreType = models.IntegerField(db_index=True, null=True, blank=True)
     promotion = models.ForeignKey(Promotion, related_name='questions', null=True, blank=True)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questions', null=True, blank=True)
@@ -31,5 +31,11 @@ class Question(models.Model):
     @staticmethod
     def get_if_exists(object_id):
         question = Question.objects.filter(objectId=object_id).first()
+        if question:
+            return question
+
+    @staticmethod
+    def get_if_exists_by_text(text):
+        question = Question.objects.filter(text=text).first()
         if question:
             return question
