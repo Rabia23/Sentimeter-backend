@@ -31,6 +31,7 @@ urlpatterns = patterns('',
                        url(r'^questionnaire_detail/$', views.QuestionnaireDetailView.as_view()),
                        url(r'^client_question/$', views.ClientQuestionsView.as_view()),
                        url(r'^recommendation_analysis/$', views.RecommendationAnalysisView.as_view()),
+                       url(r'^customer_analysis/$', views.CustomerAnalysisView.as_view()),
 )
 
 

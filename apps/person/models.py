@@ -6,10 +6,11 @@ from apps.person.enum import UserRolesEnum
 from apps.region.models import Region
 from apps.region.serializers import RegionSerializer
 
-
 class UserInfo(models.Model):
     phone_no = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     role = models.IntegerField(default=1, db_index=True)
+    gender = models.IntegerField( db_index=True, null=True, blank=True)
+    ageGroup = models.IntegerField( db_index=True, null=True, blank=True)
     objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)
     user = models.ForeignKey(User, related_name='info')
     branch = models.ForeignKey(Branch, related_name='user_info', null=True, blank=True)

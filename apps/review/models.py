@@ -236,6 +236,13 @@ class Feedback(models.Model):
                     return user_info.phone_no
         return constants.NOT_ATTEMPTED_TEXT
 
+    def customer_age_group(self):
+        if self.user:
+            user_info = self.user.info.first()
+            if user_info:
+                if user_info.ageGroup:
+                    return user_info.ageGroup
+
     def selected_main_option(self):
         main_question = Question.objects.get(type=constants.TYPE_1)
         option_list = self.feedback_option.filter(

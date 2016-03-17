@@ -9,8 +9,9 @@ from apps.city.models import City
 from apps.option.models import Option
 from apps.option.utils import generate_missing_options, generate_missing_sub_options, generate_option_groups, \
     generate_segmentation_with_options, generate_segmentation
-from apps.person.enum import UserRolesEnum
+from apps.person.enum import UserRolesEnum, UserAgeEnum
 from apps.person.models import UserInfo
+from apps.person.utils import generate_gender_division
 from apps.promotion.models import Promotion
 from apps.promotion.serializers import PromotionSerializer
 from apps.question.models import Question
@@ -957,6 +958,37 @@ class RecommendationAnalysisView(APIView):
             list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_20), feedback_options_dict)
 
             data = {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
+            return Response(response_json(True, data, None))
+
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+
+class CustomerAnalysisView(APIView):
+
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
+        now = datetime.now()
+
+        try:
+            region_id, city_id, branch_id = get_user_data(user)
+
+            date_to = get_param(request, 'date_to', str(now.date()))
+            date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
+
+            feedback = Feedback.manager.date(date_from, date_to).filters(region_id, city_id, branch_id)
+
+            customer_analysis = []
+            for age in UserAgeEnum.items():
+                age_group_feedback = feedback.filter(user__info__ageGroup=age[1])
+                customer_analysis.append({
+                    "age_group_id": age[1],
+                    "age_group_label": UserAgeEnum.label(age[0]),
+                    "count": age_group_feedback.count(),
+                    "gender_division": generate_gender_division(age_group_feedback)
+                })
+
+            data = {'feedback_count': feedback.count(), 'customer_analysis': customer_analysis}
             return Response(response_json(True, data, None))
 
         except Exception as e:

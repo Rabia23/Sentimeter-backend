@@ -1,3 +1,4 @@
+from apps.person.enum import UserGenderEnum
 from apps.person.models import UserInfo
 from apps.person.serializers import UserSerializer, UserInfoSerializer
 from apps.utils import save, generate_username, generate_password, make_request
@@ -26,3 +27,15 @@ def get_related_user(data):
     save(user_info_serializer)
 
     return user
+
+
+def generate_gender_division(feedback):
+    gender_groups = []
+    for gender in UserGenderEnum.items():
+        gender_group_feedback = feedback.filter(user__info__gender=gender[1])
+        gender_groups.append({
+            "gender_group_id": gender[1],
+            "gender_group_label": UserGenderEnum.label(gender[0]),
+            "count": gender_group_feedback.count(),
+        })
+    return gender_groups
