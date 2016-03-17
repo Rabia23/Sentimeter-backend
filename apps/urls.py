@@ -30,6 +30,7 @@ urlpatterns = patterns('',
                        url(r'^promotion_detail/$', views.PromotionDetailView.as_view()),
                        url(r'^questionnaire_detail/$', views.QuestionnaireDetailView.as_view()),
                        url(r'^client_question/$', views.ClientQuestionsView.as_view()),
+                       url(r'^recommendation_analysis/$', views.RecommendationAnalysisView.as_view()),
 )
 
 

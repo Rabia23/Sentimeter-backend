@@ -11,6 +11,7 @@ CUSTOMER_PASSWORD = "customerpassword"
 TYPE_1 = 1
 TYPE_2 = 2
 TYPE_3 = 3
+TYPE_20 = 20
 
 #------------ Feedback Analysis -------------
 REGIONAL_ANALYSIS = '1'

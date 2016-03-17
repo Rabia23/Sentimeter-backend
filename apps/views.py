@@ -937,3 +937,29 @@ class ClientQuestionsView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
+class RecommendationAnalysisView(APIView):
+
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
+        now = datetime.now()
+
+        try:
+            region_id, city_id, branch_id = get_user_data(user)
+
+            date_to = get_param(request, 'date_to', str(now.date()))
+            date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
+
+            feedback_options = FeedbackOption.manager.question(constants.TYPE_20).date(date_from, date_to).\
+                filters(region_id, city_id, branch_id)
+            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
+                annotate(count=Count('option_id'))
+
+            list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_20), feedback_options_dict)
+
+            data = {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
+            return Response(response_json(True, data, None))
+
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+
