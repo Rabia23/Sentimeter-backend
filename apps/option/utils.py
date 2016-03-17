@@ -100,9 +100,15 @@ def generate_segmentation_with_options(data, options):
     for segment in constants.segments:
         segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
 
+        segment_feedback_ids = []
+        for feedback_option in data:
+            if feedback_option.feedback.get_segment() == constants.segments[segment] and feedback_option.feedback.id not in segment_feedback_ids:
+                segment_feedback_ids.append(feedback_option.feedback.id)
+
         segments_list.append({
             "segment_end_time": segment,
             "segment": constants.segments[segment],
+            "feedback_count": len(segment_feedback_ids),
             "option_count": len(segment_feedbacks),
             "option_data": generate_option_group(segment_feedbacks, options)
         })
