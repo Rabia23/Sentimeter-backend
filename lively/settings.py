@@ -135,6 +135,10 @@ REST_API_KEY = "fIGO4Y5KdvgKM8dsspYQrfO5raxdfmbaDdodeQOb"
 MASTER_KEY = "dp1YtF7VkUvRYAhmCtc52hlb5jmjpBZAVFSuYexo"
 
 
+#------------------------- AWS S3 Keys --------------------------
+AWS_ACCESS_KEY_ID = "AKIAIXOMJ2SLOFOJYADQ"
+AWS_SECRET_ACCESS_KEY = "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"
+
 try:
     from lively.local_settings import *
 except ImportError:

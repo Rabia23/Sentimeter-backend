@@ -1,4 +1,7 @@
 from django.db import models
+from django_boto.s3.storage import S3Storage
+
+s3 = S3Storage()
 
 
 class Promotion(models.Model):
@@ -9,6 +12,8 @@ class Promotion(models.Model):
     color_unselected = models.CharField(max_length=10, blank=True, null=True)
     objectId = models.CharField(max_length=20, db_index=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    banner_image = models.ImageField(storage=s3, blank=True, null=True, upload_to='promotions')
+    background_image = models.ImageField(storage=s3, blank=True, null=True, upload_to='promotions')
 
     def __str__(self):
         return self.title
@@ -18,6 +23,8 @@ class Promotion(models.Model):
             "title": self.title,
             "isActive": self.isActive,
             "objectId": self.objectId,
+            "background_image": self.background_image,
+            "banner_image": self.banner_image,
             "created_at": self.created_at,
             "questions": [question.to_dict() for question in self.questions.all()]
         }

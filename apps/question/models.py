@@ -1,6 +1,9 @@
 from django.db import models
 from apps.promotion.models import Promotion
 from apps.questionnaire.models import Questionnaire
+from django_boto.s3.storage import S3Storage
+
+s3 = S3Storage()
 
 
 class Question(models.Model):
@@ -11,6 +14,7 @@ class Question(models.Model):
     genreType = models.IntegerField(db_index=True, null=True, blank=True)
     promotion = models.ForeignKey(Promotion, related_name='questions', null=True, blank=True)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questions', null=True, blank=True)
+    image = models.ImageField(storage=s3, blank=True, null=True, upload_to='questions')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
@@ -23,6 +27,7 @@ class Question(models.Model):
             "type": self.type,
             "objectId": self.objectId,
             "genreType": self.genreType,
+            "image": self.image,
             "created_at": self.created_at,
             "options": [option.to_dict() for option in self.options.all()]
         }
