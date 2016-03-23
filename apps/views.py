@@ -464,7 +464,10 @@ class SegmentationRatingView(APIView):
             feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to).\
                                     filters(region_id, city_id, branch_id)
 
-            feedback_segmented_list = generate_segmentation_with_options(feedback_options, options)
+            #for getting total feedback
+            feedback = Feedback.manager.date(date_from, date_to).filters(region_id, city_id, branch_id)
+
+            feedback_segmented_list = generate_segmentation_with_options(feedback_options, options, feedback)
 
             data = {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list}
             return Response(response_json(True, data, None))

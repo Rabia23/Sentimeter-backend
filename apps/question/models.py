@@ -27,7 +27,7 @@ class Question(models.Model):
             "type": self.type,
             "objectId": self.objectId,
             "genreType": self.genreType,
-            "image": self.image,
+            "image": self.image.url if self.image else None,
             "created_at": self.created_at,
             "options": [option.to_dict() for option in self.options.all()]
         }

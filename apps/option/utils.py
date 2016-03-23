@@ -95,15 +95,16 @@ def generate_segmentation(data):
     return sorted(segments_list, key=itemgetter('segment_end_time'))
 
 
-def generate_segmentation_with_options(data, options):
+def generate_segmentation_with_options(data, options, feedback=None):
     segments_list = []
     for segment in constants.segments:
         segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
 
         segment_feedback_ids = []
-        for feedback_option in data:
-            if feedback_option.feedback.get_segment() == constants.segments[segment] and feedback_option.feedback.id not in segment_feedback_ids:
-                segment_feedback_ids.append(feedback_option.feedback.id)
+        if feedback:
+            for single_feedback in feedback:
+                if single_feedback.get_segment() == constants.segments[segment] and single_feedback.id not in segment_feedback_ids:
+                    segment_feedback_ids.append(single_feedback.id)
 
         segments_list.append({
             "segment_end_time": segment,

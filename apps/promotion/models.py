@@ -23,8 +23,8 @@ class Promotion(models.Model):
             "title": self.title,
             "isActive": self.isActive,
             "objectId": self.objectId,
-            "background_image": self.background_image,
-            "banner_image": self.banner_image,
+            "background_image": self.background_image.url if self.background_image else None,
+            "banner_image": self.banner_image.url if self.banner_image else None,
             "created_at": self.created_at,
             "questions": [question.to_dict() for question in self.questions.all()]
         }
