@@ -483,6 +483,7 @@ class ActionTakenView(APIView):
         try:
             feedback_id = get_data_param(request, 'feedback_id', None)
             action_id = get_data_param(request, 'action_id', None)
+            action_comment = get_data_param(request, 'action_comment', None)
 
             action_id = int(action_id) if action_id else None
             if feedback_id and action_id and valid_action_id(action_id):
@@ -490,6 +491,7 @@ class ActionTakenView(APIView):
 
                 feedback.updated_at = datetime.now()
                 feedback.action_taken = action_id
+                feedback.action_comment = action_comment
                 feedback.save()
 
                 return Response(response_json(True, feedback.feedback_comment_dict(), None))

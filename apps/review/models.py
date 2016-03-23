@@ -83,6 +83,7 @@ class FeedbackManager(models.Manager):
 
 class Feedback(models.Model):
     comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
+    action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     objectId = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
     gro_name = models.CharField(max_length=25, null=True, blank=True, db_index=True)
@@ -344,6 +345,7 @@ class Feedback(models.Model):
                 "id": self.id,
                 "objectId": self.objectId,
                 "comment": self.comment,
+                "action_comment": self.action_comment,
                 "branch": self.branch.name,
                 "city": self.branch.city.name,
                 "region": self.branch.city.region.name,
