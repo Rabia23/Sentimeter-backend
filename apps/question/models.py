@@ -8,6 +8,7 @@ s3 = S3Storage()
 
 class Question(models.Model):
     text = models.CharField(max_length=255)
+    text_urdu = models.CharField(max_length=255)
     isActive = models.BooleanField(default=True, db_index=True)
     type = models.IntegerField(db_index=True)
     objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)

@@ -45,6 +45,7 @@ class QuestionAddView(APIView):
     @transaction.atomic
     def post(self, request, format=None):
         text = get_data_param(request, 'text', None)
+        text_urdu = get_data_param(request, 'text_urdu', None)
 
         question = Question.get_if_exists_by_text(text)
         serializer = QuestionSerializer(question, data=request.data)
