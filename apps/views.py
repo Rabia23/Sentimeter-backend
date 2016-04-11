@@ -63,7 +63,7 @@ class LoginView(APIView):
                     token.created = datetime.datetime.utcnow()
                     token.save()
 
-                data = {'token': token[0].key,
+                data = {'token': token.key,
                         'user': user.info.first().to_dict()}
                 return Response(response_json(True, data, None))
         else:
