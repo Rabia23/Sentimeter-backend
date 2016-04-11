@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from apps.area.models import Area
 from apps.branch.models import Branch
 from apps.city.models import City
+from apps.livedashboard import get_live_record
 from apps.option.models import Option
 from apps.option.utils import generate_missing_options, generate_missing_sub_options, generate_option_groups, \
     generate_segmentation_with_options, generate_segmentation
@@ -37,9 +38,12 @@ from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
+from django.db import transaction
+from apps.redis_queue import RedisQueue
 
 class LoginView(APIView):
 
+    @transaction.atomic
     def post(self, request, format=None):
         username = get_data_param(request, 'username', None)
         password = get_data_param(request, 'password', None)
@@ -50,7 +54,15 @@ class LoginView(APIView):
             elif user.info.first() and not user.info.first().has_permission():
                 return Response(response_json(False, None, 'User has no permission to login'))
             else:
-                token = Token.objects.get_or_create(user=user)
+                token, created = Token.objects.get_or_create(user=user)
+
+                utc_now = datetime.utcnow()
+                if not created and token.created.replace(tzinfo=None) < utc_now - timedelta(hours=24):
+                    token.delete()
+                    token = Token.objects.create(user=user)
+                    token.created = datetime.datetime.utcnow()
+                    token.save()
+
                 data = {'token': token[0].key,
                         'user': user.info.first().to_dict()}
                 return Response(response_json(True, data, None))
@@ -493,6 +505,9 @@ class ActionTakenView(APIView):
                 feedback.action_taken = action_id
                 feedback.action_comment = action_comment
                 feedback.save()
+
+                q = RedisQueue('feedback_redis_queue')
+                q.put(str(get_live_record()))
 
                 return Response(response_json(True, feedback.feedback_comment_dict(), None))
             else:

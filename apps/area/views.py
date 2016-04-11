@@ -5,6 +5,7 @@ from apps import constants
 from apps.area.serializers import AreaSerializer
 from apps.utils import get_data_param, response_json
 from apps.area.models import Area
+from django.db import transaction
 
 
 class AreaView(APIView):
@@ -13,6 +14,7 @@ class AreaView(APIView):
         serializer = AreaSerializer(areas, many=True)
         return Response(response_json(True, serializer.data, None))
 
+    @transaction.atomic
     def post(self, request, format=None):
         name = get_data_param(request, 'name', None)
         area = Area.get_if_exists(name)
