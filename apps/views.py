@@ -60,7 +60,7 @@ class LoginView(APIView):
                 if not created and token.created.replace(tzinfo=None) < utc_now - timedelta(hours=24):
                     token.delete()
                     token = Token.objects.create(user=user)
-                    token.created = datetime.datetime.utcnow()
+                    token.created = datetime.utcnow()
                     token.save()
 
                 data = {'token': token.key,
