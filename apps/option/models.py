@@ -4,6 +4,7 @@ from apps.question.models import Question
 
 class Option(models.Model):
     text = models.CharField(max_length=255)
+    text_urdu = models.CharField(max_length=255)
     objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)
     score = models.IntegerField(default=0, db_index=True)
     question = models.ForeignKey(Question, related_name='options', null=True, blank=True)
@@ -18,6 +19,7 @@ class Option(models.Model):
     def to_dict(self):
         option = {
             "text": self.text,
+            "text_urdu": self.text_urdu,
             "isActive": self.isActive,
             "objectId": self.objectId,
             "score": self.score,

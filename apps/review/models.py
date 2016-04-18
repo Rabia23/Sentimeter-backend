@@ -98,7 +98,7 @@ class Feedback(models.Model):
     manager = FeedbackManager()
 
     def __str__(self):
-        return self.objectId
+        return self.comment
 
     @staticmethod
     def get_if_exists(objectId):
