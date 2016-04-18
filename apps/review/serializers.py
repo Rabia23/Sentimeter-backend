@@ -10,7 +10,6 @@ class FeedbackSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     comment = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     objectId = serializers.CharField(required=False)
-    gro_name = serializers.CharField(required=False)
     action_taken = serializers.CharField(required=False)
 
     class Meta:

@@ -11,7 +11,6 @@ class UserInfo(models.Model):
     role = models.IntegerField(default=1, db_index=True)
     gender = models.IntegerField( db_index=True, null=True, blank=True)
     ageGroup = models.IntegerField( db_index=True, null=True, blank=True)
-    objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)
     user = models.ForeignKey(User, related_name='info')
     branch = models.ForeignKey(Branch, related_name='user_info', null=True, blank=True)
     region = models.ForeignKey(Region, related_name='user_info', null=True, blank=True)

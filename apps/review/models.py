@@ -86,7 +86,6 @@ class Feedback(models.Model):
     action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     objectId = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
-    gro_name = models.CharField(max_length=25, null=True, blank=True, db_index=True)
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
     user = models.ForeignKey(User, related_name='feedback', null=True, blank=True)
     branch = models.ForeignKey(Branch, related_name='feedback')

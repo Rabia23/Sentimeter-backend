@@ -18,6 +18,7 @@ class Option(models.Model):
 
     def to_dict(self):
         option = {
+            "id": self.id,
             "text": self.text,
             "text_urdu": self.text_urdu,
             "isActive": self.isActive,

@@ -23,6 +23,7 @@ class Question(models.Model):
 
     def to_dict(self):
         question = {
+            "id": self.id,
             "text": self.text,
             "text_urdu": self.text_urdu,
             "isActive": self.isActive,

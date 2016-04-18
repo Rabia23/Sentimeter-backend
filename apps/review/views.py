@@ -91,6 +91,15 @@ class FeedbackAddView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
+        if "user" in request.data:
+            user_data = request.data["user"]
+            user = get_related_user(user_data)
+        else:
+            user = None
+
+        feedback_params = request.data
+        feedback_params['user'] = user.id if user else None
+
         serializer = FeedbackSerializer(data=request.data)
         if serializer.is_valid():
             feedback = serializer.save()
