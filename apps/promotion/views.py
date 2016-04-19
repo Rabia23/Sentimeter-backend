@@ -16,19 +16,14 @@ class PromotionView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        data = request.data["object"]
-        trigger = request.data["triggerName"]
+        title = get_data_param(request, 'title', None)
 
-        if trigger == constants.TRIGGER_AFTER_SAVE:
-            promotion = Promotion.get_if_exists(data["objectId"])
-            serializer = PromotionSerializer(promotion, data=data)
-            promotion = save(serializer)
-
-            if "questions" in data:
-                question_object_ids = [question_data["objectId"] for question_data in data["questions"]]
-                Question.objects.filter(objectId__in=question_object_ids).update(promotion=promotion)
-
-            return response(data)
+        promotion = Promotion.get_if_exists_by_title(title)
+        serializer = PromotionSerializer(promotion, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(response_json(True, serializer.data, None))
+        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
 class PromotionQuestionsView(APIView):
@@ -38,17 +33,3 @@ class PromotionQuestionsView(APIView):
         if promotion:
             data = promotion.to_dict()
         return Response(response_json(True, data, None))
-
-
-class PromotionAddView(APIView):
-
-    @transaction.atomic
-    def post(self, request, format=None):
-        title = get_data_param(request, 'title', None)
-
-        promotion = Promotion.get_if_exists_by_title(title)
-        serializer = PromotionSerializer(promotion, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(response_json(True, serializer.data, None))
-        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))

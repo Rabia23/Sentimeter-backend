@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from apps import constants
 from apps.branch.models import Branch
 from apps.decorators import my_login_required
-from apps.parse import ParseHelper
 from apps.person.enum import UserRolesEnum
 from apps.person.models import UserInfo
 from apps.region.models import Region
@@ -69,9 +68,6 @@ class UserView(APIView):
                         user = create_user(username, first_name, last_name, email, password)
                         user_info = UserInfo.objects.create(user=user, phone_no=phone_no, role=UserRolesEnum.GRO,
                                                             branch=branch, parent=parent)
-                        parse_helper = ParseHelper()
-                        user_info.objectId = parse_helper.item_add(user_info, password)
-                        user_info.save()
                         return Response(response_json(True, user_info.to_dict(), None))
                     elif role == UserRolesEnum.BRANCH_MANAGER:
                         if not branch.is_associated():
@@ -147,10 +143,6 @@ class UserView(APIView):
                 user_info.region_id = region.id if region else user_info.region_id
                 user_info.phone_no = phone_no if phone_no else user_info.phone_no
                 user_info.save()
-
-            if user_info.role == UserRolesEnum.GRO:
-                parse_helper = ParseHelper()
-                parse_helper.item_update(user_info, new_password)
 
             return Response(response_json(True, user_info.to_dict(), None))
 

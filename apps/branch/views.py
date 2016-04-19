@@ -20,7 +20,6 @@ class BranchView(APIView):
         serializer = BranchSerializer(branches, many=True)
         return Response(response_json(True, serializer.data, None))
 
-
     @transaction.atomic
     def post(self, request, format=None):
         name = get_data_param(request, 'name', None)

@@ -22,8 +22,6 @@ elasticsearch==2.3.0
 elasticsearch-curator==3.4.1
 gunicorn==19.3.0
 kombu==3.0.32
-parse-rest==0.2.20141004
-ParsePy==0.3.20150629
 Pillow==3.1.1
 psycopg2==2.6.1
 PyMySQL==0.7.2

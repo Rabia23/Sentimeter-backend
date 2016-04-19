@@ -27,23 +27,14 @@ class QuestionnaireView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        data = request.data["object"]
-        trigger = request.data["triggerName"]
+        title = get_data_param(request, 'title', None)
 
-        if trigger == constants.TRIGGER_AFTER_SAVE:
-            questionnaire = Questionnaire.get_if_exists(data["objectId"])
-            serializer = QuestionnaireSerializer(questionnaire, data=data)
-            questionnaire = save(serializer)
-
-            branch = Branch.objects.get(pk=data["branch"])
-            questionnaire.branch.add(branch)
-            questionnaire.save()
-
-            if "questions" in data:
-                question_object_ids = [question_data["objectId"] for question_data in data["questions"]]
-                Question.objects.filter(objectId__in=question_object_ids).update(questionnaire=questionnaire)
-
-            return response(data)
+        questionnaire = Questionnaire.get_if_exists_by_title(title)
+        serializer = QuestionnaireSerializer(questionnaire, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(response_json(True, serializer.data, None))
+        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
 class QuestionnaireQuestionsView(APIView):
@@ -54,17 +45,3 @@ class QuestionnaireQuestionsView(APIView):
         if questionnaire:
             data = questionnaire.to_dict()
         return Response(response_json(True, data, None))
-
-
-class QuestionnaireAddView(APIView):
-
-    @transaction.atomic
-    def post(self, request, format=None):
-        title = get_data_param(request, 'title', None)
-
-        questionnaire = Questionnaire.get_if_exists_by_title(title)
-        serializer = QuestionnaireSerializer(questionnaire, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(response_json(True, serializer.data, None))
-        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))

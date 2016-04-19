@@ -21,29 +21,6 @@ class QuestionView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        data = request.data["object"]
-        trigger = request.data["triggerName"]
-
-        if trigger == constants.TRIGGER_AFTER_SAVE:
-            question = Question.get_if_exists(data["objectId"])
-            serializer = QuestionSerializer(question, data=data)
-            question = save(serializer)
-
-            if "options" in data:
-                for option_data in data["options"]:
-                    option_parse = option_get(option_data["objectId"])
-                    option = get_related_option(option_parse)
-
-                    option.question = question
-                    option.save()
-
-            return response(data)
-
-
-class QuestionAddView(APIView):
-
-    @transaction.atomic
-    def post(self, request, format=None):
         text = get_data_param(request, 'text', None)
 
         question = Question.get_if_exists_by_text(text)
