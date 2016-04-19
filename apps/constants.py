@@ -101,3 +101,8 @@ DEFERRED = 3
 TEXT_ALREADY_EXISTS = "Already Exists"
 TEXT_DOES_NOT_EXISTS = "Does Not Exists"
 TEXT_OPERATION_UNSUCCESSFUL = "Operation Unsuccessful"
+
+#------------ Color Constants -----------------
+COLORS_TOP_CONCERNS = ["#cb1e24", "#178aea", "#434347", "#f1d400", "#90ec7c"]
+COLORS_ACTION_STATUS = ["#ffffff", "#cb1e24", "#ffd200", "#01c211", "#01c211"]
+COLORS_CUSTOMER_GENDERS = ["#26AAE2", "#F174AC"]

@@ -1,3 +1,4 @@
+from apps import constants
 from apps.person.enum import UserGenderEnum
 from apps.person.models import UserInfo
 from apps.person.serializers import UserSerializer, UserInfoSerializer
@@ -37,5 +38,6 @@ def generate_gender_division(feedback):
             "gender_group_id": gender[1],
             "gender_group_label": UserGenderEnum.label(gender[0]),
             "count": gender_group_feedback.count(),
+            "color_code": constants.COLORS_CUSTOMER_GENDERS[gender[1]],
         })
     return gender_groups

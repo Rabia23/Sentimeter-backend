@@ -448,9 +448,12 @@ class TopConcernsView(APIView):
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         try:
-            concerns = [concern.to_dict() for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]]
+            count = 0
+            concerns = []
+            for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]:
+                concerns.append(concern.to_color_dict(constants.COLORS_TOP_CONCERNS[count]))
+                count += 1
             data = {'concern_count': len(concerns), 'concern_list': concerns}
-
             return Response(response_json(True, data, None))
         except Exception as e:
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
@@ -622,7 +625,7 @@ class TopRankingsView(APIView):
 class ComplaintAnalysisView(APIView):
 
     @method_decorator(my_login_required)
-    def get(self, request, user, format=None):
+    def get(self, request,  format=None):
         try:
             data_list = []
             objects = Area.objects.all()
@@ -638,6 +641,9 @@ class ComplaintAnalysisView(APIView):
                 feedback = Feedback.manager.related_filters(0, object).normal_feedback()
                 filtered_feedback = feedback.values('action_taken').annotate(count=Count('action_taken'))
                 filtered_feedback = generate_missing_actions(filtered_feedback)
+
+                for feedback_dict in filtered_feedback:
+                    feedback_dict.update({'color_code': constants.COLORS_ACTION_STATUS[feedback_dict["action_taken"]]})
 
                 data = {'feedback_count': feedback.count(), 'action_analysis': filtered_feedback}
                 data_list.append({'object': ObjectSerializer(object).data, 'data': data})
@@ -681,6 +687,9 @@ class LiveDashboardView(APIView):
             feedback = Feedback.manager.date(date_from, date_to).related_filters(0, object)
             filtered_feedback = feedback.values('action_taken').annotate(count=Count('action_taken'))
             filtered_feedback = generate_missing_actions(filtered_feedback)
+
+            for feedback_dict in filtered_feedback:
+                feedback_dict.update({'color_code': constants.COLORS_ACTION_STATUS[feedback_dict["action_taken"]]})
 
             data = {'feedback_count': feedback.count(), 'action_analysis': filtered_feedback}
             complaint_view_list.append({'object': ObjectSerializer(object).data, 'data': data})
@@ -986,12 +995,13 @@ class RecommendationAnalysisView(APIView):
 
 class CustomerAnalysisView(APIView):
 
-    @method_decorator(my_login_required)
-    def get(self, request, user, format=None):
+    # @method_decorator(my_login_required)
+    def get(self, request, format=None):
         now = datetime.now()
 
         try:
-            region_id, city_id, branch_id = get_user_data(user)
+            # region_id, city_id, branch_id = get_user_data(user)
+            region_id, city_id, branch_id = 1, None, None
 
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))

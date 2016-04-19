@@ -497,7 +497,6 @@ class Concern(models.Model):
     keyword = models.CharField(max_length=255, db_index=True, unique=True)
     count = models.IntegerField(db_index=True, default=0)
     is_active = models.BooleanField(default=True)
-    color_code = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def to_dict(self):
@@ -506,6 +505,18 @@ class Concern(models.Model):
                 "id": self.id,
                 "name": self.keyword.capitalize(),
                 "weight": self.count,
+            }
+            return concern
+        except Exception as e:
+            return {}
+
+    def to_color_dict(self, color_code):
+        try:
+            concern = {
+                "id": self.id,
+                "name": self.keyword.capitalize(),
+                "weight": self.count,
+                "color_code": color_code,
             }
             return concern
         except Exception as e:
