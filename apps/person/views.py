@@ -44,7 +44,7 @@ class UserView(APIView):
 
     # @method_decorator(my_login_required)
     @transaction.atomic()
-    def post(self, request, user, format=None):
+    def post(self, request, format=None):
         try:
             role = get_data_param(request, 'role', None)
             username = get_data_param(request, 'username', None)
