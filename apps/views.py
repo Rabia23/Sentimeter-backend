@@ -952,7 +952,7 @@ class ClientQuestionsView(APIView):
             branch_id = get_param(request, 'branch_id', None)
             normal_questions = Question.objects.filter(genreType=0)
 
-            questionnaire = Questionnaire.objects.filter(branch=branch_id).first()
+            questionnaire = Questionnaire.objects.filter(branch=branch_id, isActive=True).first()
             if not questionnaire:
                 promotion = Promotion.objects.filter(isActive=True).first()
 
