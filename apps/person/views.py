@@ -42,7 +42,7 @@ class UserView(APIView):
 
         return Response(response_json(True, data, None))
 
-    @method_decorator(my_login_required)
+    # @method_decorator(my_login_required)
     @transaction.atomic()
     def post(self, request, user, format=None):
         try:
