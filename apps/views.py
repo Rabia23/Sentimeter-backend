@@ -995,13 +995,12 @@ class RecommendationAnalysisView(APIView):
 
 class CustomerAnalysisView(APIView):
 
-    # @method_decorator(my_login_required)
-    def get(self, request, format=None):
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
         now = datetime.now()
 
         try:
-            # region_id, city_id, branch_id = get_user_data(user)
-            region_id, city_id, branch_id = 1, None, None
+            region_id, city_id, branch_id = get_user_data(user)
 
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
