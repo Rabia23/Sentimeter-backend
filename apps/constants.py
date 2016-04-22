@@ -66,10 +66,10 @@ DINNER_TIME = "18:00"
 LATE_NIGHT_TIME = "01:00"
 
 segments = {
-    "06:00": "Breakfast",
-    "10:00": "Lunch",
-    "14:00": "Snack",
-    "18:00": "Dinner",
+    "06:00": "Morning",
+    "10:00": "Afternoon",
+    "14:00": "Evening",
+    "18:00": "Night",
     "01:00": "Late Night",
 }
 
