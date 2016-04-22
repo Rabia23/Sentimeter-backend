@@ -188,7 +188,7 @@ class Feedback(models.Model):
         return True
 
     def keyword_analysis(self):
-        if self.comment_exists() and self.is_negative():
+        if self.comment_exists():
             for concern in Concern.get_all_concerns():
                 if self.comment.lower().find(concern.keyword) != -1:
                     concern.count += 1
