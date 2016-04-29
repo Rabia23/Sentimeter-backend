@@ -201,7 +201,10 @@ class Feedback(models.Model):
         if not self.is_negative():
             self.action_taken = ActionStatusEnum.NOACTIONNEEDED
         else:
-            self.action_taken = ActionStatusEnum.UNPORCESSED
+            if self.comment_exists():
+                self.action_taken = ActionStatusEnum.UNPORCESSED
+            else:
+                self.action_taken = ActionStatusEnum.UNRECOVERABLE
         self.save()
 
     def is_bad(self):

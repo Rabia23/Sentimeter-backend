@@ -1,4 +1,5 @@
 from django.db import models
+from apps import constants
 from apps.promotion.models import Promotion
 from apps.questionnaire.models import Questionnaire
 from django_boto.s3.storage import S3Storage
@@ -22,6 +23,10 @@ class Question(models.Model):
         return self.text
 
     def to_dict(self):
+        if self.type and self.type == constants.TYPE_1:
+            options = [option.to_dict() for option in self.options.all().order_by("-score")]
+        else:
+            options = [option.to_dict() for option in self.options.all().order_by("created_at")]
         question = {
             "id": self.id,
             "text": self.text,
@@ -32,7 +37,7 @@ class Question(models.Model):
             "genreType": self.genreType,
             "image": self.image.url if self.image else None,
             "created_at": self.created_at,
-            "options": [option.to_dict() for option in self.options.all()]
+            "options": options,
         }
         return question
 
