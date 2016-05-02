@@ -325,6 +325,7 @@ class CommentsView(APIView):
         region_id, city_id, branch_id = get_user_data(user)
         page = int(get_param(request, 'page', 1))
         action_taken = get_param(request, 'action_taken', None)
+        branch_id = get_param(request, 'branch_id', None)
 
         feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments().action(action_taken).order_by("-created_at")
         paginator = Paginator(feedback, constants.COMMENTS_PER_PAGE)
