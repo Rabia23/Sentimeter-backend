@@ -1,10 +1,12 @@
+from django.utils.decorators import method_decorator
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps import constants
 from apps.branch.models import Branch
 from apps.branch.serializers import BranchSerializer
-from apps.utils import get_data_param, response_json
+from apps.utils import get_data_param, response_json, get_user_data
 from django.db import transaction
+from apps.decorators import my_login_required
 
 
 class BranchView(APIView):
@@ -32,3 +34,19 @@ class BranchView(APIView):
             serializer.save()
             return Response(response_json(True, serializer.data, None))
         return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+
+class SpecificBranchView(APIView):
+
+    @method_decorator(my_login_required)
+    def get(self, request, user, format=None):
+        region_id, city_id, branch_id = get_user_data(user)
+
+        if branch_id:
+            branches = Branch.objects.filter(id=branch_id)
+        elif region_id:
+            branches = Branch.objects.filter(city__region__exact=region_id)
+        else:
+            branches = Branch.objects.all()
+        serializer = BranchSerializer(branches, many=True)
+        return Response(response_json(True, serializer.data, None))

@@ -323,9 +323,10 @@ class CommentsView(APIView):
     @method_decorator(my_login_required)
     def get(self, request, user, format=None, *args, **kwargs):
         region_id, city_id, branch_id = get_user_data(user)
+
         page = int(get_param(request, 'page', 1))
         action_taken = get_param(request, 'action_taken', None)
-        branch_id = get_param(request, 'branch_id', None)
+        branch_id = get_param(request, 'branch_id', branch_id)
 
         feedback = Feedback.manager.filters(region_id, city_id, branch_id).comments().action(action_taken).order_by("-created_at")
         paginator = Paginator(feedback, constants.COMMENTS_PER_PAGE)
@@ -349,6 +350,7 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
         text = get_param(request, 'text', None)
         page = int(get_param(request, 'page', 1))
         action_taken = get_param(request, 'action_taken', None)
+        branch_id = get_param(request, 'branch_id', branch_id)
 
         if text:
             all_results = SearchQuerySet().filter(comment__icontains=text).order_by('-created_at')

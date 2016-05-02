@@ -29,3 +29,19 @@ class QuestionView(APIView):
             serializer.save()
             return Response(response_json(True, serializer.data, None))
         return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+    @transaction.atomic
+    def put(self, request, format=None):
+        id = get_data_param(request, 'id', None)
+
+        try:
+            question = Question.objects.get(pk=id)
+            serializer = QuestionSerializer(question, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(response_json(True, serializer.data, None))
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+        except Question.DoesNotExist as e:
+            return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
