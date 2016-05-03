@@ -26,7 +26,7 @@ class Option(models.Model):
             "score": self.score,
             "color_code": self.color_code,
             "created_at": self.created_at,
-            "children": [child.to_dict() for child in self.children.all()]
+            "children": [child.to_dict() for child in self.children.filter(isActive=True)]
         }
         return option
 
