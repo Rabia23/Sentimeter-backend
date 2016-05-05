@@ -9,7 +9,7 @@ from apps.city.models import City
 from apps.livedashboard import get_live_record
 from apps.option.models import Option
 from apps.option.utils import generate_missing_options, generate_missing_sub_options, generate_option_groups, \
-    generate_segmentation_with_options, generate_segmentation
+    generate_segmentation_with_options, generate_segmentation, generate_segmentation_with_options_updated
 from apps.person.enum import UserRolesEnum, UserAgeEnum
 from apps.person.models import UserInfo
 from apps.person.utils import generate_gender_division
@@ -482,7 +482,7 @@ class SegmentationRatingView(APIView):
             #for getting total feedback
             feedback = Feedback.manager.date(date_from, date_to).filters(region_id, city_id, branch_id)
 
-            feedback_segmented_list = generate_segmentation_with_options(feedback_options, options, feedback)
+            feedback_segmented_list = generate_segmentation_with_options_updated(feedback_options, options, feedback)
 
             data = {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list}
             return Response(response_json(True, data, None))

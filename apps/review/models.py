@@ -11,7 +11,7 @@ from datetime import datetime
 from dateutil import tz
 from django.utils import timezone
 from apps.region.models import Region
-from apps.review.enum import ActionStatusEnum
+from apps.review.enum import ActionStatusEnum, SegmentEnum
 
 
 class FeedbackQuerySet(models.QuerySet):
@@ -86,6 +86,7 @@ class Feedback(models.Model):
     action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     objectId = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
+    segment = models.IntegerField(null=True, blank=True, db_index=True)
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
     user = models.ForeignKey(User, related_name='feedback', null=True, blank=True)
     branch = models.ForeignKey(Branch, related_name='feedback')
@@ -292,6 +293,30 @@ class Feedback(models.Model):
         elif created_at < start_time:
             return constants.segments[constants.LATE_NIGHT_TIME]
         return ""
+
+    def mark_segment(self):
+        start_time = self.get_time(constants.STARTING_TIME)
+        breakfast_time = self.get_time(constants.BREAKFAST_TIME)
+        lunch_time = self.get_time(constants.LUNCH_TIME)
+        snack_time = self.get_time(constants.SNACK_TIME)
+        dinner_time = self.get_time(constants.DINNER_TIME)
+        late_night_time = self.get_time(constants.LATE_NIGHT_TIME)
+
+        created_at = self.created_at.time()
+
+        if created_at >= start_time and created_at < breakfast_time:
+            self.segment = SegmentEnum.MORNING
+        elif created_at >= breakfast_time and created_at < lunch_time:
+            self.segment = SegmentEnum.AFTERNOON
+        elif created_at >= lunch_time and created_at < snack_time:
+            self.segment = SegmentEnum.EVENING
+        elif created_at >= snack_time and created_at < dinner_time:
+            self.segment = SegmentEnum.NIGHT
+        elif created_at >= dinner_time:
+            self.segment = SegmentEnum.LATE_NIGHT
+        elif created_at < start_time:
+            self.segment = SegmentEnum.LATE_NIGHT
+        self.save()
 
     def get_shift(self):
         start_time = self.get_time(constants.STARTING_TIME)

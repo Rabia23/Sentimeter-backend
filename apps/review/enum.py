@@ -14,3 +14,20 @@ class ActionStatusEnum(enum.Enum):
         RECOVERED: "Recovered",
         NOACTIONNEEDED: "No Action Needed"
     }
+
+
+class SegmentEnum(enum.Enum):
+    MORNING = 1
+    AFTERNOON = 2
+    EVENING = 3
+    NIGHT = 4
+    LATE_NIGHT = 5
+
+    labels = {
+        MORNING: "Morning",
+        AFTERNOON: "Afternoon",
+        EVENING: "Evening",
+        NIGHT: "Night",
+        LATE_NIGHT: "Late Night"
+    }
+

@@ -48,6 +48,7 @@ class FeedbackView(APIView):
 
                 feedback.mark_feedback_status()
                 feedback.keyword_analysis()
+                feedback.mark_segment()
 
                 q = RedisQueue('feedback_redis_queue')
                 q.put(str(get_live_record()))

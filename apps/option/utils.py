@@ -1,6 +1,7 @@
 from apps.option.models import Option
 from apps.option.serializers import OptionSerializer
 from apps import constants
+from apps.review.enum import SegmentEnum
 from apps.utils import make_request
 from operator import itemgetter
 
@@ -97,23 +98,18 @@ def generate_segmentation(data):
 
 def generate_segmentation_with_options(data, options, feedback=None):
     segments_list = []
-    for segment in constants.segments:
-        segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
-
-        segment_feedback_ids = []
-        if feedback:
-            for single_feedback in feedback:
-                if single_feedback.get_segment() == constants.segments[segment] and single_feedback.id not in segment_feedback_ids:
-                    segment_feedback_ids.append(single_feedback.id)
+    for label, item in SegmentEnum.items():
+        segment_feedback_options = data.filter(feedback__segment=item)
+        segment_feedback_count = feedback.filter(segment=item).count() if feedback else None
 
         segments_list.append({
-            "segment_end_time": segment,
-            "segment": constants.segments[segment],
-            "feedback_count": len(segment_feedback_ids),
-            "option_count": len(segment_feedbacks),
-            "option_data": generate_option_group(segment_feedbacks, options)
+            "segment_key": item,
+            "segment": label,
+            "feedback_count": segment_feedback_count,
+            "option_count": segment_feedback_options.count(),
+            "option_data": generate_option_group(segment_feedback_options, options)
         })
-    return sorted(segments_list, key=itemgetter('segment_end_time'))
+    return sorted(segments_list, key=itemgetter('segment_key'))
 
 
 def generate_option_groups(data, options):
@@ -132,11 +128,11 @@ def generate_option_groups(data, options):
 def generate_option_group(data, options):
     option_groups = []
     for option in options:
-        list = [feedbackOption for feedbackOption in data if feedbackOption.option_id == option.id]
+        option_count = data.filter(option_id=option.id).count()
         option_groups.append({
             "option__text": option.text,
             "option_id": option.id,
-            "count": len(list),
+            "count": option_count,
             "option__color_code": option.color_code,
         })
     return option_groups
