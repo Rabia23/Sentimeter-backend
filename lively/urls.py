@@ -13,6 +13,7 @@ from apps.person import urls as person_urls
 from apps.questionnaire import urls as questionnaire_urls
 from apps import urls as api_urls
 from apps.dashboard import urls as dashboard_urls
+from apps.report import urls as report_urls
 
 
 urlpatterns = [
@@ -27,6 +28,7 @@ urlpatterns = [
     url(r'^api/', include(review_urls)),
     url(r'^api/', include(person_urls)),
     url(r'^api/', include(questionnaire_urls)),
+    url(r'^api/', include(report_urls)),
     url(r'^api/', include(api_urls)),
     url(r'^dashboard/', include(dashboard_urls)),
     url(r'^swagger/', include('rest_framework_swagger.urls')),

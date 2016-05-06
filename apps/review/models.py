@@ -107,9 +107,9 @@ class Feedback(models.Model):
             return feedback
 
     @staticmethod
-    def get_feedback_type_count(date_from=None, date_to=None):
-        negative_feedback_count = Feedback.manager.date(date_from, date_to).filter(feedback_option__option__score__in=constants.NEGATIVE_SCORE_LIST).count()
-        positive_feedback_count = Feedback.manager.date(date_from, date_to).filter(feedback_option__option__score__in=constants.POSITIVE_SCORE_LIST).count()
+    def get_feedback_type_count(date_from=None, date_to=None, region_id=None, city_id=None, branch_id=None):
+        negative_feedback_count = Feedback.manager.date(date_from, date_to).filters(region_id, city_id, branch_id).filter(feedback_option__option__score__in=constants.NEGATIVE_SCORE_LIST).count()
+        positive_feedback_count = Feedback.manager.date(date_from, date_to).filters(region_id, city_id, branch_id).filter(feedback_option__option__score__in=constants.POSITIVE_SCORE_LIST).count()
 
         return {"positive_feedback_count": positive_feedback_count, "negative_feedback_count": negative_feedback_count}
 
@@ -498,9 +498,9 @@ class FeedbackOption(models.Model):
             return feedback_option
 
     @staticmethod
-    def get_top_option(date_from=None, date_to=None):
+    def get_top_option(date_from=None, date_to=None, region_id=None, city_id=None, branch_id=None):
         result = None
-        dict = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to).values('option_id').annotate(count=Count("option_id"))
+        dict = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to).filters(region_id, city_id, branch_id).values('option_id').annotate(count=Count("option_id"))
         if dict:
             dict = dict.latest("count")
             option = Option.objects.get(pk=dict["option_id"])
@@ -508,8 +508,8 @@ class FeedbackOption(models.Model):
         return result
 
     @staticmethod
-    def get_qsc_count(date_from=None, date_to=None):
-        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).values('option_id', 'option__text').annotate(count=Count("option_id"))
+    def get_qsc_count(date_from=None, date_to=None, region_id=None, city_id=None, branch_id=None):
+        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).filters(region_id, city_id, branch_id).values('option_id', 'option__text').annotate(count=Count("option_id"))
 
         qsc_list = []
         for dict in dict_list:

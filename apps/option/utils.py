@@ -85,15 +85,15 @@ def generate_missing_sub_options(option, data, is_parent_needed=True):
 
 def generate_segmentation(data):
     segments_list = []
-    for segment in constants.segments:
-        segment_feedbacks = [feedback_option for feedback_option in data if feedback_option.feedback.get_segment() == constants.segments[segment]]
+    for label, item in SegmentEnum.items():
+        segment_feedback_options = data.filter(feedback__segment=item)
 
         segments_list.append({
-            "segment_end_time": segment,
-            "segment": constants.segments[segment],
-            "option_count": len(segment_feedbacks),
+            "segment_key": item,
+            "segment": label,
+            "option_count": segment_feedback_options.count(),
         })
-    return sorted(segments_list, key=itemgetter('segment_end_time'))
+    return sorted(segments_list, key=itemgetter('segment_key'))
 
 
 def generate_segmentation_with_options(data, options, feedback=None):

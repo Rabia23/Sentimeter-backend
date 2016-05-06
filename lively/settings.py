@@ -36,6 +36,7 @@ PROJECT_APPS = [
     'apps.promotion',
     'apps.review',
     'apps.questionnaire',
+    'apps.report',
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS

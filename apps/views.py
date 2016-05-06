@@ -585,7 +585,6 @@ class TopChartsView(APIView):
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         try:
-
             now = datetime.now()
 
             date_to_str = str(now.date())
