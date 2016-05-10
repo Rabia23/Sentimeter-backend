@@ -104,7 +104,7 @@ def generate_segmentation_with_options(data, options, feedback=None):
 
         segments_list.append({
             "segment_key": item,
-            "segment": label,
+            "segment": SegmentEnum.label(item),
             "feedback_count": segment_feedback_count,
             "option_count": segment_feedback_options.count(),
             "option_data": generate_option_group(segment_feedback_options, options)
