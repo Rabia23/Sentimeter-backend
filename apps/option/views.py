@@ -15,10 +15,7 @@ class OptionView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        text = get_data_param(request, 'text', None)
-
-        option = Option.get_if_exists_by_text(text)
-        serializer = OptionSerializer(option, data=request.data)
+        serializer = OptionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(response_json(True, serializer.data, None))

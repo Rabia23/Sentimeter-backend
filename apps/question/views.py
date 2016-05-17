@@ -21,10 +21,7 @@ class QuestionView(APIView):
 
     @transaction.atomic
     def post(self, request, format=None):
-        text = get_data_param(request, 'text', None)
-
-        question = Question.get_if_exists_by_text(text)
-        serializer = QuestionSerializer(question, data=request.data)
+        serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(response_json(True, serializer.data, None))
