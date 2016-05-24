@@ -98,11 +98,11 @@ class ReportView(APIView):
 
     def _get_patch_analysis(self, date_from, date_to, region_id, city_id, branch_id):
         question_type = [constants.TYPE_1, constants.TYPE_2]
+        region_objects = Region.objects.all()
         question_feedbacks = []
 
         for type in question_type:
             feedback_options = FeedbackOption.manager.question(type).date(date_from, date_to)
-            region_objects = Region.objects.all()
             feedbacks = []
             for object in region_objects:
                 related_feedback_options = feedback_options.related_filters(constants.REGIONAL_ANALYSIS, object)
@@ -113,9 +113,6 @@ class ReportView(APIView):
                 feedbacks.append({'object': ObjectSerializer(object).data, 'data': data})
             question_feedbacks.append({'question_feedbacks': feedbacks})
         return {'count': region_objects.count(), 'analysis': question_feedbacks}
-
-
-
 
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
