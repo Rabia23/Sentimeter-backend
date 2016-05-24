@@ -67,14 +67,19 @@ class ReportView(APIView):
         return {'feedback_count': feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
 
     def _get_segmentation_rating(self, date_from, date_to, region_id, city_id, branch_id):
-        question = Question.objects.get(type=constants.TYPE_2)
 
+        question = Question.objects.get(type=constants.TYPE_2)
         options = question.options.all()
         feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to).filters(region_id, city_id, branch_id)
-
         feedback_segmented_list = generate_segmentation_with_options(feedback_options, options)
 
-        return {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list}
+        sub_options_segments_list = []
+        for option in options:
+            children_options = option.children.all()
+            children_feedback_options = FeedbackOption.manager.options(children_options).date(date_from, date_to).filters(region_id, city_id, branch_id)
+            children_feedback_segmented_list = generate_segmentation_with_options(children_feedback_options, children_options)
+            sub_options_segments_list.append({'sub_option_segments_list': children_feedback_segmented_list})
+        return {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list, 'sub_options_segments': sub_options_segments_list}
 
     def _get_top_rankings(self, region_id, city_id, branch_id, date_from=None, date_to=None,):
         overall_experience = FeedbackOption.get_top_option(date_from, date_to)
