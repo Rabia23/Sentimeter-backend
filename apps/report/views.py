@@ -59,8 +59,8 @@ class ReportView(APIView):
         for option in options:
             children_options = option.children.all()
             children_feedback_options = FeedbackOption.manager.options(children_options).date(date_from, date_to).filters(region_id, city_id, branch_id)
-            children_feedback_segmented_list = generate_segmentation_with_options(children_feedback_options, children_options)
-            sub_options_segments_list.append({'sub_option_segments_list': children_feedback_segmented_list})
+            sub_options_segments_list.append({'sub_option_segments_list': generate_segmentation_with_options(children_feedback_options, children_options)})
+
         return {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list, 'sub_options_segments': sub_options_segments_list}
 
     def _get_opportunity_analysis(self, date_from, date_to, region_id, city_id, branch_id):
