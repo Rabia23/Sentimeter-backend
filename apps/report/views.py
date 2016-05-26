@@ -107,10 +107,10 @@ class ReportView(APIView):
             feedbacks = []
             for object in region_objects:
                 related_feedback_options = feedback_options.related_filters(constants.REGIONAL_ANALYSIS, object)
-                filtered_feedback_options = related_feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').annotate(count=Count('option_id'))
+                filtered_feedback_options = related_feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(Question.objects.get(type=type), filtered_feedback_options)
 
-                data = {'feedback_count': related_feedback_options.count(), 'feedbacks': list_feedback}
+                data = {'feedback_count': related_feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
                 feedbacks.append({'object': ObjectSerializer(object).data, 'data': data})
             question_feedbacks.append({'question_feedbacks': feedbacks})
         return {'count': region_objects.count(), 'analysis': question_feedbacks}
