@@ -2,6 +2,7 @@ from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.area.models import Area
+from apps.branch.models import Branch
 from apps.option.utils import generate_missing_options, generate_segmentation_with_options, generate_segmentation
 from apps.person.enum import UserAgeEnum
 from apps.person.utils import generate_gender_division
@@ -114,6 +115,38 @@ class ReportView(APIView):
             question_feedbacks.append({'question_feedbacks': feedbacks})
         return {'count': region_objects.count(), 'analysis': question_feedbacks}
 
+    def _get_benchmark_counts(self, date_from_str, date_to_str):
+        branch_details = []
+        branches = Branch.objects.all()
+
+        current_tz = timezone.get_current_timezone()
+        date_to = current_tz.localize(datetime.strptime(date_to_str + " 23:59:59", constants.DATE_FORMAT))
+        date_from = current_tz.localize(datetime.strptime(date_from_str + " 00:00:00", constants.DATE_FORMAT))
+
+        rule = rrule.DAILY
+        for branch in branches:
+            branch_detail_list = []
+            total_feedback_count = 0
+            for single_date in rrule.rrule(rule, dtstart=date_from, until=date_to):
+                feedback_count = branch.get_branch_feedback_count(str(single_date.date()), str(single_date.date()))
+                total_feedback_count += feedback_count
+                branch_detail_list.append({
+                    "date": str(single_date.date()),
+                    "feedback_count": feedback_count,
+                    "count_exceeded": feedback_count >= branch.benchmark_count,
+                })
+            branch_details.append({
+                "id": branch.id,
+                "name": branch.name,
+                "latitude": branch.latitude,
+                "longitude": branch.longitude,
+                "city": branch.city.name,
+                "region": branch.city.region.name,
+                "total_feedback_count": total_feedback_count,
+                "details": branch_detail_list,
+            })
+        return {'branch_count': branches.count(), 'branches_data': branch_details}
+
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         try:
@@ -124,6 +157,7 @@ class ReportView(APIView):
             date_from_str = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
             data = {
+                "benchmark_analysis": self._get_benchmark_counts(date_from_str, date_to_str),
                 "segmentation_rating": self._get_segmentation_rating(date_from_str, date_to_str, region_id, city_id, branch_id),
                 "overall_rating": self._get_overall_feedback(date_from_str, date_to_str, region_id, city_id, branch_id),
                 "patch_analysis": self._get_patch_analysis(date_from_str, date_to_str, region_id, city_id, branch_id),

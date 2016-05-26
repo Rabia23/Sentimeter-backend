@@ -1,4 +1,4 @@
-*.pyc
+x*.pyc
 *.xml
 *.iml
 /.idea
