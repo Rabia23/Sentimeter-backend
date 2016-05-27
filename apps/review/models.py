@@ -524,6 +524,7 @@ class FeedbackOption(models.Model):
 class Concern(models.Model):
     keyword = models.CharField(max_length=255, db_index=True, unique=True)
     count = models.IntegerField(db_index=True, default=0)
+    color_code = models.CharField(max_length=20, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
