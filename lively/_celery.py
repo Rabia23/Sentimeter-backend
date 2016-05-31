@@ -81,3 +81,24 @@ def get_super_recipients():
         recipients.append(superuser.email)
     return recipients
 
+
+@shared_task
+def send_feedback_email_report(feedback_json):
+    context = Context({'feedback': feedback_json})
+    text_template = get_template('emails/feedback_email_report.txt')
+    html_template = get_template('emails/feedback_email_report.html')
+
+    recipients = get_upper_management_recipients()
+    send_mail(constants.FEEDBACK_REPORT_SUBJECT, context, recipients, text_template, html_template)
+
+
+def get_upper_management_recipients():
+    recipients = []
+
+    director_tier_management = UserInfo.get_people_dict(UserRolesEnum.DIRECTOR)
+    assistant_director_tier_management = UserInfo.get_people_dict(UserRolesEnum.ASSISTANT_DIRECTOR)
+
+    [recipients.append(director) for director in director_tier_management]
+    [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
+
+    return recipients

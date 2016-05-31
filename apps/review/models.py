@@ -90,6 +90,7 @@ class Feedback(models.Model):
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
     user = models.ForeignKey(User, related_name='feedback', null=True, blank=True)
     branch = models.ForeignKey(Branch, related_name='feedback')
+    is_emailed = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(db_index=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
