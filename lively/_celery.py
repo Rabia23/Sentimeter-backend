@@ -97,8 +97,10 @@ def get_upper_management_recipients():
 
     director_tier_management = UserInfo.get_people_dict(UserRolesEnum.DIRECTOR)
     assistant_director_tier_management = UserInfo.get_people_dict(UserRolesEnum.ASSISTANT_DIRECTOR)
+    operational_manager_tier_management = UserInfo.get_people_dict(UserRolesEnum.OPERATIONAL_MANAGER)
 
     [recipients.append(director) for director in director_tier_management]
     [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
+    [recipients.append(operational_manager) for operational_manager in operational_manager_tier_management]
 
     return recipients
