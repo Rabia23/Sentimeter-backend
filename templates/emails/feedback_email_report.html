@@ -34,77 +34,101 @@
 								</tr>
 
                                 <tr>
-									<td valign="top" align="left" class="text-holder">
+									<td valign="top" align="left" class="text-holder" bgcolor="#efefef" style="padding-top:27px;padding-left:10px;padding-right:10px;padding-bottom:40px">
 										<table width="100%" cellspacing="0" cellpadding="0">
 											<tr>
-												<td valign="top" align="left" style="padding-bottom:16px; font-size:12px; line-height:12px; font-family:Arial, Helvetica, sans-serif; text-transform:capitalize; color:#919191;"><strong style="font-weight:bold;">McDonald‘s Feedback</strong> – Report </td>
+												<td valign="top" align="center" style="padding-bottom:16px;font-size:20px;line-height:22px;font-family:Arial,Helvetica,sans-serif;text-transform:capitalize;color:#ac1a1a"><strong style="font-weight:bold">Opportunity</strong>  Recieved</td>
+											</tr>
+                                            <tr>
+												<td valign="top" align="left" style="padding-bottom:25px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191">Sentimeter received negative feedbacks recently. The details of the complaints are as follows:</td>
+											</tr>
+                                            <tr>
+												<td width="100%" valign="top" align="left">
+													<table width="100%" cellspacing="0" cellpadding="0">
+														<tbody>
+                                                        {% for single_feedback in feedback %}
+                                                        <tr>
+															<td valign="top" align="left" bgcolor="white" style="border-left:1px solid #ac1a1a;padding-top:15px;padding-bottom:7px">
+																<table width="100%" cellspacing="0" cellpadding="0">
+																	<tbody><tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Name:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191">{{ single_feedback.user_name }}</td>
+																	</tr>
+																	<tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Contact No:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191"><a style="color:#919191;text-decoration:none"><span style="color:#919191;text-decoration:none">{{ single_feedback.user_phone }}</span></a></td>
+																	</tr>
+																	<tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Email Address:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191"><a href="mailto:{{ single_feedback.email }}" style="color:#919191;text-decoration:none" target="_blank"><span style="color:#919191;text-decoration:none">{{ single_feedback.email }}</span></a></td>
+																	</tr>
+																	<tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Branch:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191">{{ single_feedback.branch }}</td>
+																	</tr>
+																	<tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Segment:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191">{{ single_feedback.segment }}</td>
+																	</tr>
+																	<tr>
+																		<td valign="top" align="right" width="141" style="padding-bottom:8px;padding-left:5px;font-size:14px;line-height:18px;font-weight:bold;text-transform:capitalize;font-family:Arial,Helvetica,sans-serif;color:#919191">Comments:</td>
+																		<td valign="top" align="left" width="286" style="padding-bottom:8px;padding-left:15px;font-size:14px;line-height:18px;font-family:Arial,Helvetica,sans-serif;color:#919191">{{ single_feedback.comment }}</td>
+																	</tr>
+																</tbody></table>
+															</td>
+														</tr>
+                                                        <tr>
+															<td valign="top" align="left" height="10" bgcolor="#efefef" style="font-size:0;line-height:0">&nbsp;</td>
+														</tr>
+                                                        {% endfor %}
+														<tr>
+															<td valign="top" align="left" height="10" style="font-size:0;line-height:0">&nbsp;</td>
+														</tr>
+
+                                                        <tr>
+                                                            <td valign="top" align="center" style="font-size:14px; line-height:37px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; color:#ffffff;"><a href="{{ feedback.server_link }}" target="_blank" style="color:#ffffff; display:block; width:100%; background:#ac1a1a; text-decoration:none;"><span style="color:#ffffff; background:#ac1a1a; display:block; width:100%; text-decoration:none;">View Analytics</span></a>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+															<td valign="top" align="left" height="10" style="font-size:0;line-height:0">&nbsp;</td>
+														</tr>
+													</tbody></table>
+												</td>
 											</tr>
 										</table>
 									</td>
 								</tr>
-                                {% for single_feedback in feedback  %}
-                                <tr>
-									<td valign="top" align="center" bgcolor="#efefef" class="info-text" style="padding-top:27px; padding-left:10px; padding-right:10px; padding-bottom:40px;">
-										<table width="100%" cellspacing="0" cellpadding="0" style="max-width:460px;">
-                                            <tr>
-                                            	<td valign="top" align="left" style="border-left:1px solid #ac1a1a;">
-                                                	<table width="100%" cellspacing="0" cellpadding="0">
-                                                    	<tr>
-                                                            <td valign="top" align="right" width="141" style="padding-bottom:20px; padding-left:5px; font-size:14px; line-height:18px; font-weight:bold; text-transform:capitalize; font-family:Arial, Helvetica, sans-serif; color:#919191;">Name:</td>
-                                                           <td valign="top" align="left" width="286" class="detail-text" style="padding-bottom:20px; padding-left:20px; font-size:14px; line-height:18px; font-family:Arial, Helvetica, sans-serif; color:#919191;">
-                                                            {{ single_feedback.user_name }}
-                                                           </td>
-                                                        </tr>
-                                                        <tr>
-                                                        	<td valign="top" align="right" width="141" style="padding-bottom:20px; padding-left:5px; font-size:14px; line-height:18px; font-weight:bold; text-transform:capitalize; font-family:Arial, Helvetica, sans-serif; color:#919191;">Contact Number:</td>
-                                                           <td valign="top" align="left" width="286" class="detail-text" style="padding-bottom:20px; padding-left:20px; font-size:14px; line-height:18px; font-family:Arial, Helvetica, sans-serif; color:#919191;"><a href="tel:{{ single_feedback.user_phone }}" style="color:#919191; text-decoration:none;"><span style="color:#919191; text-decoration:none;">{{ single_feedback.user_phone }}</span></a></td>
-                                                        </tr>
-                                                        <tr>
-                                                        	<td valign="top" align="right" width="141" style="padding-bottom:20px; padding-left:5px; font-size:14px; line-height:18px; font-weight:bold; text-transform:capitalize; font-family:Arial, Helvetica, sans-serif; color:#919191;">Email Address:</td>
-                                                           <td valign="top" align="left" width="286" class="detail-text" style="padding-bottom:20px; padding-left:20px; font-size:14px; line-height:18px; font-family:Arial, Helvetica, sans-serif; color:#919191;"><a style="color:#919191; text-decoration:none;"><span style="color:#919191; text-decoration:none;">{{ single_feedback.email }}</span></a></td>
-                                                        </tr>
-                                                        <tr>
-                                                        	<td valign="top" align="right" width="141" style="padding-bottom:20px; padding-left:5px; font-size:14px; line-height:18px; font-weight:bold; text-transform:capitalize; font-family:Arial, Helvetica, sans-serif; color:#919191;">Branch:</td>
-                                                           <td valign="top" align="left" width="286" class="detail-text" style="padding-bottom:20px; padding-left:20px; font-size:14px; line-height:18px; font-family:Arial, Helvetica, sans-serif; color:#919191;"><a style="color:#919191; text-decoration:none;"><span style="color:#919191; text-decoration:none;">{{ single_feedback.branch }}</span></a></td>
-                                                        </tr>
-                                                        <tr>
-                                                        	<td valign="top" align="right" width="141" style="padding-bottom:14px; padding-left:5px; font-size:14px; line-height:18px; font-weight:bold; text-transform:capitalize; font-family:Arial, Helvetica, sans-serif; color:#919191;">Comment:</td>
-                                                           <td valign="top" align="left" width="286" class="detail-text" style="padding-bottom:14px; padding-left:20px; font-size:14px; line-height:18px; font-family:Arial, Helvetica, sans-serif; color:#919191;">
-                                                               {% if single_feedback.comment|length > 0 %}
-                                                                {{ single_feedback.comment }}
-                                                               {% else %}
-                                                                 N/A
-                                                               {% endif %}
-                                                           </td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                            	<td valign="top" align="left" height="28">&nbsp;</td>
-                                            </tr>
-										</table>
-									</td>
-								</tr>
-                                {% endfor %}
-
                                 <tr>
 									<td valign="top" align="left" height="18">&nbsp;</td>
 								</tr>
-
-                                <tr>
-                                	<td valign="top" align="left" class="text-holder">
-                                    	<table width="100%" cellspacing="0" cellpadding="0">
-                                        	<tr>
-                                            	<td valign="top" align="left" style="font-size:11px; line-height:15px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; color:#919191;">McFeedback Service</td>
-                                            </tr>
-                                            <tr>
-                                            	<td valign="top" align="left" style="font-size:11px; line-height:15px; font-family:Arial, Helvetica, sans-serif; color:#bbbbbb;">You are receiving this email because you are subscribed for notification for this branch! &nbsp;&nbsp;&nbsp;<strong style="font-weight:bold;"><a href="" target="_blank" style="color:#bbbbbb; text-decoration:none;"><span style="color:#bbbbbb; text-decoration:none;">Unsubscribed</span></a></strong></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
+								<tr>
+									<td valign="top" align="left">
+										<table width="100%" cellspacing="0" cellpadding="0">
+											<tbody><tr>
+												<td valign="top" align="left" style="font-size:12px;line-height:15px;font-family:Arial,Helvetica,sans-serif;color:#bbbbbb">© 2016 Sentimeter Inc.</td>
+											</tr>
+										</tbody></table>
+									</td>
+								</tr>
+								<tr>
+									<td valign="top" align="left">
+										<table width="100%" cellspacing="0" cellpadding="0">
+											<tbody><tr>
+												<td valign="top" align="left" style="font-size:11px;line-height:15px;font-family:Arial,Helvetica,sans-serif;color:#bbbbbb">You are recieving this email because you have subscribed for notifications for this branch! &nbsp;<strong style="font-weight:bold"><a href="http://sentimeter.io/" style="color:#aaaaaa;text-decoration:none" target="_blank"><span style="color:#aaaaaa;text-decoration:none">Unsubscribe</span></a></strong></td>
+											</tr>
+										</tbody></table>
+									</td>
+								</tr>
+								<tr>
+									<td valign="top" align="left">
+										<table width="100%" cellspacing="0" cellpadding="0">
+											<tbody><tr>
+												<td valign="top" align="left" style="font-size:11px;line-height:15px;font-family:Arial,Helvetica,sans-serif;color:#bbbbbb">Mailing Address: 2035 Central Circle, Suite 201, McKinney, TX, 75069, USA</td>
+											</tr>
+										</tbody></table>
+									</td>
+								</tr>
 							</table>
 						</td>
 					</tr>

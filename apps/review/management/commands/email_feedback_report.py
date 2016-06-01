@@ -12,7 +12,10 @@ class Command(BaseCommand):
 
         all_feedback = Feedback.objects.filter(is_emailed=False)
         feedback_comments = [feedback.feedback_comment_dict() for feedback in all_feedback]
-        send_feedback_email_report(feedback_comments)
-        all_feedback.update(is_emailed=True)
 
-        self.stdout.write("Successfully reported")
+        if all_feedback:
+            send_feedback_email_report(feedback_comments)
+            all_feedback.update(is_emailed=True)
+            self.stdout.write("Successfully Reported!")
+        else:
+            self.stdout.write("No Report Generated!")
