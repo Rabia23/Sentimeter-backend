@@ -138,14 +138,6 @@ def generate_option_group(data, options):
     return option_groups
 
 
-def generate_option_data(option):
-    return {
-        "option_text": option.text,
-        "option_id": option.id,
-        "option_color_code": option.color_code,
-    }
-
-
 def generate_missing_segments(segment_data):
     list_feedback_segment_ids = []
     segment_feedback = []

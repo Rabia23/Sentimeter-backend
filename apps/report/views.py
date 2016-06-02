@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.area.models import Area
 from apps.branch.models import Branch
-from apps.option.utils import generate_missing_options, generate_option_data, generate_missing_segments
+from apps.option.utils import generate_missing_options, generate_missing_segments
 from apps.person.enum import UserAgeEnum
 from apps.person.utils import generate_gender_division
 from apps.question.models import Question
@@ -65,7 +65,7 @@ class ReportView(APIView):
                 sub_option_feedback = feedback_options.filter(option=child_option).values_list('feedback_id')
                 sub_option_segments_feedback = Feedback.objects.filter(id__in=sub_option_feedback).values('segment').annotate(count=Count('segment'))
                 sub_options_segments_list.append({'option_name': child_option.text, 'segments': generate_missing_segments(sub_option_segments_feedback)})
-            options_data.append({'option_object': generate_option_data(option), 'segments': generate_missing_segments(segments_feedback), 'sub_option_segments': sub_options_segments_list})
+            options_data.append({'option_object': option.to_object_dict(), 'segments': generate_missing_segments(segments_feedback), 'sub_option_segments': sub_options_segments_list})
 
         return options_data
 
