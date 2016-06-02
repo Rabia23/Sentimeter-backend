@@ -56,15 +56,16 @@ class ReportView(APIView):
         feedback_options = FeedbackOption.manager.date(date_from, date_to).filters(region_id, city_id, branch_id)
 
         for option in options:
-            option_feedbacks = feedback_options.filter(option=option).values_list('feedback_id')
-            segments_feedbacks = Feedback.objects.filter(id__in=option_feedbacks).values('segment').annotate(count=Count('segment'))
             sub_options_segments_list = []
-            children_options = option.children.all()
-            for child_option in children_options:
-                 sub_option_feedbacks = feedback_options.filter(option=child_option).values_list('feedback_id')
-                 sub_option_segments_feedbacks = Feedback.objects.filter(id__in=sub_option_feedbacks).values('segment').annotate(count=Count('segment'))
-                 sub_options_segments_list.append({'option_name': child_option.text, 'segments': generate_missing_segments(sub_option_segments_feedbacks)})
-            options_data.append({'option_object': generate_option_data(option), 'segments': generate_missing_segments(segments_feedbacks), 'sub_option_segments': sub_options_segments_list})
+
+            option_feedback = feedback_options.filter(option=option).values_list('feedback_id')
+            segments_feedback = Feedback.objects.filter(id__in=option_feedback).values('segment').annotate(count=Count('segment'))
+
+            for child_option in option.children.all():
+                sub_option_feedback = feedback_options.filter(option=child_option).values_list('feedback_id')
+                sub_option_segments_feedback = Feedback.objects.filter(id__in=sub_option_feedback).values('segment').annotate(count=Count('segment'))
+                sub_options_segments_list.append({'option_name': child_option.text, 'segments': generate_missing_segments(sub_option_segments_feedback)})
+            options_data.append({'option_object': generate_option_data(option), 'segments': generate_missing_segments(segments_feedback), 'sub_option_segments': sub_options_segments_list})
 
         return options_data
 

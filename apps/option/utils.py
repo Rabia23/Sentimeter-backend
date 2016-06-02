@@ -156,8 +156,9 @@ def generate_missing_segments(segment_data):
 
     for segment_id in list(SegmentEnum.labels.keys()):
         if segment_id in list_feedback_segment_ids:
-            segment_list = [x for x in segment_feedback if x['segment'] == segment_id]
-            segment_list[0]['segment_name'] = SegmentEnum.labels[segment_id]
+            for obj in segment_feedback:
+                if obj['segment'] == segment_id:
+                    obj['segment_name'] = SegmentEnum.labels[segment_id]
 
         else:
             segment_feedback.append({'count': 0, 'segment': segment_id, 'segment_name': SegmentEnum.labels[segment_id]})
