@@ -136,3 +136,30 @@ def generate_option_group(data, options):
             "option__color_code": option.color_code,
         })
     return option_groups
+
+
+def generate_option_data(option):
+    return {
+        "option_text": option.text,
+        "option_id": option.id,
+        "option_color_code": option.color_code,
+    }
+
+
+def generate_missing_segments(segment_data):
+    list_feedback_segment_ids = []
+    segment_feedback = []
+
+    if segment_data:
+        list_feedback_segment_ids = [item['segment'] for item in segment_data]
+        segment_feedback = list(segment_data)
+
+    for segment_id in list(SegmentEnum.labels.keys()):
+        if segment_id in list_feedback_segment_ids:
+            segment_list = [x for x in segment_feedback if x['segment'] == segment_id]
+            segment_list[0]['segment_name'] = SegmentEnum.labels[segment_id]
+
+        else:
+            segment_feedback.append({'count': 0, 'segment': segment_id, 'segment_name': SegmentEnum.labels[segment_id]})
+
+    return sorted(segment_feedback, key=itemgetter('segment'))
