@@ -535,6 +535,7 @@ class Concern(models.Model):
                 "id": self.id,
                 "name": self.keyword.capitalize(),
                 "weight": self.count,
+                "color_code": self.color_code
             }
             return concern
         except Exception as e:

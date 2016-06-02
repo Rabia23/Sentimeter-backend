@@ -30,6 +30,14 @@ class Option(models.Model):
         }
         return option
 
+    def to_object_dict(self):
+        option = {
+            "id": self.id,
+            "text": self.text,
+            "color_code": self.color_code
+        }
+        return option
+
     @staticmethod
     def get_if_exists(object_id):
         option = Option.objects.filter(objectId=object_id).first()

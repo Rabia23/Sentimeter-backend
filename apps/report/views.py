@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from apps.area.models import Area
 from apps.branch.models import Branch
-from apps.option.utils import generate_missing_options, generate_segmentation_with_options, generate_segmentation
+from apps.option.utils import generate_missing_options, generate_missing_segments
 from apps.person.enum import UserAgeEnum
 from apps.person.utils import generate_gender_division
 from apps.question.models import Question
@@ -49,20 +49,25 @@ class ReportView(APIView):
 
         return {'feedback_count': feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
 
-    def _get_segmentation_rating(self, date_from, date_to, region_id, city_id, branch_id):
-
+    def _get_segments(self, date_from, date_to, region_id, city_id, branch_id):
+        options_data = []
         question = Question.objects.get(type=constants.TYPE_2)
         options = question.options.all()
-        feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to).filters(region_id, city_id, branch_id)
-        feedback_segmented_list = generate_segmentation_with_options(feedback_options, options)
+        feedback_options = FeedbackOption.manager.date(date_from, date_to).filters(region_id, city_id, branch_id)
 
-        sub_options_segments_list = []
         for option in options:
-            children_options = option.children.all()
-            children_feedback_options = FeedbackOption.manager.options(children_options).date(date_from, date_to).filters(region_id, city_id, branch_id)
-            sub_options_segments_list.append({'option_name': option.text, 'sub_option_segments_list': generate_segmentation_with_options(children_feedback_options, children_options)})
+            sub_options_segments_list = []
 
-        return {'segment_count': len(feedback_segmented_list), 'segments': feedback_segmented_list, 'sub_options_segments': sub_options_segments_list}
+            option_feedback = feedback_options.filter(option=option).values_list('feedback_id')
+            segments_feedback = Feedback.objects.filter(id__in=option_feedback).values('segment').annotate(count=Count('segment'))
+
+            for child_option in option.children.all():
+                sub_option_feedback = feedback_options.filter(option=child_option).values_list('feedback_id')
+                sub_option_segments_feedback = Feedback.objects.filter(id__in=sub_option_feedback).values('segment').annotate(count=Count('segment'))
+                sub_options_segments_list.append({'option_name': child_option.text, 'segments': generate_missing_segments(sub_option_segments_feedback)})
+            options_data.append({'option_object': option.to_object_dict(), 'segments': generate_missing_segments(segments_feedback), 'sub_option_segments': sub_options_segments_list})
+
+        return options_data
 
     def _get_opportunity_analysis(self, date_from, date_to, region_id, city_id, branch_id):
         feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to).filters(region_id, city_id, branch_id)
@@ -158,7 +163,7 @@ class ReportView(APIView):
 
             data = {
                 "benchmark_analysis": self._get_benchmark_counts(date_from_str, date_to_str),
-                "segmentation_rating": self._get_segmentation_rating(date_from_str, date_to_str, region_id, city_id, branch_id),
+                "segmentation_rating": self._get_segments(date_from_str, date_to_str, region_id, city_id, branch_id),
                 "overall_rating": self._get_overall_feedback(date_from_str, date_to_str, region_id, city_id, branch_id),
                 "patch_analysis": self._get_patch_analysis(date_from_str, date_to_str, region_id, city_id, branch_id),
                 "complaint_view": self._get_complaint_view(date_from_str, date_to_str, region_id, city_id, branch_id),
