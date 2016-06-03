@@ -14,7 +14,7 @@ class Command(BaseCommand):
         feedback_comments = [feedback.feedback_comment_dict() for feedback in all_feedback]
 
         if all_feedback:
-            send_feedback_email_report(feedback_comments)
+            send_feedback_email_report.delay(feedback_comments)
             all_feedback.update(is_emailed=True)
             self.stdout.write("Successfully Reported!")
         else:

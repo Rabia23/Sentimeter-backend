@@ -199,6 +199,10 @@ class Feedback(models.Model):
     def comment_exists(self):
         return True if self.comment else False
 
+    def mark_for_report(self):
+        self.is_emailed = False
+        self.save()
+
     def mark_feedback_status(self):
         if not self.is_negative():
             self.action_taken = ActionStatusEnum.NOACTIONNEEDED
