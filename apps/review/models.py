@@ -395,6 +395,28 @@ class Feedback(models.Model):
         except Exception as e:
             return {}
 
+    def feedback_report_comment_dict(self):
+        try:
+            feedback = {
+                "id": self.id,
+                "objectId": self.objectId,
+                "comment": self.comment,
+                "action_comment": self.action_comment,
+                "branch": self.branch.name,
+                "city": self.branch.city.name,
+                "region": self.branch.city.region.name,
+                "user_name": self.customer_name(),
+                "user_phone": self.customer_phone(),
+                "segment": self.get_segment(),
+                "shift": self.get_shift(),
+                "is_negative": self.is_negative(),
+                "action_taken": self.action_taken,
+                "email": self.customer_email(),
+            }
+            return feedback
+        except Exception as e:
+            return {}
+
 
 class FeedbackOptionQuerySet(models.QuerySet):
     def question(self, question_type):

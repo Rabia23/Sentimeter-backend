@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         all_feedback = Feedback.objects.filter(is_emailed=False)
-        feedback_comments = [feedback.feedback_comment_dict() for feedback in all_feedback]
+        feedback_comments = [feedback.feedback_report_comment_dict() for feedback in all_feedback]
 
         if all_feedback:
             send_feedback_email_report.delay(feedback_comments)
