@@ -12,6 +12,7 @@ from dateutil import tz
 from django.utils import timezone
 from apps.region.models import Region
 from apps.review.enum import ActionStatusEnum, SegmentEnum
+from apps.table.models import Table
 
 
 class FeedbackQuerySet(models.QuerySet):
@@ -93,6 +94,7 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(db_index=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
+    table = models.ForeignKey(Table, related_name='table', null=True, blank=True)
 
     objects = models.Manager()
     manager = FeedbackManager()
