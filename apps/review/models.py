@@ -84,7 +84,6 @@ class FeedbackManager(models.Manager):
 class Feedback(models.Model):
     comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
-    objectId = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
     segment = models.IntegerField(null=True, blank=True, db_index=True)
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
@@ -359,7 +358,6 @@ class Feedback(models.Model):
     def to_dict(self):
         try:
             feedback = {
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "branch": self.branch.name,
                 "city": self.branch.city.name,
@@ -375,7 +373,6 @@ class Feedback(models.Model):
         try:
             feedback = {
                 "id": self.id,
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "action_comment": self.action_comment,
                 "branch": self.branch.name,
@@ -399,7 +396,6 @@ class Feedback(models.Model):
         try:
             feedback = {
                 "id": self.id,
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "action_comment": self.action_comment,
                 "branch": self.branch.name,
