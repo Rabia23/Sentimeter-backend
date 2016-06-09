@@ -12,6 +12,7 @@ from dateutil import tz
 from django.utils import timezone
 from apps.region.models import Region
 from apps.review.enum import ActionStatusEnum, SegmentEnum
+from apps.table.models import Table
 
 
 class FeedbackQuerySet(models.QuerySet):
@@ -84,7 +85,6 @@ class FeedbackManager(models.Manager):
 class Feedback(models.Model):
     comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
-    objectId = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
     segment = models.IntegerField(null=True, blank=True, db_index=True)
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
@@ -94,6 +94,7 @@ class Feedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(db_index=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
+    table = models.ForeignKey(Table, related_name='table', null=True, blank=True)
 
     objects = models.Manager()
     manager = FeedbackManager()
@@ -359,7 +360,6 @@ class Feedback(models.Model):
     def to_dict(self):
         try:
             feedback = {
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "branch": self.branch.name,
                 "city": self.branch.city.name,
@@ -375,7 +375,6 @@ class Feedback(models.Model):
         try:
             feedback = {
                 "id": self.id,
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "action_comment": self.action_comment,
                 "branch": self.branch.name,
@@ -399,7 +398,6 @@ class Feedback(models.Model):
         try:
             feedback = {
                 "id": self.id,
-                "objectId": self.objectId,
                 "comment": self.comment,
                 "action_comment": self.action_comment,
                 "branch": self.branch.name,
