@@ -12,12 +12,12 @@ class Question(models.Model):
     text_urdu = models.CharField(max_length=255)
     isActive = models.BooleanField(default=True, db_index=True)
     type = models.IntegerField(db_index=True)
-    objectId = models.CharField(max_length=20, db_index=True, null=True, blank=True)
     genreType = models.IntegerField(db_index=True, null=True, blank=True)
     promotion = models.ForeignKey(Promotion, related_name='questions', null=True, blank=True)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questions', null=True, blank=True)
     image = models.ImageField(storage=s3, blank=True, null=True, upload_to='questions')
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    sequence = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
         return self.text
@@ -33,7 +33,7 @@ class Question(models.Model):
             "text_urdu": self.text_urdu,
             "isActive": self.isActive,
             "type": self.type,
-            "objectId": self.objectId,
+            "sequence": self.sequence,
             "genreType": self.genreType,
             "image": self.image.url if self.image else None,
             "created_at": self.created_at,
