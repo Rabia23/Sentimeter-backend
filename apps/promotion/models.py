@@ -10,7 +10,6 @@ class Promotion(models.Model):
     toggle_colors = models.BooleanField(default=True, db_index=True)
     color_selected = models.CharField(max_length=10, blank=True, null=True)
     color_unselected = models.CharField(max_length=10, blank=True, null=True)
-    objectId = models.CharField(max_length=20, db_index=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     banner_image = models.ImageField(storage=s3, blank=True, null=True, upload_to='promotions')
     background_image = models.ImageField(storage=s3, blank=True, null=True, upload_to='promotions')
@@ -22,7 +21,6 @@ class Promotion(models.Model):
         promotion = {
             "title": self.title,
             "isActive": self.isActive,
-            "objectId": self.objectId,
             "toggle_colors": self.toggle_colors,
             "color_selected": self.color_selected,
             "color_unselected": self.color_unselected,
