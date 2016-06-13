@@ -75,6 +75,7 @@ class OverallFeedbackView(APIView):
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         now = datetime.now()
+        data = []
 
         try:
             region_id, city_id, branch_id = get_user_data(user)
@@ -82,13 +83,16 @@ class OverallFeedbackView(APIView):
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
-            feedback_options = FeedbackOption.manager.question(constants.TYPE_1).\
-                                            date(date_from, date_to).filters(region_id, city_id, branch_id)
-            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
-                annotate(count=Count('option_id'))
-            list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_1), feedback_options_dict)
+            questions = Question.objects.filter(type=constants.TYPE_1)
 
-            data = {'feedback_count': feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
+            for question in questions:
+                options = question.options.all()
+                feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to).filters(region_id, city_id, branch_id)
+                feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
+                    annotate(count=Count('option_id'))
+                list_feedback = generate_missing_options(question, feedback_options_dict)
+
+                data.append({'question': question.text, 'feedback_count': feedback_options.count(), 'feedback': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))})
             return Response(response_json(True, data, None))
 
         except Exception as e:
@@ -711,12 +715,18 @@ class LiveDashboardView(APIView):
         return feedback_segmented_list[feedback_segmented_counts.index(max(feedback_segmented_counts))]
 
     def _get_overall_feedback(self, date_from, date_to):
-        feedback_options = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to)
-        feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
-            annotate(count=Count('option_id'))
-        list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_1), feedback_options_dict)
+        data = []
 
-        return {'feedback_count': feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
+        questions = Question.objects.filter(type=constants.TYPE_1)
+        for question in questions:
+            options = question.options.all()
+            feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to)
+            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
+                annotate(count=Count('option_id'))
+            list_feedback = generate_missing_options(question, feedback_options_dict)
+            data.append({'question': question.text, 'feedback_count': feedback_options.count(), 'feedback': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))})
+
+        return data
 
     def _get_segmentation_rating(self, date_from, date_to):
         question = Question.objects.get(type=constants.TYPE_2)
@@ -848,6 +858,7 @@ class OpportunityAnalysisView(APIView):
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         now = datetime.now()
+        data = []
 
         try:
             region_id, city_id, branch_id = get_user_data(user)
@@ -855,14 +866,15 @@ class OpportunityAnalysisView(APIView):
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
-            feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to).\
-                filters(region_id, city_id, branch_id)
-            feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
-                annotate(count=Count('option_id'))
+            questions = Question.objects.filter(type=constants.TYPE_3)
 
-            list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_3), feedback_options_dict)
-
-            data = {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
+            for question in questions:
+                options = question.options.all()
+                feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to).filters(region_id, city_id, branch_id)
+                feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score', 'option__color_code').\
+                    annotate(count=Count('option_id'))
+                list_feedback = generate_missing_options(question, feedback_options_dict)
+                data.append({'question': question.text, 'feedback_count': feedback_options.count(), 'feedback': list_feedback})
             return Response(response_json(True, data, None))
 
         except Exception as e:
