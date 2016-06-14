@@ -83,7 +83,7 @@ class OverallFeedbackView(APIView):
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
-            questions = Question.objects.filter(type=constants.TYPE_1)
+            questions = Question.objects.filter(type=constants.TYPE_1, isActive=True)
 
             for question in questions:
                 options = question.options.all()
@@ -114,7 +114,12 @@ class FeedbackAnalysisView(APIView):
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
-            feedback_options = FeedbackOption.manager.question(question_type).date(date_from, date_to)
+            if question_type == str(constants.TYPE_1):
+                question = Question.objects.filter(type=constants.TYPE_1, isActive=True).order_by('created_at').first()
+                feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to)
+            else:
+                question = Question.objects.get(type=question_type)
+                feedback_options = FeedbackOption.manager.question(question_type).date(date_from, date_to)
 
             if type == constants.CITY_ANALYSIS:
                 region_id = get_param(request, 'region', None)
@@ -149,7 +154,8 @@ class FeedbackAnalysisView(APIView):
                 related_feedback_options = feedback_options.related_filters(type, object)
                 filtered_feedback_options = related_feedback_options.values(
                     'option_id', 'option__text', 'option__parent_id', 'option__color_code').annotate(count=Count('option_id'))
-                list_feedback = generate_missing_options(Question.objects.get(type=question_type), filtered_feedback_options)
+
+                list_feedback = generate_missing_options(question, filtered_feedback_options)
 
                 data = {'feedback_count': related_feedback_options.count(), 'feedbacks': list_feedback}
                 feedbacks.append({'object': ObjectSerializer(object).data, 'data': data})
@@ -866,7 +872,7 @@ class OpportunityAnalysisView(APIView):
             date_to = get_param(request, 'date_to', str(now.date()))
             date_from = get_param(request, 'date_from', str((now - timedelta(days=1)).date()))
 
-            questions = Question.objects.filter(type=constants.TYPE_3)
+            questions = Question.objects.filter(type=constants.TYPE_3, isActive=True)
 
             for question in questions:
                 options = question.options.all()
