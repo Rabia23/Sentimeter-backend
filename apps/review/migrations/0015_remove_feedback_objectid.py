@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0014_feedback_table'),
+        ('review', '0013_feedback_is_emailed'),
     ]
 
     operations = [
