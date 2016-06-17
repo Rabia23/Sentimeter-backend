@@ -952,7 +952,7 @@ class ClientQuestionsView(APIView):
         promotion = None
         try:
             branch_id = get_param(request, 'branch_id', None)
-            normal_questions = Question.objects.filter(genreType=0, isActive=True).order_by("type")
+            normal_questions = Question.objects.filter(genreType=0, isActive=True).order_by("sequence")
 
             questionnaire = Questionnaire.objects.filter(branch=branch_id, isActive=True).first()
             if not questionnaire:
@@ -962,6 +962,7 @@ class ClientQuestionsView(APIView):
                     'questionnaire': questionnaire.to_dict() if questionnaire else None,
                     'promotion': promotion.to_dict() if promotion and not questionnaire else None}
             return Response(response_json(True, data, None))
+
 
         except Branch.DoesNotExist as e:
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
