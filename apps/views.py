@@ -963,6 +963,7 @@ class ClientQuestionsView(APIView):
                     'promotion': promotion.to_dict() if promotion and not questionnaire else None}
             return Response(response_json(True, data, None))
 
+
         except Branch.DoesNotExist as e:
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
