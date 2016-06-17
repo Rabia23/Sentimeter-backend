@@ -9,8 +9,9 @@ from apps.region.serializers import RegionSerializer
 class UserInfo(models.Model):
     phone_no = models.CharField(max_length=20, null=True, blank=True, db_index=True)
     role = models.IntegerField(default=1, db_index=True)
-    gender = models.IntegerField( db_index=True, null=True, blank=True)
-    ageGroup = models.IntegerField( db_index=True, null=True, blank=True)
+    gender = models.IntegerField(db_index=True, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    ageGroup = models.IntegerField(db_index=True, null=True, blank=True)
     user = models.ForeignKey(User, related_name='info')
     branch = models.ForeignKey(Branch, related_name='user_info', null=True, blank=True)
     region = models.ForeignKey(Region, related_name='user_info', null=True, blank=True)
@@ -26,6 +27,7 @@ class UserInfo(models.Model):
             "last_name": self.user.last_name,
             "email": self.user.email,
             "phone_no": self.phone_no,
+            "date_of_birth": self.date_of_birth,
             "role": self.role,
             "branch": BranchSerializer(self.branch).data if self.branch else None,
             "region": RegionSerializer(self.region).data if self.region else None,
@@ -43,6 +45,7 @@ class UserInfo(models.Model):
                 "last_name": self.parent.user.last_name,
                 "email": self.parent.user.email,
                 "phone_no": self.parent.phone_no,
+                "date_of_birth": self.date_of_birth,
                 "role": self.parent.role,
                 "branch": BranchSerializer(self.parent.branch).data if self.parent.branch else None,
                 "region": RegionSerializer(self.parent.region).data if self.parent.region else None,

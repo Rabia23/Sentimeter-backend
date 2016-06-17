@@ -50,8 +50,8 @@ class FeedbackView(APIView):
                 feedback.keyword_analysis()
                 feedback.mark_segment()
 
-                q = RedisQueue('feedback_redis_queue')
-                q.put(str(get_live_record()))
+                # q = RedisQueue('feedback_redis_queue')
+                # q.put(str(get_live_record()))
                 # q.put("ping")
 
                 if feedback.is_negative() and feedback.not_empty():
