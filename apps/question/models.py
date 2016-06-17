@@ -26,7 +26,7 @@ class Question(models.Model):
         if self.type and self.type == constants.TYPE_1:
             options = [option.to_dict() for option in self.options.filter(isActive=True).order_by("-score")]
         else:
-            options = [option.to_dict() for option in self.options.filter(isActive=True).order_by("created_at")]
+            options = [option.to_dict() for option in self.options.filter(isActive=True).order_by("sequence")]
         question = {
             "id": self.id,
             "text": self.text,

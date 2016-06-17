@@ -952,7 +952,7 @@ class ClientQuestionsView(APIView):
         promotion = None
         try:
             branch_id = get_param(request, 'branch_id', None)
-            normal_questions = Question.objects.filter(genreType=0, isActive=True).order_by("type")
+            normal_questions = Question.objects.filter(genreType=0, isActive=True).order_by("sequence")
 
             questionnaire = Questionnaire.objects.filter(branch=branch_id, isActive=True).first()
             if not questionnaire:
