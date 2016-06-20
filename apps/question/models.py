@@ -12,6 +12,7 @@ class Question(models.Model):
     text_urdu = models.CharField(max_length=255)
     isActive = models.BooleanField(default=True, db_index=True)
     type = models.IntegerField(db_index=True)
+    dashboard_type = models.IntegerField(db_index=True, default=0)
     genreType = models.IntegerField(db_index=True, null=True, blank=True)
     promotion = models.ForeignKey(Promotion, related_name='questions', null=True, blank=True)
     questionnaire = models.ForeignKey(Questionnaire, related_name='questions', null=True, blank=True)
@@ -33,6 +34,7 @@ class Question(models.Model):
             "text_urdu": self.text_urdu,
             "isActive": self.isActive,
             "type": self.type,
+            "dashboard_type": self.dashboard_type,
             "sequence": self.sequence,
             "genreType": self.genreType,
             "image": self.image.url if self.image else None,
