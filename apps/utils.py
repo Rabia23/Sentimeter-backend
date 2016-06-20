@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from django.utils import timezone
 from datetime import datetime, timedelta
 from apps import constants
+from apps.serializers import ObjectSerializer
+from apps.option.serializers import OptionSerializer
 
 __author__ = 'aamish'
 
@@ -147,3 +149,9 @@ def create_user(username, first_name, last_name, email, password):
 
     return user
 
+
+def get_object_data(type, object):
+    if type == constants.TABLE_ANALYSIS:
+        return OptionSerializer(object).data
+    else:
+        return ObjectSerializer(object).data

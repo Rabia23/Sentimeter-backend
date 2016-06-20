@@ -356,6 +356,10 @@ class Feedback(models.Model):
         converted_time = utc.astimezone(to_zone)
         return converted_time.time()
 
+    def get_table(self, feedback_id):
+        options = Question.objects.get(dashboard_type=constants.DASHBOARD_TYPE_1).options.values_list('id')
+        return FeedbackOption.objects.filter(feedback=feedback_id, option__in=options).values('option__id','option__text').first()
+
     def to_dict(self):
         try:
             feedback = {
@@ -382,6 +386,7 @@ class Feedback(models.Model):
                 "user_name": self.customer_name(),
                 "user_phone": self.customer_phone(),
                 "segment": self.get_segment(),
+                "table": self.get_table(self.id),
                 "shift": self.get_shift(),
                 "is_negative": self.is_negative(),
                 "action_taken": self.action_taken,
