@@ -21,7 +21,3 @@ class ObjectSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
 
-
-class OptionObjectSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    text = serializers.CharField()
