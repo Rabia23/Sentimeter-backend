@@ -7,8 +7,8 @@ TRIGGER_AFTER_SAVE = "afterSave"
 #------------ Password for Customers -------------
 CUSTOMER_PASSWORD = "customerpassword"
 
-#------------ Question PK -------------
-PK_7 = 7
+#------------ Question Dashboard Types -------------
+DASHBOARD_TYPE_1 = 1
 
 #------------ Question Types -------------
 TYPE_1 = 1

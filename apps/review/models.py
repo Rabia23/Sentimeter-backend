@@ -357,7 +357,7 @@ class Feedback(models.Model):
         return converted_time.time()
 
     def get_table(self, feedback_id):
-        options = Question.objects.get(pk=constants.PK_7).options.values_list('id')
+        options = Question.objects.get(dashboard_type=constants.DASHBOARD_TYPE_1).options.values_list('id')
         return FeedbackOption.objects.filter(feedback=feedback_id, option__in=options).values('option__id','option__text').first()
 
     def to_dict(self):

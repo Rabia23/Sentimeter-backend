@@ -134,7 +134,7 @@ class FeedbackAnalysisView(APIView):
                 branch_id = get_param(request, 'branch', None)
                 if branch_id:
                     branch = Branch.objects.get(pk=branch_id)
-                objects = Question.objects.get(pk=constants.PK_7).options.all()
+                objects = Question.objects.get(dashboard_type=constants.DASHBOARD_TYPE_1).options.all()
                 options = Question.objects.get(type=question_type).options.values_list('id')
 
             else:
