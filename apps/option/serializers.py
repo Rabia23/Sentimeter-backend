@@ -7,4 +7,4 @@ class OptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Option
-        fields = ('id', 'text', 'score', 'objectId', 'isActive', 'color_code', 'question', 'parent', 'text_urdu')
+        fields = ('id', 'text', 'score', 'isActive', 'color_code', 'question', 'parent', 'text_urdu')
