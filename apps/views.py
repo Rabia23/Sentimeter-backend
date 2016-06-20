@@ -30,7 +30,7 @@ from django.core.paginator import Paginator
 from django.utils import timezone
 from operator import itemgetter
 from apps.decorators import my_login_required
-from apps.utils import get_param, get_data_param, get_user_data, get_user_role, response_json, get_next_day
+from apps.utils import get_param, get_data_param, get_user_data, get_user_role, response_json, get_next_day, get_object_data
 from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta
 from apps import constants
@@ -129,6 +129,14 @@ class FeedbackAnalysisView(APIView):
                     objects = area.regions.all()
                 else:
                     objects = Region.objects.all()
+
+            elif type == constants.TABLE_ANALYSIS:
+                branch_id = get_param(request, 'branch', None)
+                if branch_id:
+                    branch = Branch.objects.get(pk=branch_id)
+                objects = Question.objects.get(pk=constants.PK_7).options.all()
+                options = Question.objects.get(type=question_type).options.values_list('id')
+
             else:
                 role = get_user_role(user)
                 user_region_id, user_city_id, user_branch_id = get_user_data(user)
@@ -142,13 +150,19 @@ class FeedbackAnalysisView(APIView):
                     objects = Area.objects.all()
 
             for object in objects:
-                related_feedback_options = feedback_options.related_filters(type, object)
+                if type == constants.TABLE_ANALYSIS:
+                    table_feedback = FeedbackOption.objects.filter(option=object).values_list('feedback')
+                    table_options_feedback = FeedbackOption.objects.filter(feedback__in=table_feedback, option__in=options)
+                    related_feedback_options = table_options_feedback.filter(feedback__branch__exact=branch.id)
+                else:
+                    related_feedback_options = feedback_options.related_filters(type, object)
+
                 filtered_feedback_options = related_feedback_options.values(
                     'option_id', 'option__text', 'option__parent_id', 'option__color_code').annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(Question.objects.get(type=question_type), filtered_feedback_options)
 
                 data = {'feedback_count': related_feedback_options.count(), 'feedbacks': list_feedback}
-                feedbacks.append({'object': ObjectSerializer(object).data, 'data': data})
+                feedbacks.append({'object': get_object_data(type, object), 'data': data})
 
             feedback_data = {'count': objects.count(), 'analysis': feedbacks}
             return Response(response_json(True, feedback_data, None))

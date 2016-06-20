@@ -7,17 +7,22 @@ TRIGGER_AFTER_SAVE = "afterSave"
 #------------ Password for Customers -------------
 CUSTOMER_PASSWORD = "customerpassword"
 
+#------------ Question PK -------------
+PK_7 = 7
+
 #------------ Question Types -------------
 TYPE_1 = 1
 TYPE_2 = 2
 TYPE_3 = 3
 TYPE_20 = 20
+TYPE_21 = 21
 
 #------------ Feedback Analysis -------------
 REGIONAL_ANALYSIS = '1'
 CITY_ANALYSIS = '2'
 BRANCH_ANALYSIS = '3'
 AREA_ANALYSIS = '3'
+TABLE_ANALYSIS = '4'
 
 DAILY_ANALYSIS = '1'
 WEEK_ANALYSIS = '2'
