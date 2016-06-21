@@ -5,4 +5,4 @@ from apps.questionnaire.models import Questionnaire
 class QuestionnaireSerializer(serializers.ModelSerializer):
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'isActive', 'objectId', 'branch')
+        fields = ('id', 'title', 'isActive', 'branch')
