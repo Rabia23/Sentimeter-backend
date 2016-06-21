@@ -360,6 +360,10 @@ class Feedback(models.Model):
         options = Question.objects.get(dashboard_type=constants.DASHBOARD_TYPE_1).options.values_list('id')
         return FeedbackOption.objects.filter(feedback=feedback_id, option__in=options).values('option__id','option__text').first()
 
+    def get_party_size(self, feedback_id):
+        options = Question.objects.get(dashboard_type=constants.DASHBOARD_TYPE_2).options.values_list('id')
+        return FeedbackOption.objects.filter(feedback=feedback_id, option__in=options).values('option__id','option__text').first()
+
     def to_dict(self):
         try:
             feedback = {

@@ -66,6 +66,8 @@ class FeedbackView(APIView):
                         "customer_email": feedback.customer_email(),
                         "problems": feedback.problems(),
                         "comment": feedback.comment,
+                        "table": feedback.get_table(feedback.id),
+                        "party_size": feedback.get_party_size(feedback.id),
                         "server_link": settings.server_url,
                     }
 

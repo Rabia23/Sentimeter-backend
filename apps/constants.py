@@ -9,6 +9,7 @@ CUSTOMER_PASSWORD = "customerpassword"
 
 #------------ Question Dashboard Types -------------
 DASHBOARD_TYPE_1 = 1
+DASHBOARD_TYPE_2 = 2
 
 #------------ Question Types -------------
 TYPE_1 = 1
