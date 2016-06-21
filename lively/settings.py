@@ -122,12 +122,12 @@ STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
 DIRS = [os.path.join(BASE_DIR,'templates')]
 
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mclivefeed@gmail.com'
-EMAIL_HOST_PASSWORD = 'Arbisoft123'
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_HOST_USER = 'staging.noreply@sentimeter.io'
+EMAIL_HOST_PASSWORD = 'arbisoft@123'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'LiveFeed Support <no-reply@livefeed.com>'
+DEFAULT_FROM_EMAIL = 'Sentimeter Support <staging.noreply@sentimeter.io>'
 
 WEBSOCKET_ADDRESS = '172.16.11.113'
 WEBSOCKET_PORT = '5678'
