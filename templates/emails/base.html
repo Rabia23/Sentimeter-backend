@@ -3,6 +3,65 @@
 <head lang="en">
     <meta name=”viewport” content=”width=device-width, initial-scale=1, maximum-scale=1″>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+		* {
+			-ms-text-size-adjust: 100%;
+			-webkit-text-size-adjust: none;
+			-webkit-text-resize: 100%;
+			text-resize: 100%;
+		}
+		a {
+			outline: none;
+			color: #919191;
+			text-decoration: none;
+		}
+		a:hover {text-decoration: none !important;}
+		a[x-apple-data-detectors] {
+			color: inherit !important;
+			text-decoration: none !important;
+		}
+		.ecxmoz-txt-link-abbreviated {
+			color: inherit !important;
+			text-decoration: none !important;
+		}
+		table td {border-collapse: collapse !important;}
+		.tpl-content {padding: 0 !important;}
+		.ExternalClass,
+		.ExternalClass a,
+		.ExternalClass span,
+		.ExternalClass b,
+		.ExternalClass br,
+		.ExternalClass p,
+		.ExternalClass div {line-height: inherit;}
+
+		@media only screen and (max-width:620px) {
+			/* default style */
+			table[class="flexible"] {width: 100% !important;}
+			/* custom style */
+			td[class="text-holder"] {
+				padding-left: 10px !important;
+				padding-right: 10px !important;
+			}
+			td[class="info-text"] {
+				padding-left: 8px !important;
+				padding-right: 8px !important;
+				padding-top: 20px !important;
+				padding-bottom: 20px !important;
+			}
+			td[class="detail-text"] {
+              padding-left: 10px !important;
+              padding-right: 3px !important;
+            }
+			td[class="text"],
+			td[class="detail-text"],
+			td[class="heading-text"]{
+				font-size: 13px !important;
+				line-height: 18px !important;
+			}
+			td[class="heading-text"]{padding-bottom: 20px !important;}
+			td[class="height"]{height: 10px !important;}
+		}
+	</style>
 </head>
 <body style="margin:0; padding:0; min-width:100%;" bgcolor="#ffffff" link="#919191">
     {% block body %}{% endblock %}
