@@ -48,8 +48,8 @@ VERY_BAD_SCORE = 1
 BAD_SCORE = 2
 
 #------------ Email Constants -------------
-NEGATIVE_FEEDBACK_SUBJECT = "LiveFeed | Negative Feedback Received"
-FEEDBACK_REPORT_SUBJECT = "LiveFeed | Feedback Report"
+NEGATIVE_FEEDBACK_SUBJECT = "Sentimeter | Negative Feedback Received"
+FEEDBACK_REPORT_SUBJECT = "Sentimeter | Feedback Report"
 
 #------------ Feedback Constants -------------
 FEEDBACKS_PER_PAGE = 25
