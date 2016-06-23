@@ -17,16 +17,15 @@ class ActionStatusEnum(enum.Enum):
 
 
 class SegmentEnum(enum.Enum):
-    MORNING = 1
-    AFTERNOON = 2
-    EVENING = 3
-    NIGHT = 4
-    LATE_NIGHT = 5
+    LUNCH = 2
+    EARLY_DINNER = 3
+    MID_DINNER = 4
+    DINNER = 5
 
     labels = {
-        MORNING: "Morning",
-        AFTERNOON: "Afternoon",
-        EVENING: "Evening",
-        NIGHT: "Night",
-        LATE_NIGHT: "Late Night"
+
+        LUNCH: "Lunch",
+        EARLY_DINNER: "Early Dinner",
+        MID_DINNER: "Mid Dinner",
+        DINNER: "Dinner"
     }

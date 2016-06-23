@@ -301,26 +301,23 @@ class Feedback(models.Model):
 
     def mark_segment(self):
         start_time = self.get_time(constants.STARTING_TIME)
-        breakfast_time = self.get_time(constants.BREAKFAST_TIME)
         lunch_time = self.get_time(constants.LUNCH_TIME)
-        snack_time = self.get_time(constants.SNACK_TIME)
+        early_dinner_time = self.get_time(constants.EARLY_DINNER_TIME)
+        mid_dinner_time = self.get_time(constants.MID_DINNER_TIME)
         dinner_time = self.get_time(constants.DINNER_TIME)
-        late_night_time = self.get_time(constants.LATE_NIGHT_TIME)
 
         created_at = self.created_at.time()
 
-        if created_at >= start_time and created_at < breakfast_time:
-            self.segment = SegmentEnum.MORNING
-        elif created_at >= breakfast_time and created_at < lunch_time:
-            self.segment = SegmentEnum.AFTERNOON
-        elif created_at >= lunch_time and created_at < snack_time:
-            self.segment = SegmentEnum.EVENING
-        elif created_at >= snack_time and created_at < dinner_time:
-            self.segment = SegmentEnum.NIGHT
-        elif created_at >= dinner_time:
-            self.segment = SegmentEnum.LATE_NIGHT
-        elif created_at < start_time:
-            self.segment = SegmentEnum.LATE_NIGHT
+        if created_at >= start_time:
+            self.segment = SegmentEnum.LUNCH
+        elif created_at < lunch_time:
+            self.segment = SegmentEnum.LUNCH
+        elif created_at >= lunch_time and created_at < early_dinner_time:
+            self.segment = SegmentEnum.EARLY_DINNER
+        elif created_at >= early_dinner_time and created_at < mid_dinner_time:
+            self.segment = SegmentEnum.MID_DINNER
+        elif created_at >= mid_dinner_time and created_at < dinner_time:
+            self.segment = SegmentEnum.DINNER
         self.save()
 
     def get_shift(self):
