@@ -65,19 +65,17 @@ BRANCH_FEEDBACK_TARGET = 10
 
 
 #------------ Segment Constants -------------
-STARTING_TIME = "01:00"
-BREAKFAST_TIME = "06:00"
-LUNCH_TIME = "10:00"
-SNACK_TIME = "14:00"
-DINNER_TIME = "18:00"
-LATE_NIGHT_TIME = "01:00"
+STARTING_TIME = "20:00"
+LUNCH_TIME = "11:00"
+EARLY_DINNER_TIME = "15:00"
+MID_DINNER_TIME = "17:00"
+DINNER_TIME = "20:00"
 
 segments = {
-    "06:00": "Breakfast",
-    "10:00": "Lunch",
-    "14:00": "Snack",
-    "18:00": "Dinner",
-    "01:00": "Late Night",
+    "11:00": "Lunch",
+    "15:00": "Early Dinner",
+    "17:00": "Mid Dinner",
+    "20:00": "Dinner",
 }
 
 #------------ Shift Constants -------------
