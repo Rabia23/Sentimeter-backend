@@ -90,7 +90,7 @@ def generate_segmentation(data):
 
         segments_list.append({
             "segment_key": item,
-            "segment": label,
+            "segment": SegmentEnum.label(item),
             "option_count": segment_feedback_options.count(),
         })
     return sorted(segments_list, key=itemgetter('segment_key'))
