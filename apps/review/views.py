@@ -12,6 +12,7 @@ from lively._celery import send_negative_feedback_email
 from apps import constants
 from apps.utils import save, response, response_json, get_data_param
 from apps.redis_queue import RedisQueue
+from apps.livedashboard import get_live_record
 from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
 from django.db import IntegrityError, transaction
@@ -38,4 +39,7 @@ class FeedbackBatchView(APIView):
         feedback_array = request.data
         for feedback in feedback_array:
             save_feedback(feedback)
+        q = RedisQueue('feedback_redis_queue')
+        q.put(str(get_live_record()))
+        # q.put("ping")
         return
