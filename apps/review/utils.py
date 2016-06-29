@@ -75,8 +75,8 @@ def save_feedback(data):
                 # send_negative_feedback_email(feedback_json)
                 send_negative_feedback_email.delay(feedback_json)
 
-            return Response(response_json(True, None, None))
-    return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+            return True
+    return False
 
 
 def generate_missing_actions(data):
