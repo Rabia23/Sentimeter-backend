@@ -73,7 +73,7 @@ def save_feedback(data):
                 }
 
                 # send_negative_feedback_email(feedback_json)
-                # send_negative_feedback_email.delay(feedback_json)
+                send_negative_feedback_email.delay(feedback_json)
 
             return True
     return False
