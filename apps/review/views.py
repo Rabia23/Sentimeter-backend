@@ -40,14 +40,11 @@ class FeedbackBatchView(APIView):
     @transaction.atomic
     def post(self, request, format=None):
         feedback_array = request.data
-        flag = True
         for feedback in feedback_array:
             status = save_feedback(feedback)
             if status == False:
-                flag = False
+                return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         q = RedisQueue('feedback_redis_queue')
         q.put(str(get_live_record()))
         # q.put("ping")
-        if flag:
-            return Response(response_json(True, None, "Feedback successfully added"))
-        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+        return Response(response_json(True, None, "Feedback successfully added"))
