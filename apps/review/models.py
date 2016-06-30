@@ -419,6 +419,10 @@ class Feedback(models.Model):
 
 
 class FeedbackOptionQuerySet(models.QuerySet):
+
+    def table(self, table):
+        return self.filter(option=table)
+
     def question(self, question_type):
         question = Question.objects.get(type=question_type)
         return self.filter(option__in=question.options.values_list('id'))
