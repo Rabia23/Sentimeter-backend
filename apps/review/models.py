@@ -289,9 +289,9 @@ class Feedback(models.Model):
         elif created_at < lunch_time:
             return constants.segments[constants.LUNCH_TIME]
         elif created_at >= lunch_time and created_at < early_dinner_time:
-            return constants.segments[constants.EARLY_DINNER]
+            return constants.segments[constants.EARLY_DINNER_TIME]
         elif created_at >= early_dinner_time and created_at < mid_dinner_time:
-            return constants.segments[constants.MID_DINNER]
+            return constants.segments[constants.MID_DINNER_TIME]
         elif created_at >= mid_dinner_time and created_at < dinner_time:
             return constants.segments[constants.DINNER_TIME]
         return ""
