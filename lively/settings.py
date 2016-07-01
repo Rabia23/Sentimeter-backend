@@ -23,6 +23,7 @@ PREREQ_APPS = [
     'rest_framework_swagger',
     'djcelery',
     'haystack',
+    'dbbackup',
 ]
 
 PROJECT_APPS = [
