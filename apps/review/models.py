@@ -355,6 +355,10 @@ class Feedback(models.Model):
         converted_time = utc.astimezone(to_zone)
         return converted_time.time()
 
+    def save_date(self, date):
+        self.created_at = date
+        self.save()
+
     def to_dict(self):
         try:
             feedback = {
@@ -492,6 +496,10 @@ class FeedbackOption(models.Model):
 
     objects = models.Manager()
     manager = FeedbackOptionManager()
+
+    def save_date(self, date):
+        self.created_at = date
+        self.save()
 
     def to_option_dict(self):
         try:
