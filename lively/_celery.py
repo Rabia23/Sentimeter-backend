@@ -66,10 +66,10 @@ def get_recipients(branch_id):
 
     recipients.append(branch_manager)
     recipients.append(operational_consultant)
-    recipients.append(operational_manager)
-
-    [recipients.append(director) for director in director_tier_management]
-    [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
+    # recipients.append(operational_manager)
+    #
+    # [recipients.append(director) for director in director_tier_management]
+    # [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
 
     return recipients
 
