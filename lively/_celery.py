@@ -57,12 +57,12 @@ def get_recipients(branch_id):
     recipients = []
     branch_manager = UserInfo.get_person_dict_by_branch(UserRolesEnum.BRANCH_MANAGER, branch_id)
     operational_consultant = UserInfo.get_person_dict(UserRolesEnum.OPERATIONAL_CONSULTANT, branch_manager["parent"]["id"]) if branch_manager else None
-    operational_manager = UserInfo.get_person_dict(UserRolesEnum.OPERATIONAL_MANAGER, operational_consultant["parent"]["id"]) if operational_consultant else None
+    # operational_manager = UserInfo.get_person_dict(UserRolesEnum.OPERATIONAL_MANAGER, operational_consultant["parent"]["id"]) if operational_consultant else None
     # assistant_director = UserInfo.get_person_dict(UserRolesEnum.ASSISTANT_DIRECTOR, operational_manager["parent"]["id"]) if operational_manager else None
     # director = UserInfo.get_person_dict(UserRolesEnum.DIRECTOR, assistant_director["parent"]["id"]) if assistant_director else None
 
-    director_tier_management = UserInfo.get_people_dict(UserRolesEnum.DIRECTOR)
-    assistant_director_tier_management = UserInfo.get_people_dict(UserRolesEnum.ASSISTANT_DIRECTOR)
+    # director_tier_management = UserInfo.get_people_dict(UserRolesEnum.DIRECTOR)
+    # assistant_director_tier_management = UserInfo.get_people_dict(UserRolesEnum.ASSISTANT_DIRECTOR)
 
     recipients.append(branch_manager)
     recipients.append(operational_consultant)
