@@ -412,6 +412,7 @@ class Feedback(models.Model):
                 "is_negative": self.is_negative(),
                 "action_taken": self.action_taken,
                 "email": self.customer_email(),
+                "time": self.created_at
             }
             return feedback
         except Exception as e:

@@ -30,6 +30,8 @@ class FeedbackView(APIView):
     def post(self, request, format=None):
         status = save_feedback(request.data)
         if status:
+            q = RedisQueue('feedback_redis_queue')
+            q.put(str(get_live_record()))
             return Response(response_json(True, None, "Feedback successfully added"))
 
         return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
