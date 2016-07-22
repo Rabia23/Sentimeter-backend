@@ -21,8 +21,8 @@ class Questionnaire(models.Model):
         return questionnaire
 
     @staticmethod
-    def get_if_exists(object_id):
-        questionnaire = Questionnaire.objects.filter(objectId=object_id).first()
+    def get_if_exists(questionnaire_id):
+        questionnaire = Questionnaire.objects.filter(id=questionnaire_id).first()
         if questionnaire:
             return questionnaire
 

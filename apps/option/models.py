@@ -31,8 +31,8 @@ class Option(models.Model):
         return option
 
     @staticmethod
-    def get_if_exists(object_id):
-        option = Option.objects.filter(objectId=object_id).first()
+    def get_if_exists(option_id):
+        option = Option.objects.filter(id=option_id).first()
         if option:
             return option
 

@@ -100,8 +100,8 @@ class Feedback(models.Model):
         return self.comment
 
     @staticmethod
-    def get_if_exists(objectId):
-        feedback = Feedback.objects.filter(objectId=objectId).first()
+    def get_if_exists(feedback_id):
+        feedback = Feedback.objects.filter(id=feedback_id).first()
         if feedback:
             return feedback
 
@@ -503,8 +503,8 @@ class FeedbackOption(models.Model):
         return False
 
     @staticmethod
-    def get_if_exists(objectId):
-        feedback_option = FeedbackOption.objects.filter(objectId=objectId).first()
+    def get_if_exists(feedback_option_id):
+        feedback_option = FeedbackOption.objects.filter(id=feedback_option_id).first()
         if feedback_option:
             return feedback_option
 

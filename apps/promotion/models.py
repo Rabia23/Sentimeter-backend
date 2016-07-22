@@ -32,8 +32,8 @@ class Promotion(models.Model):
         return promotion
 
     @staticmethod
-    def get_if_exists(object_id):
-        promotion = Promotion.objects.filter(objectId=object_id).first()
+    def get_if_exists(promotion_id):
+        promotion = Promotion.objects.filter(id=promotion_id).first()
         if promotion:
             return promotion
 
