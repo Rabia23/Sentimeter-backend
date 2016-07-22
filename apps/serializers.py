@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 class FeedbackCommentSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    objectId = serializers.CharField()
     comment = serializers.CharField()
     branch = serializers.CharField()
     city = serializers.CharField()

@@ -44,7 +44,7 @@ def get_top_concers():
 
 
 def get_top_segment(date_from, date_to):
-    question = Question.objects.get(type=constants.TYPE_1)
+    question = Question.objects.filter(type=constants.TYPE_1).order_by('created_at').first()
 
     options = question.options.all()
     feedback_options = FeedbackOption.manager.options(options).date(date_from, date_to)
@@ -55,10 +55,11 @@ def get_top_segment(date_from, date_to):
 
 
 def get_overall_feedback(date_from, date_to):
-    feedback_options = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to)
+    question = Question.objects.filter(type=constants.TYPE_1).order_by('created_at').first()
+    feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to)
     feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__score').\
         annotate(count=Count('option_id'))
-    list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_1), feedback_options_dict, False)
+    list_feedback = generate_missing_options(question, feedback_options_dict, False)
 
     return {'feedback_count': feedback_options.count(), 'feedbacks': sorted(list_feedback, reverse=True, key=itemgetter('option__score'))}
 
@@ -118,11 +119,12 @@ def get_overall_rating(date_from, date_to):
 
 
 def get_opportunity_analysis(date_from, date_to):
-    feedback_options = FeedbackOption.manager.question(constants.TYPE_3).date(date_from, date_to)
+    question = Question.objects.filter(type=constants.TYPE_3).order_by('created_at').first()
+    feedback_options = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to)
     feedback_options_dict = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__score').\
             annotate(count=Count('option_id'))
 
-    list_feedback = generate_missing_options(Question.objects.get(type=constants.TYPE_3), feedback_options_dict)
+    list_feedback = generate_missing_options(question, feedback_options_dict)
     return {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}
 
 

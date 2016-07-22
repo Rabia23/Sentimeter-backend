@@ -42,8 +42,8 @@ class Question(models.Model):
         return question
 
     @staticmethod
-    def get_if_exists(object_id):
-        question = Question.objects.filter(objectId=object_id).first()
+    def get_if_exists(question_id):
+        question = Question.objects.filter(id=question_id).first()
         if question:
             return question
 

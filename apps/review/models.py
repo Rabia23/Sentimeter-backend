@@ -100,8 +100,8 @@ class Feedback(models.Model):
         return self.comment
 
     @staticmethod
-    def get_if_exists(objectId):
-        feedback = Feedback.objects.filter(objectId=objectId).first()
+    def get_if_exists(feedback_id):
+        feedback = Feedback.objects.filter(id=feedback_id).first()
         if feedback:
             return feedback
 
@@ -503,8 +503,8 @@ class FeedbackOption(models.Model):
         return False
 
     @staticmethod
-    def get_if_exists(objectId):
-        feedback_option = FeedbackOption.objects.filter(objectId=objectId).first()
+    def get_if_exists(feedback_option_id):
+        feedback_option = FeedbackOption.objects.filter(id=feedback_option_id).first()
         if feedback_option:
             return feedback_option
 
@@ -517,7 +517,8 @@ class FeedbackOption(models.Model):
     @staticmethod
     def get_top_option(date_from=None, date_to=None):
         result = None
-        dict = FeedbackOption.manager.question(constants.TYPE_1).date(date_from, date_to).values('option_id').annotate(count=Count("option_id"))
+        question = Question.objects.filter(type=constants.TYPE_1).order_by('created_at').first()
+        dict = FeedbackOption.manager.options(question.options.all()).date(date_from, date_to).values('option_id').annotate(count=Count("option_id"))
         if dict:
             dict = dict.latest("count")
             option = Option.objects.get(pk=dict["option_id"])
