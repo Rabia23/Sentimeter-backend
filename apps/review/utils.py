@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from pytz import timezone
 from datetime import datetime
 
-
 __author__ = 'aamish'
 
 
@@ -70,7 +69,7 @@ def save_feedback(data):
                     "problems": feedback.problems(),
                     "comment": feedback.comment,
                     "server_link": settings.server_url,
-                    "time": feedback.created_at
+                    "time": feedback.created_at.strftime("%Y-%m-%d %H:%M:%S")
                 }
 
                 # send_negative_feedback_email(feedback_json)
