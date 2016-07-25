@@ -9,9 +9,6 @@ from lively import settings
 from rest_framework.response import Response
 from pytz import timezone
 from datetime import datetime
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
 
 __author__ = 'aamish'
 
