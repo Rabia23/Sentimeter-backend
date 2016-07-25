@@ -69,8 +69,8 @@ def save_feedback(data):
                     "customer_email": feedback.customer_email(),
                     "problems": feedback.problems(),
                     "comment": feedback.comment,
-                    "server_link": settings.server_url
-                    # "time": feedback.created_at
+                    "server_link": settings.server_url,
+                    "time": feedback.created_at
                 }
 
                 # send_negative_feedback_email(feedback_json)
