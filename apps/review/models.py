@@ -277,26 +277,23 @@ class Feedback(models.Model):
 
     def get_segment(self):
         start_time = self.get_time(constants.STARTING_TIME)
-        breakfast_time = self.get_time(constants.BREAKFAST_TIME)
         lunch_time = self.get_time(constants.LUNCH_TIME)
-        snack_time = self.get_time(constants.SNACK_TIME)
+        early_dinner_time = self.get_time(constants.EARLY_DINNER_TIME)
+        mid_dinner_time = self.get_time(constants.MID_DINNER_TIME)
         dinner_time = self.get_time(constants.DINNER_TIME)
-        late_night_time = self.get_time(constants.LATE_NIGHT_TIME)
 
         created_at = self.created_at.time()
 
-        if created_at >= start_time and created_at < breakfast_time:
-            return constants.segments[constants.BREAKFAST_TIME]
-        elif created_at >= breakfast_time and created_at < lunch_time:
+        if created_at >= start_time:
             return constants.segments[constants.LUNCH_TIME]
-        elif created_at >= lunch_time and created_at < snack_time:
-            return constants.segments[constants.SNACK_TIME]
-        elif created_at >= snack_time and created_at < dinner_time:
+        elif created_at < lunch_time:
+            return constants.segments[constants.LUNCH_TIME]
+        elif created_at >= lunch_time and created_at < early_dinner_time:
+            return constants.segments[constants.EARLY_DINNER_TIME]
+        elif created_at >= early_dinner_time and created_at < mid_dinner_time:
+            return constants.segments[constants.MID_DINNER_TIME]
+        elif created_at >= mid_dinner_time and created_at < dinner_time:
             return constants.segments[constants.DINNER_TIME]
-        elif created_at >= dinner_time:
-            return constants.segments[constants.LATE_NIGHT_TIME]
-        elif created_at < start_time:
-            return constants.segments[constants.LATE_NIGHT_TIME]
         return ""
 
     def mark_segment(self):
@@ -388,7 +385,7 @@ class Feedback(models.Model):
                 "user_phone": self.customer_phone(),
                 "segment": self.get_segment(),
                 "table": self.get_table(self.id),
-                "shift": self.get_shift(),
+                # "shift": self.get_shift(),
                 "is_negative": self.is_negative(),
                 "action_taken": self.action_taken,
                 "email": self.customer_email(),
@@ -422,6 +419,10 @@ class Feedback(models.Model):
 
 
 class FeedbackOptionQuerySet(models.QuerySet):
+
+    def table(self, table):
+        return self.filter(option=table)
+
     def question(self, question_type):
         question = Question.objects.get(type=question_type)
         return self.filter(option__in=question.options.values_list('id'))

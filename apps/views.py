@@ -151,8 +151,8 @@ class FeedbackAnalysisView(APIView):
 
             for object in objects:
                 if type == constants.TABLE_ANALYSIS:
-                    table_feedback = FeedbackOption.objects.filter(option=object).values_list('feedback')
-                    table_options_feedback = FeedbackOption.objects.filter(feedback__in=table_feedback, option__in=options)
+                    table_feedback = FeedbackOption.manager.table(object).date(date_from, date_to)
+                    table_options_feedback = FeedbackOption.objects.filter(feedback__in=table_feedback.values_list('feedback'), option__in=options)
                     related_feedback_options = table_options_feedback.filter(feedback__branch__exact=branch.id)
                 else:
                     related_feedback_options = feedback_options.related_filters(type, object)
