@@ -1,3 +1,4 @@
+from lively.mailgun import sendEmaiLMailGun
 from apps import constants
 from apps.review.enum import ActionStatusEnum
 from apps.utils import make_request, response_json
@@ -9,7 +10,6 @@ from lively import settings
 from rest_framework.response import Response
 from pytz import timezone
 from datetime import datetime
-
 
 __author__ = 'aamish'
 
@@ -70,10 +70,12 @@ def save_feedback(data):
                     "problems": feedback.problems(),
                     "comment": feedback.comment,
                     "server_link": settings.server_url,
+                    "time": feedback.created_at.strftime("%Y-%m-%d %H:%M:%S")
                 }
 
                 # send_negative_feedback_email(feedback_json)
-                send_negative_feedback_email.delay(feedback_json)
+                # send_negative_feedback_email.delay(feedback_json)
+                sendEmaiLMailGun(feedback_json)
 
             return True
     return False

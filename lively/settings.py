@@ -62,7 +62,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -100,6 +99,8 @@ USE_L10N = True
 USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
+
 CORS_ALLOW_HEADERS = (
         'x-requested-with',
         'content-type',
@@ -148,6 +149,10 @@ MASTER_KEY = "dp1YtF7VkUvRYAhmCtc52hlb5jmjpBZAVFSuYexo"
 #------------------------- AWS S3 Keys --------------------------
 AWS_ACCESS_KEY_ID = "AKIAIXOMJ2SLOFOJYADQ"
 AWS_SECRET_ACCESS_KEY = "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"
+
+#----------------------- mail gun credentials--------------------
+api_key = 'key-ae81bf507aa18292f186252f9fdc65ee'
+domain = 'sandbox8bc1d94007254064a4a316f3caa7948a.mailgun.org'
 
 try:
     from lively.local_settings import *
