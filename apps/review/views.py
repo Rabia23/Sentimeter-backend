@@ -16,6 +16,7 @@ from apps.redis_queue import RedisQueue
 from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
 from django.db import IntegrityError, transaction
+from lively.mailgun import sendEmaiLMailGun
 
 
 class FeedbackView(APIView):
@@ -69,7 +70,8 @@ class FeedbackView(APIView):
                     }
 
                     # send_negative_feedback_email(feedback_json)
-                    send_negative_feedback_email.delay(feedback_json)
+                    # send_negative_feedback_email.delay(feedback_json)
+                    sendEmaiLMailGun(feedback_json)
 
                 return Response(response_json(True, None, None))
         return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
