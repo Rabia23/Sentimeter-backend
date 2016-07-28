@@ -14,6 +14,7 @@ django-cors-headers==1.1.0
 django-dbbackup==2.5.0
 django-enumfield==1.2.1
 django-haystack==2.4.1
+django-mailgun-mime==0.1.7
 django-rest-swagger==0.3.4
 django-toolbelt==0.0.1
 djangorestframework==3.2.4
