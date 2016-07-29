@@ -72,5 +72,3 @@ def get_upper_management_recipients():
     [recipients.append(operational_manager) for operational_manager in operational_manager_tier_management]
 
     return recipients
-    # return [{"email": "rabia.iftikhar@arbisoft.com"}, {"email": "zamanafzal@gmail.com"},
-    #         {"email": "zaman.afzal@arbisoft.com"}]
