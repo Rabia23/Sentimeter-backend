@@ -6,6 +6,8 @@ from apps.person.models import UserInfo
 from apps.person.enum import UserRolesEnum
 from lively import settings
 from apps import constants
+
+
 def sendEmaiLMailGun(feedback_json):
     try:
         subject = constants.NEGATIVE_FEEDBACK_SUBJECT
@@ -18,6 +20,7 @@ def sendEmaiLMailGun(feedback_json):
     except Exception as e:
         print(e)
 
+
 def send_email(subject,email_addresses,html,txt):
     try:
         connection = get_connection('django_mailgun_mime.backends.MailgunMIMEBackend',
@@ -27,6 +30,7 @@ def send_email(subject,email_addresses,html,txt):
              connection=connection, html_message=html)
     except Exception as e:
         print(e)
+
 
 def get_recipients(branch_id):
     recipients = []
@@ -47,6 +51,7 @@ def get_recipients(branch_id):
     # [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
     return recipients
 
+
 # ------------------------- feed-back report  ---------------------------------
 def sendReportMailGun(feedback_json):
     try:
@@ -59,6 +64,7 @@ def sendReportMailGun(feedback_json):
         send_email(subject, email_addresses, html, txt)
     except Exception as e:
         print(e)
+
 
 def get_upper_management_recipients():
     recipients = []
