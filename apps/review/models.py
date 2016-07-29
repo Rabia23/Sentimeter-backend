@@ -338,6 +338,10 @@ class Feedback(models.Model):
             return constants.shifts[constants.OVERNIGHT_SHIFT_TIME]
         return ""
 
+    def save_date(self, date):
+        self.created_at = date
+        self.save()
+
     def get_time(self, constant):
         return datetime.strptime(constant, '%H:%M').time()
 
