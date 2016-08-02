@@ -50,5 +50,32 @@ class FeedbackBatchView(APIView):
         return Response(response_json(True, None, "Feedback successfully added"))
 
 
+class AllFeedback(APIView):
+
+    def get(self, request, format=None):
+        feedback_list = []
+        li =[]
+        full_feed = {}
+        feedbacks = Feedback.objects.all().order_by("-created_at")
+        for feed in feedbacks:
+            options_ar = []
+            options = FeedbackOption.objects.select_related("option").filter(feedback=feed)
+            options_dict = {}
+
+            for op in options:
+                all_op = op.option.text
+                options_dict = {
+                    'option' : all_op,
+                }
+                options_ar.append(options_dict)
+            full_feed = {
+                "feed":feed.comment,
+                "options_dict":options_ar,
+            }
+            li.append(full_feed)
+
+        return Response(response_json(True, None, li))
+
+
 
 
