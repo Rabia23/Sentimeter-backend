@@ -69,6 +69,7 @@ def save_feedback(data):
                     "customer_email": feedback.customer_email(),
                     "problems": feedback.problems(),
                     "comment": feedback.comment,
+                    "segment": feedback.get_segment(),
                     "server_link": settings.server_url,
                     "time": feedback.created_at.strftime("%Y-%m-%d %H:%M:%S")
                 }
