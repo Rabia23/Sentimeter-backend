@@ -15,7 +15,7 @@ from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
 from django.db import IntegrityError, transaction
 from apps.review.utils import save_feedback
-
+from django.core.paginator import Paginator
 
 class FeedbackView(APIView):
 
@@ -49,7 +49,7 @@ class FeedbackBatchView(APIView):
         # q.put("ping")
         return Response(response_json(True, None, "Feedback successfully added"))
 
-from django.core.paginator import Paginator
+
 class AllFeedback(APIView):
 
     def get(self, request, format=None):
