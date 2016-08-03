@@ -10,7 +10,7 @@ from lively import settings
 
 @asyncio.coroutine
 def ping(websocket, path):
-    q = RedisQueue('feedback_redis_queue')
+    q = RedisQueue('feedback_redis_ginsoy')
     print("Connection Opened")
     length = 0
     while True:
