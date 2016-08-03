@@ -10,17 +10,27 @@ from lively import settings
 
 @asyncio.coroutine
 def ping(websocket, path):
-    q = RedisQueue('feedback_redis_ginsoy')
+    q_qatar = RedisQueue('feedback_redis_mc_qatar')
+    q_jinsoy = RedisQueue('feedback_redis_ginsoy')
     print("Connection Opened")
     length = 0
     while True:
         if websocket.open:
-            if length < q.qsize():
-                length = q.qsize()
-                abc = q.seek()
-                data = abc[0].decode("utf-8")
+            if length < q_qatar.qsize():
+                length = q_qatar.qsize()
+                abc_qatar = q_qatar.seek()
+                data_qatar = abc_qatar[0].decode("utf-8")
                 print("Ping Received")
-                yield from websocket.send(str(data))
+                print("in feed back qatar")
+                yield from websocket.send(str(data_qatar))
+                yield from asyncio.sleep(random.random() * 3)
+            if length < q_jinsoy.qsize():
+                length = q_jinsoy.qsize()
+                abc_jinsoy = q_jinsoy.seek()
+                data_jinsoy = abc_jinsoy[0].decode("utf-8")
+                print("Ping Received")
+                print("in feed back qatar")
+                yield from websocket.send(str(data_jinsoy))
                 yield from asyncio.sleep(random.random() * 3)
         else:
             return
