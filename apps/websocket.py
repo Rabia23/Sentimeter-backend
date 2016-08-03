@@ -10,28 +10,27 @@ from lively import settings
 
 @asyncio.coroutine
 def ping(websocket, path):
-    q1 = RedisQueue('feedback_redis_mc_qatar')
-    q2 = RedisQueue('feedback_redis_ginsoy')
+    q_qatar = RedisQueue('feedback_redis_mc_qatar')
+    q_ginsoy = RedisQueue('feedback_redis_ginsoy')
     print("Connection Opened")
     length = 0
     while True:
         if websocket.open:
-            if length < q1.qsize():
+            if length < q_qatar.qsize():
+                length = q_qatar.qsize()
+                abc_qatar = q_qatar.seek()
+                data_qatar = abc_qatar[0].decode("utf-8")
+                print("Ping Received")
                 print("in feed back qatar")
-                length = q1.qsize()
-                abc1 = q1.seek()
-                data1 = abc1[0].decode("utf-8")
-                print("Ping Received")
-                yield from websocket.send(str(data1))
+                yield from websocket.send(str(data_qatar))
                 yield from asyncio.sleep(random.random() * 3)
-
-            if length < q2.qsize():
-                print("in feed back ginsoy")
-                length = q2.qsize()
-                abc2 = q2.seek()
-                data2 = abc2[0].decode("utf-8")
+            if length < q_ginsoy.qsize():
+                length = q_ginsoy.qsize()
+                abc_ginsoy = q_ginsoy.seek()
+                data_ginsoy = abc_ginsoy[0].decode("utf-8")
                 print("Ping Received")
-                yield from websocket.send(str(data2))
+                print("in feed back ginsoy")
+                yield from websocket.send(str(data_ginsoy))
                 yield from asyncio.sleep(random.random() * 3)
         else:
             return
