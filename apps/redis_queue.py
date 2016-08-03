@@ -3,7 +3,7 @@ import redis
 
 
 #copied http://peter-hoffmann.com/2012/python-simple-queue-redis-queue.html
-class RedisQueue(object):
+class RedisQueueGinsoy(object):
     def __init__(self, name, namespace='queue', **redis_kwargs):
        self.__db= redis.Redis(**redis_kwargs)
        self.key = '%s:%s' %(namespace, name)
