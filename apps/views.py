@@ -39,7 +39,7 @@ from drf_haystack.generics import HaystackGenericAPIView
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
 from django.db import transaction
-from apps.redis_queue import RedisQueueMcdonaldsQatar
+from apps.redis_queue import RedisQueue
 
 class LoginView(APIView):
 
@@ -512,7 +512,7 @@ class ActionTakenView(APIView):
                 feedback.action_comment = action_comment
                 feedback.save()
 
-                q = RedisQueueMcdonaldsQatar('feedback_redis_queue')
+                q = RedisQueue('feedback_redis_queue')
                 q.put(str(get_live_record()))
 
                 return Response(response_json(True, feedback.feedback_comment_dict(), None))
