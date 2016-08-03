@@ -29,7 +29,7 @@ def ping(websocket, path):
                 abc_ginsoy = q_ginsoy.seek()
                 data_ginsoy = abc_ginsoy[0].decode("utf-8")
                 print("Ping Received")
-                print("in feed back qatar")
+                print("in feed back ginsoy")
                 yield from websocket.send(str(data_ginsoy))
                 yield from asyncio.sleep(random.random() * 3)
         else:
