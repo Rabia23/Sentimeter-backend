@@ -3,14 +3,14 @@ __author__ = 'aamish'
 
 import asyncio
 import websockets
-from apps.redis_queue import RedisQueue
+from apps.redis_queue import RedisQueueMcdonaldsQatar
 import random
 from lively import settings
 
 
 @asyncio.coroutine
 def ping(websocket, path):
-    q = RedisQueue('feedback_redis_queue')
+    q = RedisQueueMcdonaldsQatar('feedback_redis_queue')
     print("Connection Opened")
     length = 0
     while True:
