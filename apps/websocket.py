@@ -25,15 +25,15 @@ def ping(websocket, path):
                 print("length ginsoy",q_ginsoy.qsize())
                 print("in feed back qatar")
                 yield from websocket.send(str(data_qatar))
-                yield from asyncio.sleep(random.random() * 3)
-            # if length < q_ginsoy.qsize():
-            #     length = q_ginsoy.qsize()
-            #     abc_ginsoy = q_ginsoy.seek()
-            #     data_ginsoy = abc_ginsoy[0].decode("utf-8")
-            #     print("Ping Received")
-            #     print("in feed back ginsoy")
-            #     yield from websocket.send(str(data_ginsoy))
-            #     yield from asyncio.sleep(random.random() * 3)
+                yield from asyncio.sleep(random.random() * 120)
+            if length < q_ginsoy.qsize():
+                length = q_ginsoy.qsize()
+                abc_ginsoy = q_ginsoy.seek()
+                data_ginsoy = abc_ginsoy[0].decode("utf-8")
+                print("Ping Received")
+                print("in feed back ginsoy")
+                yield from websocket.send(str(data_ginsoy))
+                yield from asyncio.sleep(random.random() * 120)
         else:
             return
 
