@@ -20,6 +20,8 @@ def ping(websocket, path):
                 length = q_ginsoy.qsize()
                 abc_ginsoy = q_ginsoy.seek()
                 data_ginsoy = abc_ginsoy[0].decode("utf-8")
+                print("q_jinsoy _ length",length)
+                print("q_qatar _ length",q_qatar.qsize())
                 print(q_ginsoy)
                 print("Ping Received")
                 print("in feed back ginsoy")
