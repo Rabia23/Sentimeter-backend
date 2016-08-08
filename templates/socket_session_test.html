@@ -17,7 +17,7 @@
       evt.preventDefault();
     var token = $('token').value;
 
-    var sock = new WebSocket('ws://localhost:8888/ws/'+ token);
+    var sock = new WebSocket('wss://localhost:8888/ws/'+ token);
     sock.onopen = function () {
       console.log('opened.');
     };

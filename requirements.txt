@@ -37,3 +37,4 @@ static3==0.6.1
 tzlocal==1.2
 urllib3==1.14
 websockets==2.7
+tornado==4.4.1
