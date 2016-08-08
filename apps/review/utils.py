@@ -1,4 +1,5 @@
 from apps import constants
+from lively.mailgun import sendEmaiLMailGun
 from apps.review.enum import ActionStatusEnum
 from apps.utils import make_request, response_json
 from lively._celery import send_negative_feedback_email
@@ -73,7 +74,8 @@ def save_feedback(data):
                 }
 
                 # send_negative_feedback_email(feedback_json)
-                send_negative_feedback_email.delay(feedback_json)
+                # send_negative_feedback_email.delay(feedback_json)
+                sendEmaiLMailGun(feedback_json)
 
             return True
     return False
