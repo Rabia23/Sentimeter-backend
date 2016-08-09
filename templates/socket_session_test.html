@@ -8,17 +8,28 @@
   <input type="text" id="token" value="76c7ea95f0e51fb9b047dfe7aab4ff3c099505e4" />
   <button id="connect">Connect</button>
   <div id="result"></div>
+
+<script>
+    function yourfunction() {
+
+    }
+
+    </script>
+
   <script>
+
   var $ = function (id) {
     return document.getElementById(id);
   };
 
-{#  $('connect').addEventListener('click', function (evt) {#}
-{#      evt.preventDefault();#}
-    var token = $('token').value;
 
-{#    var sock = new WebSocket('ws://localhost:8888/ws/'+ token);#}
-    var sock = new WebSocket('wss://apiginsoy.sentimeter.io:5679/ws/'+ token);
+  $('connect').addEventListener('click', function (evt) {
+      evt.preventDefault();
+    var token = $('token').value;
+      console.log("click fired");
+
+    var sock = new WebSocket('ws://localhost:8888/live/');
+{#    var sock = new WebSocket('wss://apiginsoy.sentimeter.io:5679/ws/'+ token);#}
     sock.onopen = function () {
       console.log('opened.');
     };
@@ -32,7 +43,26 @@
       $('result').innerText = evt.data;
       alert(evt.data);
     };
-{#  });#}
+  });
   </script>
 </body>
 </html>
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block body_block %}#}
+{##}
+{#    <script>#}
+{#            var ws = new WebSocket("ws://localhost:8888/live/"),#}
+{#                messages = document.createElement('ul');#}
+{#            ws.onmessage = function (event) {#}
+{#                var messages = document.getElementsByTagName('ul')[0],#}
+{#                    message = document.createElement('li'),#}
+{#                    content = document.createTextNode(event.data);#}
+{#                message.appendChild(content);#}
+{#                messages.appendChild(message);#}
+{#            };#}
+{#            document.body.appendChild(messages);#}
+{#    </script>#}
+{##}
+{#{% endblock %}#}

@@ -19,7 +19,7 @@ class SampleWebSocket(WebSocketHandler):
     print(len(clients))
     def check_origin(self, origin):
         return True
-    def open(self, userid):
+    def open(self):
         length = 0
         q = RedisQueue('feedback_redis_queue')
         self.clients.append(self)
@@ -47,7 +47,7 @@ class SampleWebSocket(WebSocketHandler):
         self.write_message("connection_closed")
 
 app = Application([
-    (r'/ws/(.*)', SampleWebSocket),
+    (r'/live/', SampleWebSocket),
     ],)
 
 if __name__ == '__main__':
