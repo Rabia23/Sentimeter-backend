@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>Tornado WebSocket Sample</title>
+</head>
+<body>
+  <input type="text" id="username" value="myname" />
+  <button id="connect">connect</button>
+  <div id="result"></div>
+  <script>
+  var $ = function (id) {
+    return document.getElementById(id);
+  };
+
+  $('connect').addEventListener('click', function () {
+    var username = $('username').value;
+    $('username').value = "";
+
+    var sock = new WebSocket('ws://localhost:8888/test1/');
+    sock.onopen = function () {
+      console.log('opened.');
+    };
+    sock.onclose = function () {
+      console.log('closed.');
+    };
+    sock.onerror = function () {
+      console.log('error.');
+    };
+    sock.onmessage = function (evt) {
+        console.log(evt.data);
+      $('result').innerText = evt.data;
+    };
+  });
+  </script>
+</body>
+</html>

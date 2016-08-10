@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>Tornado WebSocket Sample</title>
+</head>
+<body>
+  <input type="text" id="token" value="76c7ea95f0e51fb9b047dfe7aab4ff3c099505e4" />
+  <button id="connect">Connect</button>
+  <div id="result"></div>
+  <script>
+  var $ = function (id) {
+    return document.getElementById(id);
+  };
+  $('connect').addEventListener('click', function (evt) {
+      evt.preventDefault();
+    var token = $('token').value;
+      console.log("click fired");
+    var sock = new WebSocket('ws://localhost:8888/live/');
+      console.log("2")
+{#    var sock = new WebSocket('wss://apiginsoy.sentimeter.io:5679/live/');#}
+      console.log("sock",sock)
+      try{
+          console.log("in try")
+   sock.onopen = function () {
+      console.log('opened.');
+    };
+          }catch (error)
+{
+    console.log("catching error");
+    console.log(error);
+}
+    sock.onclose = function () {
+      console.log('closed.');
+    };
+    sock.onerror = function () {
+      console.log('error.');
+    };
+    sock.onmessage = function (evt) {
+        console.log(evt.data);
+      $('result').innerText = evt.data;
+      alert(evt.data);
+    };
+  });
+  </script>
+</body>
+</html>
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block body_block %}#}
+{##}
+{#    <script>#}
+{#            var ws = new WebSocket("ws://localhost:8888/live/"),#}
+{#                messages = document.createElement('ul');#}
+{#            ws.onmessage = function (event) {#}
+{#                var messages = document.getElementsByTagName('ul')[0],#}
+{#                    message = document.createElement('li'),#}
+{#                    content = document.createTextNode(event.data);#}
+{#                message.appendChild(content);#}
+{#                messages.appendChild(message);#}
+{#            };#}
+{#            document.body.appendChild(messages);#}
+{##}
+{#    </script>#}
+{##}
+{#{% endblock %}#}
