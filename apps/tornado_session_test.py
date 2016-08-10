@@ -89,8 +89,8 @@ app = Application([
 
 if __name__ == '__main__':
     http_server = HTTPServer(app)
-    http_server.bind(8888)
-    # http_server.bind(5678)
+    # http_server.bind(8888)
+    http_server.bind(5678)
     http_server.start(0)
     # IOLoop.instance().start()
     IOLoop.current().start()
