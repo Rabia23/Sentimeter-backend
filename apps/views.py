@@ -512,7 +512,7 @@ class ActionTakenView(APIView):
                 feedback.action_comment = action_comment
                 feedback.save()
 
-                q = RedisQueue('feedback_redis_queue')
+                q = RedisQueue('feedback_redis_mc_qatar')
                 q.put(str(get_live_record()))
 
                 return Response(response_json(True, feedback.feedback_comment_dict(), None))

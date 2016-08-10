@@ -10,14 +10,14 @@ from apps.review.serializers import FeedbackSerializer, FeedbackSearchSerializer
 from lively import settings
 from lively._celery import send_negative_feedback_email
 from apps import constants
-from apps.utils import save, response, response_json, get_data_param
+from apps.utils import save, response, response_json, get_data_param,get_default_param
 from apps.redis_queue import RedisQueue
 from apps.livedashboard import get_live_record
 from rest_framework.mixins import ListModelMixin
 from drf_haystack.generics import HaystackGenericAPIView
 from django.db import IntegrityError, transaction
 from apps.review.utils import save_feedback
-
+from django.core.paginator import Paginator
 
 class FeedbackView(APIView):
 
@@ -30,7 +30,7 @@ class FeedbackView(APIView):
     def post(self, request, format=None):
         status = save_feedback(request.data)
         if status:
-            q = RedisQueue('feedback_redis_queue')
+            q = RedisQueue('feedback_redis_mc_qatar')
             q.put(str(get_live_record()))
             return Response(response_json(True, None, "Feedback successfully added"))
 
@@ -46,36 +46,45 @@ class FeedbackBatchView(APIView):
             status = save_feedback(feedback)
             if status == False:
                 return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
-        q = RedisQueue('feedback_redis_queue')
+        q = RedisQueue('feedback_redis_mc_qatar')
         q.put(str(get_live_record()))
         # q.put("ping")
         return Response(response_json(True, None, "Feedback successfully added"))
 
 
-class AllFeedback(APIView):
+class AllFeedbackView(APIView):
 
     def get(self, request, format=None):
         feedback_list = []
-        li =[]
-        full_feed = {}
+        page_data = []
+
+        page_number = get_default_param(request, 'page', 1)
         feedbacks = Feedback.objects.all().order_by("-created_at")
+
         for feed in feedbacks:
-            options_ar = []
+            options_array = []
             options = FeedbackOption.objects.select_related("option").filter(feedback=feed)
-            options_dict = {}
 
             for op in options:
-                all_op = op.option.text
-                options_dict = {
-                    'option' : all_op,
-                }
-                options_ar.append(options_dict)
-            full_feed = {
-                "feed":feed.comment,
-                "options_dict":options_ar,
-            }
-            li.append(full_feed)
+                options_array.append({
+                    'option': op.option.text,
+                })
 
-        return Response(response_json(True, None, li))
+            feedback_list.append({"feed":feed.comment,
+                                        "options_dict":options_array})
 
+        paginator = Paginator(feedback_list, constants.FEEDBACK_RECORDS_PER_PAGE)
+
+        if paginator.num_pages < int(page_number):
+            return Response(response_json(True, page_data, "Page not available"))
+
+        page_data = paginator.page(page_number).object_list
+
+        data = {
+            "data": page_data,
+            "page_count": paginator.num_pages,
+            "record_count": paginator.count,
+        }
+
+        return Response(response_json(True, data, None))
 
