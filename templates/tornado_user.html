@@ -17,7 +17,7 @@
     var username = $('username').value;
     $('username').value = "";
 
-    var sock = new WebSocket('ws://localhost:8888/test1/');
+    var sock = new WebSocket('wss://apimcdonaldsqatar.sentimeter.io:5679/test1/');
     sock.onopen = function () {
       console.log('opened.');
     };
