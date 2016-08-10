@@ -12,6 +12,7 @@ from tornado.ioloop import IOLoop
 import time
 class SampleWebSocket(WebSocketHandler):
     check_len = 0
+    clients = []
     print("yes came in1",)
     def check_origin(self, origin):
         return True
@@ -20,6 +21,7 @@ class SampleWebSocket(WebSocketHandler):
     def open(self):
 
         q = RedisQueue('feedback_redis_queue')
+        self.clients.append(self)
         print("connection_initiated1")
         print("1q size",q.qsize())
         length = self.check_len
@@ -41,9 +43,11 @@ class SampleWebSocket(WebSocketHandler):
                 self.write_message("%s" % str(data))
                 # time.sleep(10)
     def on_close(self):
+        self.clients.remove(self)
         print("closing1")
         self.write_message("connection_closed")
 class SampleWebSocketQatar(WebSocketHandler):
+    clients_qatar = []
     check_len_qatar = 0
     print("2yes came in qatar",)
     def check_origin(self, origin):
@@ -53,6 +57,7 @@ class SampleWebSocketQatar(WebSocketHandler):
     def open(self):
 
         q_qatar = RedisQueue('feedback_redis_mc_qatar')
+        self.clients_qatar.append(self)
         print("2connection_initiated")
         print("2q _qatar size",q_qatar.qsize())
         length_qatar = self.check_len_qatar
@@ -74,6 +79,7 @@ class SampleWebSocketQatar(WebSocketHandler):
                 self.write_message("%s" % str(data_qatar))
                 # time.sleep(10)
     def on_close(self):
+        self.clients_qatar.remove(self)
         print("closing2_qatar")
         self.write_message("connection_closed2")
 app = Application([
