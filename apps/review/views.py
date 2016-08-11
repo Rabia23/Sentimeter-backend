@@ -30,7 +30,7 @@ class FeedbackView(APIView):
     def post(self, request, format=None):
         status = save_feedback(request.data)
         if status:
-            q = RedisQueue('feedback_redis_queue')
+            q = RedisQueue('feedback_redis_koel')
             q.put(str(get_live_record()))
             return Response(response_json(True, None, "Feedback successfully added"))
 
@@ -46,7 +46,7 @@ class FeedbackBatchView(APIView):
             status = save_feedback(feedback)
             if status == False:
                 return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
-        q = RedisQueue('feedback_redis_queue')
+        q = RedisQueue('feedback_redis_koel')
         q.put(str(get_live_record()))
         # q.put("ping")
         return Response(response_json(True, None, "Feedback successfully added"))
