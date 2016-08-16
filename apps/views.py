@@ -70,6 +70,33 @@ class LoginView(APIView):
             return Response(response_json(False, None, 'User not authenticated'))
 
 
+class ToggleQuestionView(APIView):
+
+    @method_decorator(my_login_required)
+    def get(self, request, format=None):
+        try:
+            question_id = get_param(request, 'question_id', None)
+            if int(question_id):
+                try:
+                    question = Question.objects.get(id=question_id)
+                    if question.isActive:
+                        question.isActive = False
+                        question.save()
+                        return Response(response_json(True, None, "Question successfully deactivated."))
+                    else:
+                        question.isActive = True
+                        question.save()
+                        return Response(response_json(True, None, "Question successfully activated."))
+
+                except Exception as e:
+                    return Response(response_json(True, None, "Question does not exist."))
+
+            else:
+                return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+        except Exception as e:
+            return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
+
 class OverallFeedbackView(APIView):
 
     @method_decorator(my_login_required)
