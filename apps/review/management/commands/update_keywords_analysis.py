@@ -11,7 +11,7 @@ class Command(BaseCommand):
         list = [{"keyword": concern.keyword, "count": 0} for concern in Concern.get_all_concerns()]
 
         for feedback in Feedback.objects.all():
-            if feedback.comment_exists():
+            if feedback.comment_exists() and feedback.is_negative():
                 for concern in list:
                     if feedback.comment.lower().find(concern["keyword"]) != -1:
                         concern["count"] += 1
