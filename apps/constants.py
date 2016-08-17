@@ -108,3 +108,8 @@ TEXT_MISSING_PARAMS = "Params are missing"
 COLORS_TOP_CONCERNS = ["#cb1e24", "#178aea", "#434347", "#f1d400", "#90ec7c"]
 COLORS_ACTION_STATUS = ["#ffffff", "#cb1e24", "#ffd200", "#01c211", "#01c211"]
 COLORS_CUSTOMER_GENDERS = ["#26AAE2", "#F174AC"]
+
+
+#------------ Feedbac Type Constants -------------
+DINE_IN = 1
+DELIVERY = 2

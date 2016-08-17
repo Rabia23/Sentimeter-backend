@@ -7,11 +7,11 @@ from apps.option.models import Option
 from apps.option.utils import generate_missing_options
 from apps.question.models import Question
 from apps import constants
-from datetime import datetime
+from datetime import datetime,timedelta
 from dateutil import tz
 from django.utils import timezone
 from apps.region.models import Region
-from apps.review.enum import ActionStatusEnum, SegmentEnum
+from apps.review.enum import ActionStatusEnum, SegmentEnum,FeedbackTypeEnum
 
 
 class FeedbackQuerySet(models.QuerySet):
@@ -89,6 +89,7 @@ class Feedback(models.Model):
     comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     action_comment = models.CharField(max_length=1000, db_index=True, null=True, blank=True)
     action_taken = models.IntegerField(default=constants.UNPROCESSED, db_index=True)
+    type = models.IntegerField(default=FeedbackTypeEnum.DINE_IN, db_index=True)
     segment = models.IntegerField(null=True, blank=True, db_index=True)
     gro = models.ForeignKey(User, related_name='gro', null=True, blank=True)
     user = models.ForeignKey(User, related_name='feedback', null=True, blank=True)
@@ -395,6 +396,7 @@ class Feedback(models.Model):
                 "email": self.customer_email(),
                 "created_at": self.created_at,
                 "updated_at": self.updated_at,
+                "type": self.type,
             }
             return feedback
         except Exception as e:
@@ -597,3 +599,45 @@ class Concern(models.Model):
     @staticmethod
     def get_all_concerns():
         return Concern.objects.filter(is_active=True)
+
+
+class HomeDeliveryUsers(models.Model):
+    name = models.CharField(max_length=100, db_index=True,)
+    email = models.CharField(max_length=100, db_index=True,null=True,blank=True)
+    phone_num = models.CharField(max_length=50, db_index=True)
+    order_id = models.CharField(max_length=50)
+    message_sent = models.BooleanField(default=False, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    def to_dict(self):
+        try:
+            home_delivery_users = {
+                "id": self.id,
+                "name": self.name.capitalize(),
+                "email": self.email,
+                "phone_num": self.phone_num,
+                "order_id": self.order_id,
+            }
+            return home_delivery_users
+        except Exception as e:
+            return {}
+
+    def get_message_time(self):
+        extra_time = MessageDelayTime.objects.get(active =True)
+        created_time=self.created_at
+        time_after = created_time + timedelta(minutes=extra_time.minutes)
+        if time_after < timezone.now():
+            return True
+
+    @staticmethod
+    def get_all_message_sent_users():
+        return HomeDeliveryUsers.objects.filter(message_sent=True)
+
+    @staticmethod
+    def get_all_message_unsent_users():
+        return HomeDeliveryUsers.objects.filter(message_sent=False)
+
+class MessageDelayTime(models.Model):
+
+    minutes = models.IntegerField(default=0)
+    active = models.BooleanField(default=False)

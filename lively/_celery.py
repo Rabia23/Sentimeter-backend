@@ -12,12 +12,13 @@ from lively import settings as lively_settings
 from apps import constants
 from celery import shared_task
 from django.template import Context
-
+from apps.review.models import HomeDeliveryUsers
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lively.settings')
 
 from django.conf import settings
-
+import celery
+import datetime
 app = Celery('lively')
 
 # Using a string here means the worker will not have to
@@ -104,3 +105,13 @@ def get_upper_management_recipients():
     [recipients.append(operational_manager) for operational_manager in operational_manager_tier_management]
 
     return recipients
+
+@celery.decorators.periodic_task(run_every=datetime.timedelta(seconds=30))
+def sms_send_feedback():
+
+    sending_messages = HomeDeliveryUsers.get_all_message_unsent_users()
+    for message_user in sending_messages:
+        if message_user.get_message_time():
+
+            message_user.message_sent = True
+            message_user.save()

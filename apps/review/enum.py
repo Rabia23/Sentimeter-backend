@@ -30,3 +30,13 @@ class SegmentEnum(enum.Enum):
         NIGHT: "Night",
         LATE_NIGHT: "Late Night"
     }
+
+
+class FeedbackTypeEnum(enum.Enum):
+    DINE_IN = 1
+    DELIVERY = 2
+
+    labels = {
+        DINE_IN: "Dine In",
+        DELIVERY: "Delivery",
+    }

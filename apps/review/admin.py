@@ -1,12 +1,13 @@
 # from api.views import DataView
-# from feedback.models import Feedback, Question, Option
-# from django.conf.urls import patterns
-# from django.contrib import admin
-# from django.http import HttpResponse
+from .models import Feedback, Question, Option,HomeDeliveryUsers,MessageDelayTime
+from django.conf.urls import patterns
+from django.contrib import admin
+from django.http import HttpResponse
 #
 #
-# class FeedbackAdmin(admin.ModelAdmin):
-#     list_display = ('comment',)
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('comment','type',)
+
 #
 #
 # class QuestionAdmin(admin.ModelAdmin):
@@ -25,7 +26,16 @@
 #         return my_urls + urls
 #     return get_urls
 #
-# admin.site.register(Feedback, FeedbackAdmin)
+
+class HomeDeliveryUsersAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+class MessageDelayTimeAdmin(admin.ModelAdmin):
+    list_display = ('minutes',)
+
+admin.site.register(HomeDeliveryUsers, HomeDeliveryUsersAdmin)
+admin.site.register(MessageDelayTime, MessageDelayTimeAdmin)
+
+admin.site.register(Feedback, FeedbackAdmin)
 # admin.site.register(Question, QuestionAdmin)
 # admin.site.register(Option, OptionAdmin)
 #

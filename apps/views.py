@@ -350,6 +350,7 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
         text = get_param(request, 'text', None)
         page = int(get_param(request, 'page', 1))
         action_taken = get_param(request, 'action_taken', None)
+        type = get_param(request, 'type', None)
         branch_id = get_param(request, 'branch_id', branch_id)
 
         if text:
@@ -359,6 +360,9 @@ class CommentsTextSearchView(ListModelMixin, HaystackGenericAPIView):
 
         if action_taken:
             all_results = all_results.filter(action_taken=Exact(int(action_taken))).order_by('-created_at')
+
+        if type:
+            all_results = all_results.filter(type=Exact(int(type))).order_by('-created_at')
 
         if region_id:
             all_results = all_results.filter(region=Exact(region_id)).order_by('-created_at')

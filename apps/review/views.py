@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from apps.option.models import Option
 from apps.option.utils import option_get, get_related_option
 from apps.person.utils import user_get, get_related_user
-from apps.review.models import Feedback, FeedbackOption
-from apps.review.serializers import FeedbackSerializer, FeedbackSearchSerializer
+from apps.review.models import Feedback, FeedbackOption,HomeDeliveryUsers
+from apps.review.serializers import FeedbackSerializer, FeedbackSearchSerializer,HomeDeliveryUsersSerializer
 from lively import settings
 from lively._celery import send_negative_feedback_email
 from apps import constants
@@ -50,3 +50,22 @@ class FeedbackBatchView(APIView):
         q.put(str(get_live_record()))
         # q.put("ping")
         return Response(response_json(True, None, "Feedback successfully added"))
+
+
+class HomeDeliveryUsersView(APIView):
+
+    def get(self, request, format=None):
+        home_delivery_users = HomeDeliveryUsers.objects.all()
+        serializer = HomeDeliveryUsersSerializer(home_delivery_users, many=True)
+        return Response(response_json(True, serializer.data, None))
+
+    @transaction.atomic
+    def post(self, request, format=None):
+        user_data = request.data
+        serializer = HomeDeliveryUsersSerializer(data=user_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(response_json(True,None,"User delivery information successfully added "))
+
+        return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
+
