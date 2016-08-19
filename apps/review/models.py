@@ -249,6 +249,14 @@ class Feedback(models.Model):
                     return user_info.phone_no
         return constants.NOT_ATTEMPTED_TEXT
 
+    def customer_dob(self):
+        if self.user:
+            user_info = self.user.info.first()
+            if user_info:
+                if user_info.date_of_birth:
+                    return user_info.date_of_birth
+        return constants.NOT_ATTEMPTED_TEXT
+
     def customer_age_group(self):
         if self.user:
             user_info = self.user.info.first()
@@ -397,6 +405,7 @@ class Feedback(models.Model):
                 "is_negative": self.is_negative(),
                 "action_taken": self.action_taken,
                 "email": self.customer_email(),
+                "date_of_birth": self.customer_dob(),
                 "created_at": self.created_at,
                 "updated_at": self.updated_at,
             }

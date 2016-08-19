@@ -3,6 +3,7 @@ from apps.person.enum import UserGenderEnum
 from apps.person.models import UserInfo
 from apps.person.serializers import UserSerializer, UserInfoSerializer
 from apps.utils import save, generate_username, generate_password, make_request
+from datetime import datetime
 
 __author__ = 'aamish'
 
@@ -16,6 +17,12 @@ def get_related_user(data):
 
     data['username'] = generate_username()
     data['password'] = generate_password()
+
+    if "dob" in data:
+        dob = data["dob"].split("-")
+        date_of_birth = "2000-"+dob[1]+"-"+dob[0]
+        b_day = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
+        data['date_of_birth'] = b_day
 
     user_serializer = UserSerializer(data=data)
     user = save(user_serializer)

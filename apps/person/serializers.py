@@ -11,7 +11,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ('id', 'phone_no', 'user', 'gender', 'ageGroup')
+        fields = ('id', 'phone_no', 'date_of_birth', 'user', 'gender', 'ageGroup')
 
 
 class UserSerializer(serializers.ModelSerializer):
