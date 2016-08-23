@@ -87,5 +87,181 @@ class AllFeedbackView(APIView):
         }
 
         return Response(response_json(True, data, None))
+# -----------------text local start ----------#
+
+#!/usr/bin/env python
+
+import urllib.request
+import urllib.parse
+
+def sendSMS(uname, hashCode, numbers, sender, message):
+    data =  urllib.parse.urlencode({'username': uname, 'hash': hashCode, 'numbers': numbers,
+        'message' : message, 'sender': sender})
+    data = data.encode('utf-8')
+    request = urllib.request.Request("http://api.txtlocal.com/send/?")
+    f = urllib.request.urlopen(request, data)
+    fr = f.read()
+    return(fr)
+def MessageFeedBackView(request):
+    resp =  sendSMS('zamanafzal@gmail.com', 'c7f22503211dde7529015fb648efe42edcd30ede', '923146114223',
+        'Mcdonalds', 'This is sample message for mcdonalds feedback.')
+    print (resp)
 
 
+#!/usr/bin/env python
+
+import urllib.request
+import urllib.parse
+
+def getInboxes(uname, hashCode):
+    data =  urllib.parse.urlencode({'username': uname, 'hash': hashCode})
+    data = data.encode('utf-8')
+    request = urllib.request.Request("http://api.txtlocal.com/get_inboxes/?")
+    f = urllib.request.urlopen(request, data)
+    fr = f.read()
+    return(fr)
+
+
+def MessageFeedBackViewRec(request):
+    resp =  getInboxes('zamanafzal@gmail.com', 'c7f22503211dde7529015fb648efe42edcd30ede')
+    print (resp)
+
+
+# -----------------text local end ----------#
+
+
+
+# ----------------- plivo start ----------#
+import plivo
+def plivo_message_send(request):
+    # -*- coding: utf-8 -*-
+
+
+    auth_id = "MAMWM1MZG2M2EZODE1ZT"
+    auth_token = "MmYzNWE5ZTE0OTgzMmU2YzU1ZjdkNzhjOWMxNTE1"
+
+    p = plivo.RestAPI(auth_id, auth_token)
+
+    params = {
+        'src': 'ALPHA-ID',  # Alphanumeric sender ID
+        'dst': '923146114223',  # Receiver's phone number with ountry code
+        'text': "Hi, text from Plivo"  # Your SMS text message
+    }
+
+    response = p.send_message(params)
+
+    # Prints the complete response
+    print("1 of plivo")
+    print(str(response))
+
+    # Sample successful output
+    # (202,
+    # {
+    #               u'message': u'message(s) queued',
+    #               u'message_uuid': [u'b795906a-8a79-11e4-9bd8-22000afa12b9'],
+    #               u'api_id': u'b77af520-8a79-11e4-b153-22000abcaa64'
+    #       }
+    # )
+
+    # Prints only the status code
+    print("2 of plivo")
+    print(str(response[0]))
+
+    # Sample successful output
+    # 202
+
+    # Prints the message details
+    print("3 of plivo")
+    print(str(response[1]))
+
+    # Sample successful output
+    # {
+    #       u'message': u'message(s) queued',
+    #       u'message_uuid': [u'b795906a-8a79-11e4-9bd8-22000afa12b9'],
+    #       u'api_id': u'b77af520-8a79-11e4-b153-22000abcaa64'
+    # }
+
+    # Print the message_uuid
+    print("4 of plivo")
+    # print(str(response[1]['message_uuid']))
+
+    # Sample successful output
+    # [u'b795906a-8a79-11e4-9bd8-22000afa12b9']
+
+    # Print the api_id
+    print("5 of plivo")
+    print(str(response[1]['api_id']))
+
+    # Sample successful output
+    # b77af520-8a79-11e4-b153-22000abcaa64
+
+
+# ----------------- plivo end ----------#
+
+
+
+
+# ----------------- twillio start ----------#
+
+
+
+
+from twilio.rest import TwilioRestClient
+
+def twillio_message_send(request):
+
+    # Find these values at https://twilio.com/user/account
+    account_sid = "AC6b17872c1aac640d1a0c56182f026f44"
+    auth_token = "5c3508333e7bcbecf5babccce4cee95c"
+    client = TwilioRestClient(account_sid, auth_token)
+
+    message = client.messages.create(to="+923146114223", from_="+12677336602",
+                                         body="Hello zaman!How are you?")
+    print("sent")
+    print(message)
+
+
+
+
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+from django_twilio.decorators import twilio_view
+from twilio.twiml import Response
+
+TWILIO_ACCOUNT_SID = "AC6b17872c1aac640d1a0c56182f026f44"
+TWILIO_AUTH_TOKEN = "5c3508333e7bcbecf5babccce4cee95c"
+
+@twilio_view
+def sms(request):
+    r = Response()
+    print('r is',r)
+    r.message('Hello world! Get in touch - paul@twilio.com')
+    return r
+
+
+@twilio_view
+def ring(request):
+    r = Response()
+    r.play('http://bit.ly/phaltsw')
+    return r
+
+# This is a plain view that returns manually written TwiML
+# Note: it's not linked to a URL in this example.
+@csrf_exempt
+def sms_plain(request):
+    twiml = '<Response><Message>Plain old TwiML</Message></Response>'
+    return HttpResponse(twiml, content_type='text/xml')
+
+
+# This is an example that looks for a parameter in the request
+# and returns a personalised message
+@twilio_view
+def sms_personal(request):
+    name = request.POST.get('Body', '')
+    msg = 'Hey %s, how are you today?' % (name)
+
+    r = Response()
+    r.message(msg)

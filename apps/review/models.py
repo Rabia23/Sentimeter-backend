@@ -33,6 +33,10 @@ class FeedbackQuerySet(models.QuerySet):
             return self.filter(
                 branch__city__exact=city_id,
                 branch__city__region__exact=region_id)
+        elif region_id and branch_id:
+            return self.filter(
+                branch__exact=branch_id,
+                branch__city__region__exact=region_id)
         elif region_id:
             return self.filter(branch__city__region__exact=region_id)
         elif branch_id:
@@ -98,7 +102,7 @@ class Feedback(models.Model):
     manager = FeedbackManager()
 
     def __str__(self):
-        return str(self.comment)
+        return self.comment
 
     @staticmethod
     def get_if_exists(objectId):
