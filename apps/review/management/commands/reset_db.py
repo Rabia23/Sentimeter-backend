@@ -40,26 +40,3 @@ class Command(BaseCommand):
         Feedback.objects.all().delete()
         self.stdout.write("data successfully deleted from feedback table.")
         self.stdout.write("data successfully deleted from feedbackOption table.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
