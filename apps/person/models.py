@@ -122,7 +122,7 @@ class UserInfo(models.Model):
 
             elif parent_role == UserRolesEnum.OPERATIONAL_CONSULTANT:
                 data = [user_info.to_dict() for user_info in
-                        UserInfo.objects.filter(branch_manager_role, gro_role).order_by("-role", "-created_at")]
+                        UserInfo.objects.filter(~director_role, ~assitant_director_role, ~operational_manager_role,~operartional_consultant_role, ~customer_role).order_by("-role", "-created_at")]
             elif parent_role == UserRolesEnum.BRANCH_MANAGER:
                 data = [user_info.to_dict() for user_info in
                         UserInfo.objects.filter(gro_role).order_by("-role", "-created_at")]
