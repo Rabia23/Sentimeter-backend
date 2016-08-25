@@ -847,19 +847,19 @@ class ManageUserView(APIView):
 
         #can be refactored more
         if parent_role == UserRolesEnum.BRANCH_MANAGER:
-            people = UserInfo.get_children_dict(UserRolesEnum.GRO, UserRolesEnum.BRANCH_MANAGER, user.id)
+            people = UserInfo.get_all_child_dict(UserRolesEnum.GRO, UserRolesEnum.BRANCH_MANAGER, user.id)
             child_role = UserRolesEnum.GRO
         elif parent_role == UserRolesEnum.OPERATIONAL_CONSULTANT:
-            people = UserInfo.get_children_dict(UserRolesEnum.BRANCH_MANAGER, UserRolesEnum.OPERATIONAL_CONSULTANT, user.id)
+            people = UserInfo.get_all_child_dict(UserRolesEnum.BRANCH_MANAGER, UserRolesEnum.OPERATIONAL_CONSULTANT, user.id)
             child_role = UserRolesEnum.BRANCH_MANAGER
         elif parent_role == UserRolesEnum.OPERATIONAL_MANAGER:
-            people = UserInfo.get_children_dict(UserRolesEnum.OPERATIONAL_CONSULTANT, UserRolesEnum.OPERATIONAL_MANAGER, user.id)
+            people = UserInfo.get_all_child_dict(UserRolesEnum.OPERATIONAL_CONSULTANT, UserRolesEnum.OPERATIONAL_MANAGER, user.id)
             child_role = UserRolesEnum.OPERATIONAL_CONSULTANT
         elif parent_role == UserRolesEnum.ASSISTANT_DIRECTOR:
-            people = UserInfo.get_children_dict(UserRolesEnum.OPERATIONAL_MANAGER, UserRolesEnum.ASSISTANT_DIRECTOR, user.id)
+            people = UserInfo.get_all_child_dict(UserRolesEnum.OPERATIONAL_MANAGER, UserRolesEnum.ASSISTANT_DIRECTOR, user.id)
             child_role = UserRolesEnum.OPERATIONAL_MANAGER
         elif parent_role == UserRolesEnum.DIRECTOR:
-            people = UserInfo.get_children_dict(UserRolesEnum.ASSISTANT_DIRECTOR, UserRolesEnum.DIRECTOR, user.id)
+            people = UserInfo.get_all_child_dict(UserRolesEnum.ASSISTANT_DIRECTOR, UserRolesEnum.DIRECTOR, user.id)
             child_role = UserRolesEnum.ASSISTANT_DIRECTOR
 
         data = {
