@@ -24,9 +24,9 @@ class SegmentEnum(enum.Enum):
     LATE_NIGHT = 5
 
     labels = {
-        MORNING: "Morning",
-        AFTERNOON: "Afternoon",
-        EVENING: "Evening",
-        NIGHT: "Night",
+        MORNING: "Breakfast",
+        AFTERNOON: "Lunch",
+        EVENING: "Snack",
+        NIGHT: "Dinner",
         LATE_NIGHT: "Late Night"
     }
