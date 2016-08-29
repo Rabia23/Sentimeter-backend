@@ -92,45 +92,49 @@ class UserInfo(models.Model):
         data = [user_info.to_dict() for user_info in UserInfo.objects.filter(role=role, is_active=True).order_by("-created_at")]
         return data
 
+
     @staticmethod
-    def get_children_dict(role, parent_role, parent_id):
+    def get_role_child_dict(role, parent_role, user_id):
         data = []
-        director_role = Q(role=UserRolesEnum.DIRECTOR)
-        assitant_director_role = Q(role=UserRolesEnum.ASSISTANT_DIRECTOR)
-        operational_manager_role = Q(role=UserRolesEnum.OPERATIONAL_MANAGER)
-        operartional_consultant_role = Q(role=UserRolesEnum.OPERATIONAL_CONSULTANT)
-        branch_manager_role = Q(role=UserRolesEnum.BRANCH_MANAGER)
-        gro_role = Q(role=UserRolesEnum.GRO)
-        customer_role = Q(role=UserRolesEnum.CUSTOMER)
-
-        user_info = UserInfo.objects.filter(user_id=parent_id, role=parent_role).first()
-
+        user_info = UserInfo.objects.filter(user_id=user_id, role=parent_role).first()
         if user_info:
-            if parent_role == UserRolesEnum.DIRECTOR:
-                print("yes director parent role")
-                data = [user_info.to_dict() for user_info in
-                        UserInfo.objects.filter(~director_role, ~customer_role).order_by(
-                            "-role", "-created_at")]
-            elif parent_role == UserRolesEnum.ASSISTANT_DIRECTOR:
-                data = [user_info.to_dict() for user_info in UserInfo.objects.filter(
-                    ~director_role, ~assitant_director_role, ~customer_role).order_by("-role", "-created_at")]
-
-            elif parent_role == UserRolesEnum.OPERATIONAL_MANAGER:
-                data = [user_info.to_dict() for user_info in UserInfo.objects.filter(
-                    ~director_role, ~assitant_director_role, ~operational_manager_role, ~customer_role).order_by(
-                    "-role", "-created_at")]
-
-            elif parent_role == UserRolesEnum.OPERATIONAL_CONSULTANT:
-                data = [user_info.to_dict() for user_info in
-                        UserInfo.objects.filter(~director_role, ~assitant_director_role, ~operational_manager_role,~operartional_consultant_role, ~customer_role).order_by("-role", "-created_at")]
-            elif parent_role == UserRolesEnum.BRANCH_MANAGER:
-                data = [user_info.to_dict() for user_info in
-                        UserInfo.objects.filter(gro_role).order_by("-role", "-created_at")]
-
+            data = [user_info.to_dict() for user_info in
+                    UserInfo.objects.filter(role=role, parent_id=user_info.id).order_by("-created_at")]
         return data
 
-    @staticmethod
+
     def get_if_exists(objectId):
         user_info = UserInfo.objects.filter(objectId=objectId).first()
         if user_info:
             return user_info
+
+
+    def get_ancestors(self):
+        if self.parent is None:
+            return UserInfo.objects.none()
+        return UserInfo.objects.filter(pk=self.parent.pk) | self.parent.get_ancestors()
+
+
+    def get_all_children(self, include_self=True):
+        r = []
+        if include_self:
+            r.append(self)
+        for c in UserInfo.objects.filter(parent=self):
+            _r = c.get_all_children(include_self=True)
+            if 0 < len(_r):
+                r.extend(_r)
+        return r
+
+
+    @staticmethod
+    def get_all_child_dict(role, parent_role, user_id):
+        data = []
+        user_info = UserInfo.objects.filter(user_id=user_id, role=parent_role).first()
+
+        if user_info:
+            childs = user_info.get_all_children()
+            all_child_id = [child.id for child in childs]
+            data = [user_info.to_dict() for user_info in
+                    UserInfo.objects.filter(pk__in=all_child_id).exclude(role=parent_role).order_by("-role","-created_at")]
+
+        return data
