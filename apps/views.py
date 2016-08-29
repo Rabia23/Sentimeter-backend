@@ -144,7 +144,7 @@ class FeedbackAnalysisView(APIView):
             for object in objects:
                 related_feedback_options = feedback_options.related_filters(type, object)
                 filtered_feedback_options = related_feedback_options.values(
-                    'option_id', 'option__text', 'option__parent_id', 'option__color_code').annotate(count=Count('option_id'))
+                    'option_id', 'option__text', 'option__parent_id', 'option__color_code', 'option__score').annotate(count=Count('option_id'))
                 list_feedback = generate_missing_options(Question.objects.get(type=question_type), filtered_feedback_options)
 
                 data = {'feedback_count': related_feedback_options.count(), 'feedbacks': list_feedback}
@@ -246,7 +246,7 @@ class OverallRatingView(APIView):
 
                 feedback_options = feedback_options.children(option) if option else feedback_options.\
                                         question_parent_options(question)
-                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
+                filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code', 'option__score').\
                                         annotate(count=Count('option_id'))
                 list_feedback = generate_missing_sub_options(option_id, filtered_feedback) if option else \
                                     generate_missing_options(question, filtered_feedback)
@@ -286,7 +286,7 @@ class CategoryPerformanceView(APIView):
                 feedback_options = FeedbackOption.manager.question_parent_options(question).\
                                                 date(date_from, date_to).filters(region_id, city_id, branch_id)
 
-            filtered_feedback_options = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code').\
+            filtered_feedback_options = feedback_options.values('option_id', 'option__text', 'option__parent_id', 'option__color_code', 'option__score').\
                                             annotate(count=Count('option_id'))
             list_feedback = generate_missing_sub_options(option_id, filtered_feedback_options) if option else \
                                 generate_missing_options(question, filtered_feedback_options)
