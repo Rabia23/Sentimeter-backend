@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^api/', include(questionnaire_urls)),
     url(r'^api/', include(report_urls)),
     url(r'^api/', include(api_urls)),
+    url(r'^sms/$', 'lively.receive_sms.sms'),
     url(r'^dashboard/', include(dashboard_urls)),
     url(r'^swagger/', include('rest_framework_swagger.urls')),
 ]

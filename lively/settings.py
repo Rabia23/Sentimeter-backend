@@ -155,6 +155,10 @@ AWS_SECRET_ACCESS_KEY = "xpL4VeZ4Seh58ANXCyVSdNhUC+eWqDMItX4xn5Yt"
 api_key = 'key-ae81bf507aa18292f186252f9fdc65ee'
 domain = 'sentimeter.io'
 
+#--------- Twilio-------------
+TWILIO_ACCOUNT_SID = "AC4503bc16fbd3a847c43a9e02afb6c126"
+TWILIO_AUTH_TOKEN = "600f8b20eb1ae27b531f9ea29a3ebf35"
+
 try:
     from lively.local_settings import *
 except ImportError:
