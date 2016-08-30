@@ -28,6 +28,9 @@ class Branch(models.Model):
             return branch
 
     def branch_feedback_detail(self, date_from, date_to):
+
+        days = self.calculate_days(date_from, date_to)
+        benchmark_count = self.benchmark_count * days
         feedback_count = self.get_branch_feedback_count(date_from, date_to)
         branch = {
             "id": self.id,
@@ -37,7 +40,7 @@ class Branch(models.Model):
             "city": self.city.name,
             "region": self.city.region.name,
             "feedback_count": feedback_count,
-            "count_exceeded": feedback_count >= self.benchmark_count,
+            "count_exceeded": feedback_count >= benchmark_count,
         }
         return branch
 
@@ -54,3 +57,11 @@ class Branch(models.Model):
             if user.role == UserRolesEnum.BRANCH_MANAGER:
                 return True
         return False
+
+    def calculate_days(self, date_from, date_to):
+        date_format = "%Y-%m-%d"
+        a = datetime.strptime(date_from, date_format)
+        b = datetime.strptime(date_to, date_format)
+        delta = b - a
+        days = delta.days
+        return days
