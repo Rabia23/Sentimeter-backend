@@ -211,14 +211,14 @@ from twilio.rest import TwilioRestClient
 def twillio_message_send(request):
 
     # Find these values at https://twilio.com/user/account
-    account_sid = "AC6b17872c1aac640d1a0c56182f026f44"
-    auth_token = "5c3508333e7bcbecf5babccce4cee95c"
+    account_sid = "AC4503bc16fbd3a847c43a9e02afb6c126"
+    auth_token = "600f8b20eb1ae27b531f9ea29a3ebf35"
     client = TwilioRestClient(account_sid, auth_token)
 
-    message = client.messages.create(to="+923146114223", from_="+12677336602",
-                                         body="Hello zaman!How are you?")
+    message = client.messages.create(to="+923146114223", from_="+15073224128",
+                                         body="Hello zaman")
     print("sent")
-    print(message)
+    print(message.sid)
 
 
 
@@ -231,13 +231,14 @@ from django.http import HttpResponse
 from django_twilio.decorators import twilio_view
 from twilio.twiml import Response
 
-TWILIO_ACCOUNT_SID = "AC6b17872c1aac640d1a0c56182f026f44"
-TWILIO_AUTH_TOKEN = "5c3508333e7bcbecf5babccce4cee95c"
+# TWILIO_ACCOUNT_SID = "AC6b17872c1aac640d1a0c56182f026f44"
+# TWILIO_AUTH_TOKEN = "5c3508333e7bcbecf5babccce4cee95c"
 
 @twilio_view
 def sms(request):
+    print("sms view")
     r = Response()
-    print('r is',r)
+    print('r is', r)
     r.message('Hello world! Get in touch - paul@twilio.com')
     return r
 
@@ -265,3 +266,62 @@ def sms_personal(request):
 
     r = Response()
     r.message(msg)
+
+
+
+############################ twillio end ########################
+
+
+##############---- innovative text start -----#################3
+
+
+import requests
+def ahah(requeest):
+    parameters = {'from': '923248145683',
+                  'to': '923146114223',
+                  'text': 'text',
+                  'api_key': 'dgft0nq2',
+                  'api_secret': 'wtt3wedz',
+
+    }
+
+
+    r = requests.post('http://rest.innovativetxt.com/smsapi/index.php', params=parameters)
+    print(r.status_code)
+    print(r.content)
+    print(r.text)
+
+
+##############---- messagebird  start -----#################3
+
+
+import messagebird
+def messagebird1(requeest):
+    client = messagebird.Client("live_4bKU8pY022sA4ABVUh0N7DRaR")
+    message = client.message_create(
+            'mcdonalds',
+            '+923146114223',
+            'This is a test message from messagebird.Issue is short code number.',
+            { 'reference' : 'Foobar' }
+        )
+    print(message)
+
+
+
+##########clickatell ---- change code from curl to python and create request ----------#
+def clickatell(request):
+    headers = {
+        'X-Version': '1',
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer 11PntPP6UPCf7EMfTQf6Ie8R6wPv12lKhJx5g_LYL7WqMLhTuHuusR4IMzga1VpfzkWIDvWtELw8OV7P',
+        'Accept': 'application/json',
+    }
+
+    data = '{"text":"Test Message","to":["923146114223"]}'
+
+    r = requests.post('https://api.clickatell.com/rest/message', headers=headers, data=data)
+    print("yes")
+    print(r)
+    print(r.content)
+    print(r.status_code)
+    print(r.request)
