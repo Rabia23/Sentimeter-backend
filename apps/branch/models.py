@@ -41,6 +41,7 @@ class Branch(models.Model):
             "region": self.city.region.name,
             "feedback_count": feedback_count,
             "count_exceeded": feedback_count >= benchmark_count,
+            "benchmark_count": benchmark_count
         }
         return branch
 
@@ -63,7 +64,5 @@ class Branch(models.Model):
         a = datetime.strptime(date_from, date_format)
         b = datetime.strptime(date_to, date_format)
         delta = b - a
-        print(delta)
         days = delta.days + 1
-        print(days)
         return days
