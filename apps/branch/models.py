@@ -63,5 +63,7 @@ class Branch(models.Model):
         a = datetime.strptime(date_from, date_format)
         b = datetime.strptime(date_to, date_format)
         delta = b - a
-        days = delta.days
+        print(delta)
+        days = delta.days + 1
+        print(days)
         return days
