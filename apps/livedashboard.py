@@ -105,7 +105,7 @@ def get_overall_rating(date_from, date_to):
     for single_date in rrule.rrule(rule, dtstart=date_from, until=date_to):
         feedback_options = FeedbackOption.manager.date(str(single_date.date()), str(single_date.date()))
         feedback_options = feedback_options.question_parent_options(question)
-        filtered_feedback = feedback_options.values('option_id', 'option__text').annotate(count=Count('option_id'))
+        filtered_feedback = feedback_options.values('option_id', 'option__text', 'option__score').annotate(count=Count('option_id'))
         list_feedback = generate_missing_options(question, filtered_feedback, False)
 
         date_data = {'feedback_count': feedback_options.count(), 'feedbacks': list_feedback}

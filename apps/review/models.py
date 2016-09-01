@@ -545,7 +545,7 @@ class FeedbackOption(models.Model):
 
     @staticmethod
     def get_qsc_count(date_from=None, date_to=None, region_id=None, city_id=None, branch_id=None):
-        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).filters(region_id, city_id, branch_id).values('option_id', 'option__text').annotate(count=Count("option_id"))
+        dict_list = FeedbackOption.manager.question(constants.TYPE_2).date(date_from, date_to).filters(region_id, city_id, branch_id).values('option_id', 'option__text', 'option__score').annotate(count=Count("option_id"))
 
         qsc_list = []
         for dict in dict_list:
