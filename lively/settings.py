@@ -12,6 +12,7 @@ ALLOWED_HOSTS = ['*']
 ADMINS = (
   ('Zaman', 'zamanafzal@gmail.com'),
   ('Aamish', 'aamish.iftikhar@arbisoft.com'),
+  ('Rabia', 'rabia.iftikhar@arbisoft.com'),
 )
 PREREQ_APPS = [
     'django.contrib.admin',
@@ -126,13 +127,13 @@ STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__), 'static'),)
 
 DIRS = [os.path.join(BASE_DIR,'templates')]
 
-EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mclivefeed@gmail.com'
-EMAIL_HOST_PASSWORD = 'Arbisoft123'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'LiveFeed Support <no-reply@livefeed.com>'
+# EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'mclivefeed@gmail.com'
+# EMAIL_HOST_PASSWORD = 'Arbisoft123'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'LiveFeed Support <no-reply@livefeed.com>'
 
 WEBSOCKET_ADDRESS = '172.16.11.113'
 WEBSOCKET_PORT = '5678'
@@ -155,6 +156,15 @@ AWS_SECRET_ACCESS_KEY = "xpL4VeZ4Seh58ANXCyVSdNhUC+eWqDMItX4xn5Yt"
 
 
 #----------------------- mail gun credentials--------------------
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@sentimeter.io'
+EMAIL_HOST_PASSWORD = '82c079d38ef8b5914d893545d8c88d12'
+EMAIL_PORT = 587
+EMAIL_BACKEND = 'django_mailgun_mime.backends.MailgunMIMEBackend'
+MAILGUN_BASE_URL = "https://api.mailgun.net/v3/sentimeter.io"
+MAILGUN_API_KEY = 'key-ae81bf507aa18292f186252f9fdc65ee'
+MAILGUN_DOMAIN_NAME = 'sentimeter.io'
 api_key = 'key-ae81bf507aa18292f186252f9fdc65ee'
 domain = 'sentimeter.io'
 
