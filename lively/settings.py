@@ -9,7 +9,10 @@ SECRET_KEY = 'f#qiorpa9id!n$v#1*(ne16j9%hpa3zqo)u#)jtu=jqge#t%g!'
 DEBUG = False
 ALLOWED_HOSTS = ['*']
 
-
+ADMINS = (
+  ('Zaman', 'zamanafzal@gmail.com'),
+  ('Aamish', 'aamish.iftikhar@arbisoft.com'),
+)
 PREREQ_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
