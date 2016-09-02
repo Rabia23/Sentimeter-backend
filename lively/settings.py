@@ -133,7 +133,7 @@ DIRS = [os.path.join(BASE_DIR,'templates')]
 # EMAIL_HOST_PASSWORD = 'Arbisoft123'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'LiveFeed Support <no-reply@livefeed.com>'
+
 
 WEBSOCKET_ADDRESS = '172.16.11.113'
 WEBSOCKET_PORT = '5678'
@@ -167,6 +167,7 @@ MAILGUN_API_KEY = 'key-ae81bf507aa18292f186252f9fdc65ee'
 MAILGUN_DOMAIN_NAME = 'sentimeter.io'
 api_key = 'key-ae81bf507aa18292f186252f9fdc65ee'
 domain = 'sentimeter.io'
+DEFAULT_FROM_EMAIL = 'LiveFeed Support <no-reply@livefeed.com>'
 
 try:
     from lively.local_settings import *
