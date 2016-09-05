@@ -402,7 +402,99 @@ class Command(BaseCommand):
                     option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
                     self.stdout.write(option.text+" successfully created.")
 
+    def create_questionnaire(self, branch_id):
+        questionnaire_list = [
+                          {
+                            "questionnaire": {
+                              "title": "Sample Questionnaire 5"
+                            },
+                            "questions": [
+                              {
+                                "text": "How did you come to know about the questionnaire?",
+                                "type": 5,
+                                "genreType": 1,
+                                "text_urdu": "آپ کو پروموشن کے بارے میں کیسے پتا چلا؟",
+                                "options": [
+                                  {
+                                    "text": "Print",
+                                    "text_urdu": "",
+                                    "color_code": "#E74D3D"
+                                  },
+                                  {
+                                    "text": "Radio",
+                                    "text_urdu": "",
+                                    "color_code": "#F0C547"
+                                  },
+                                  {
+                                    "text": "Digital",
+                                    "text_urdu": "",
+                                    "color_code": "#34495E"
+                                  },
+                                  {
+                                    "text": "Billboards",
+                                    "text_urdu": "",
+                                    "color_code": "#9C59B8"
+                                  },
+                                  {
+                                    "text": "Restaurants",
+                                    "text_urdu": "",
+                                    "color_code": "#3598DC"
+                                  },
+                                  {
+                                    "text": "Fliers",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Would you like to try other coffee flavors?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "ہاں",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+
+        for questionnaire in questionnaire_list:
+            q = Questionnaire.objects.create(title=questionnaire['questionnaire']['title'])
+            branch = Branch.objects.get(pk=branch_id)
+            q.branch.add(branch)
+            self.stdout.write(q.title+" successfully created.")
+            for ques in questionnaire['questions']:
+                question = Question.objects.create(text=ques['text'], type=ques['type'], genreType=ques['genreType'], text_urdu=ques['text_urdu'], questionnaire=q)
+                self.stdout.write(question.text+" successfully created.")
+                for op in ques['options']:
+                    option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
+                    self.stdout.write(option.text+" successfully created.")
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '-branch_id',
+            type=int,
+            dest='branch_id',
+            help='Add branch Questionnaire',
+        )
+
     def handle(self, *args, **options):
+        if options['branch_id']:
+            branch = options['branch_id']
+            print("branch id: ", branch)
+            self.create_questionnaire(branch)
+
         self.create_patches()
         self.create_management()
         self.create_questions_options()
