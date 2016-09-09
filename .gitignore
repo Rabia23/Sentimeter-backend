@@ -8,3 +8,4 @@ local_settings.py
 dump.rdb
 eggs.csv
 feedback.csv
+errors_log.out

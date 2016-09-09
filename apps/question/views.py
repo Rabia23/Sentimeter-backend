@@ -6,6 +6,11 @@ from apps.question.serializers import QuestionSerializer
 from apps import constants
 from apps.utils import save, response, response_json, get_param, get_data_param
 from django.db import transaction
+import logging
+from lively import local_settings
+
+logging.basicConfig(filename=local_settings.LOG_FILENAME, level=logging.ERROR, format='%(asctime)s %(levelname)s %(message)s',)
+
 
 
 class QuestionView(APIView):
@@ -39,6 +44,8 @@ class QuestionView(APIView):
                 return Response(response_json(True, serializer.data, None))
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except Question.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
