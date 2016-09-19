@@ -326,10 +326,11 @@ class Command(BaseCommand):
                         sub_option = Option.objects.create(text=sub_op['text'], text_urdu=sub_op['text_urdu'], parent=option, color_code=sub_op['color_code'])
                         self.stdout.write(sub_option.text+" successfully created.")
 
+    def create_promotion(self):
         promotion_list = [
                           {
                             "promotion": {
-                              "title": "Coffee"
+                              "title": "Waffle Cone"
                             },
                             "questions": [
                               {
@@ -371,14 +372,50 @@ class Command(BaseCommand):
                                 ]
                               },
                               {
-                                "text": "Would you like to try other coffee flavors?",
+                                "text": "Is it a good value for money?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "یہ پیسے کے لئے ایک اچھی قیمت ہے؟",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "ہاں",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Are you satisfied with the taste?",
                                 "type": 4,
                                 "genreType": 1,
                                 "text_urdu": "",
                                 "options": [
                                   {
                                     "text": "Yes",
-                                    "text_urdu": "ہاں",
+                                    "text_urdu": "کیا آپ ذائقے سے مطمئن ہیں؟",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Are you satisfied with the product?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "آپ اس مصنوع سے مطمئن ہیں؟",
                                     "color_code": "#f7ca17"
                                   },
                                   {
@@ -406,50 +443,152 @@ class Command(BaseCommand):
         questionnaire_list = [
                           {
                             "questionnaire": {
-                              "title": "Sample Questionnaire 5"
+                              "title": "Jail Road"
                             },
                             "questions": [
                               {
-                                "text": "How did you come to know about the questionnaire?",
-                                "type": 5,
+                                "text": "How often do you visit McDonald's?",
+                                "type": 11,
                                 "genreType": 1,
-                                "text_urdu": "آپ کو پروموشن کے بارے میں کیسے پتا چلا؟",
+                                "text_urdu": "آپ مکڈونلڈ کتنی بار آتے ہیں؟",
                                 "options": [
                                   {
-                                    "text": "Print",
+                                    "text": "Daily",
                                     "text_urdu": "",
                                     "color_code": "#E74D3D"
                                   },
                                   {
-                                    "text": "Radio",
+                                    "text": "Monthly",
                                     "text_urdu": "",
                                     "color_code": "#F0C547"
                                   },
                                   {
-                                    "text": "Digital",
+                                    "text": "Weekly",
                                     "text_urdu": "",
                                     "color_code": "#34495E"
                                   },
                                   {
-                                    "text": "Billboards",
+                                    "text": "Very Rare",
                                     "text_urdu": "",
                                     "color_code": "#9C59B8"
-                                  },
-                                  {
-                                    "text": "Restaurants",
-                                    "text_urdu": "",
-                                    "color_code": "#3598DC"
-                                  },
-                                  {
-                                    "text": "Fliers",
-                                    "text_urdu": "",
-                                    "color_code": "#4CCC72"
                                   }
                                 ]
                               },
                               {
-                                "text": "Would you like to try other coffee flavors?",
-                                "type": 4,
+                                "text": "Which city are you from? (If not from Lahore)",
+                                "type": 11,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Dina",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  },
+                                  {
+                                    "text": "Kharian",
+                                    "text_urdu": "",
+                                    "color_code": "#90ec7c"
+                                  },
+                                  {
+                                    "text": "Mirpur",
+                                    "text_urdu": "",
+                                    "color_code": "#f1d400"
+                                  },
+                                  {
+                                    "text": "Kotli",
+                                    "text_urdu": "",
+                                    "color_code": "#434347"
+                                  },
+                                  {
+                                    "text": "Gujrat",
+                                    "text_urdu": "",
+                                    "color_code": "#178aea"
+                                  },
+                                  {
+                                    "text": "Other",
+                                    "text_urdu": "",
+                                    "color_code": "#cb1e24"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Through what medium have you come to know of this branch?",
+                                "type": 11,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Print",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  },
+                                  {
+                                    "text": "Friend/Family",
+                                    "text_urdu": "",
+                                    "color_code": "#90ec7c"
+                                  },
+                                  {
+                                    "text": "Digital",
+                                    "text_urdu": "",
+                                    "color_code": "#f1d400"
+                                  },
+                                  {
+                                    "text": "Billboards",
+                                    "text_urdu": "",
+                                    "color_code": "#434347"
+                                  },
+                                  {
+                                    "text": "Restaurants",
+                                    "text_urdu": "",
+                                    "color_code": "#178aea"
+                                  },
+                                  {
+                                    "text": "Fliers",
+                                    "text_urdu": "",
+                                    "color_code": "#cb1e24"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Did you know before traveling that there is a McDonald's Branch Jail Road?",
+                                "type": 12,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "ہاں",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "In which direction are you traveling?",
+                                "type": 12,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "RWP/ISD to Lahore",
+                                    "text_urdu": "",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "Lahore to RWP/ISD",
+                                    "text_urdu": "",
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Are you from Lahore?",
+                                "type": 12,
                                 "genreType": 1,
                                 "text_urdu": "",
                                 "options": [
@@ -493,8 +632,9 @@ class Command(BaseCommand):
         if options['branch_id']:
             branch = options['branch_id']
             print("branch id: ", branch)
-            self.create_questionnaire(branch)
+            # self.create_questionnaire(branch)
 
-        self.create_patches()
-        self.create_management()
-        self.create_questions_options()
+        # self.create_patches()
+        # self.create_management()
+        # self.create_questions_options()
+        self.create_promotion()

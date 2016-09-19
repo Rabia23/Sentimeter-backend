@@ -40,6 +40,11 @@ from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
 from django.db import transaction
 from apps.redis_queue import RedisQueue
+import logging
+from lively import local_settings
+
+logging.basicConfig(filename=local_settings.LOG_FILENAME, level=logging.ERROR, format='%(asctime)s %(levelname)s %(message)s',)
+
 
 class LoginView(APIView):
 
@@ -92,6 +97,7 @@ class OverallFeedbackView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -154,6 +160,7 @@ class FeedbackAnalysisView(APIView):
             return Response(response_json(True, feedback_data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -185,6 +192,7 @@ class FeedbackAnalysisBreakdownView(APIView):
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -260,6 +268,7 @@ class OverallRatingView(APIView):
             return Response(response_json(True, feedback_records_list, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -295,6 +304,7 @@ class CategoryPerformanceView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -315,6 +325,7 @@ class PositiveNegativeFeedbackView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -403,6 +414,7 @@ class MapView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -443,6 +455,7 @@ class FeedbackSegmentationView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -459,6 +472,7 @@ class TopConcernsView(APIView):
             data = {'concern_count': len(concerns), 'concern_list': concerns}
             return Response(response_json(True, data, None))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -491,6 +505,7 @@ class SegmentationRatingView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -519,6 +534,7 @@ class ActionTakenView(APIView):
             else:
                 return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -577,6 +593,7 @@ class ActionAnalysisView(APIView):
             return Response(response_json(True, feedback_data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -599,6 +616,7 @@ class TopChartsView(APIView):
             return Response(response_json(True, data, None))
             
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -620,6 +638,7 @@ class TopRankingsView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -653,6 +672,7 @@ class ComplaintAnalysisView(APIView):
             return Response(response_json(True, data_list, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -670,6 +690,7 @@ class LeaderBoardView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -801,6 +822,7 @@ class LiveDashboardView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -868,6 +890,7 @@ class OpportunityAnalysisView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -903,8 +926,10 @@ class PromotionDetailView(APIView):
             return Response(response_json(True, data, None))
 
         except Promotion.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -940,8 +965,10 @@ class QuestionnaireDetailView(APIView):
             return Response(response_json(True, data, None))
 
         except Questionnaire.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -964,8 +991,10 @@ class ClientQuestionsView(APIView):
             return Response(response_json(True, data, None))
 
         except Branch.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -992,6 +1021,7 @@ class RecommendationAnalysisView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
@@ -1023,6 +1053,5 @@ class CustomerAnalysisView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
-
-

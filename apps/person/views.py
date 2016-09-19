@@ -11,6 +11,10 @@ from apps.region.models import Region
 from apps.utils import get_data_param, get_param, get_default_param, response_json, create_user
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
+import logging
+from lively import local_settings
+
+logging.basicConfig(filename=local_settings.LOG_FILENAME, level=logging.ERROR, format='%(asctime)s %(levelname)s %(message)s',)
 
 
 class UserView(APIView):
@@ -105,6 +109,7 @@ class UserView(APIView):
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except IntegrityError as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, "Username " + constants.TEXT_ALREADY_EXISTS))
 
     @method_decorator(my_login_required)
@@ -147,10 +152,13 @@ class UserView(APIView):
             return Response(response_json(True, user_info.to_dict(), None))
 
         except User.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Branch.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
         except Region.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
 
     @method_decorator(my_login_required)
@@ -172,6 +180,7 @@ class UserView(APIView):
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except User.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
 
 
@@ -196,6 +205,7 @@ class DisassociateBranchRegionView(APIView):
 
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
         except User.DoesNotExist as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_DOES_NOT_EXISTS))
 
 

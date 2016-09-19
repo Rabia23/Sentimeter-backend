@@ -9,6 +9,7 @@ from apps.question.models import Question
 from apps import constants
 from datetime import datetime
 from dateutil import tz
+import pytz
 from django.utils import timezone
 from apps.region.models import Region
 from apps.review.enum import ActionStatusEnum, SegmentEnum
@@ -359,6 +360,13 @@ class Feedback(models.Model):
         converted_time = utc.astimezone(to_zone)
         return converted_time.time()
 
+    def get_converted_datetime(self, date_object):
+          z_from = tz.gettz('UTC')
+          z_to = tz.gettz('Asia/Karachi')
+          utc_date = datetime.strptime(date_object, constants.DATE_FORMAT).replace(tzinfo=z_from)
+          z_to_date = utc_date.astimezone(z_to)
+          return z_to_date
+
     def save_date(self, date):
         self.created_at = date
         self.save()
@@ -416,7 +424,7 @@ class Feedback(models.Model):
                 "is_negative": self.is_negative(),
                 "action_taken": self.action_taken,
                 "email": self.customer_email(),
-                "time": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+                "time": self.get_converted_datetime(self.created_at.strftime(constants.DATE_FORMAT))
             }
             return feedback
         except Exception as e:

@@ -19,6 +19,11 @@ from django.utils.decorators import method_decorator
 from datetime import datetime, timedelta
 from apps import constants
 from apps.region.models import Region
+import logging
+from lively import local_settings
+
+logging.basicConfig(filename=local_settings.LOG_FILENAME, level=logging.ERROR, format='%(asctime)s %(levelname)s %(message)s',)
+
 
 # Create your views here.
 class ReportView(APIView):
@@ -176,4 +181,5 @@ class ReportView(APIView):
             return Response(response_json(True, data, None))
 
         except Exception as e:
+            logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
