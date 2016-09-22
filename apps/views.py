@@ -459,18 +459,43 @@ class FeedbackSegmentationView(APIView):
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
 
 
-class TopConcernsView(APIView):
+class TopConcernsView(ListModelMixin, HaystackGenericAPIView):
 
+    serializer_class = FeedbackSearchSerializer
     @method_decorator(my_login_required)
     def get(self, request, user, format=None):
         try:
-            count = 0
-            concerns = []
-            for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]:
-                concerns.append(concern.to_color_dict(constants.COLORS_TOP_CONCERNS[count]))
-                count += 1
-            data = {'concern_count': len(concerns), 'concern_list': concerns}
-            return Response(response_json(True, data, None))
+            concern_list = [{"id": concern.id, "name": concern.keyword, "weight": 0} for concern in Concern.get_all_concerns()]
+
+            date_to = get_param(request, 'date_to', None)
+            date_from = get_param(request, 'date_from', None)
+            if date_to and date_from:
+                current_tz = timezone.get_current_timezone()
+                date_to = current_tz.localize(datetime.strptime(date_to + " 23:59:59", constants.DATE_FORMAT))
+                date_from = current_tz.localize(datetime.strptime(date_from + " 00:00:00", constants.DATE_FORMAT))
+
+            all_results = SearchQuerySet().filter(comment__icontains="spicy")
+            id_list = [element.id for element in all_results]
+
+            feedbacks = Feedback.objects.filter(id__in=id_list).order_by("-created_at")
+            feedback_comments = [feedback.feedback_comment_dict() for feedback in feedbacks]
+
+            # feedbacks = Feedback.manager.date(date_from, date_to)
+            # for feedback in feedbacks:
+            #     if feedback.comment_exists() and feedback.is_negative():
+            #         for concern in concern_list:
+            #             if feedback.comment.lower().find(concern["name"]) != -1:
+            #                     concern["weight"] += 1
+            # concern_list = sorted(concern_list, key=itemgetter('weight'), reverse=True)
+            # concern_list = concern_list[:5]
+            # count = 0
+            # for concern in concern_list:
+            #     concern["name"] = concern["name"].capitalize()
+            #     concern["color_code"] = constants.COLORS_TOP_CONCERNS[count]
+            #     count += 1
+
+            data = {'concern_count': len(concern_list), 'concern_list': concern_list}
+            return Response(response_json(True, "", None))
         except Exception as e:
             logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))
