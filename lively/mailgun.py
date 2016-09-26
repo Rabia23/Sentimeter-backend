@@ -75,7 +75,21 @@ def get_upper_management_recipients():
     operational_manager_tier_management = UserInfo.get_people_dict(UserRolesEnum.OPERATIONAL_MANAGER)
 
     [recipients.append(director) for director in director_tier_management]
-    [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
-    [recipients.append(operational_manager) for operational_manager in operational_manager_tier_management]
+    # [recipients.append(assistant_director) for assistant_director in assistant_director_tier_management]
+    # [recipients.append(operational_manager) for operational_manager in operational_manager_tier_management]
 
     return recipients
+
+
+def sendTopIssuesReport(branch_feedback_json, region_feedback_json):
+    try:
+        subject = constants.FEEDBACK_REPORT_SUBJECT
+        context = {'feedback': {'branch_feedback': branch_feedback_json, 'region_feedback': region_feedback_json}}
+        txt = render_to_string('emails/issues_email_report.txt', context)
+        html = render_to_string('emails/issues_email_report.html', context)
+        recipients = get_upper_management_recipients()
+        email_addresses = [recipient["email"] for recipient in recipients]
+        print(email_addresses)
+        send_email(subject, email_addresses, html, txt)
+    except Exception as e:
+        print(e)
