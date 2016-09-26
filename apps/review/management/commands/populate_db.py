@@ -620,12 +620,90 @@ class Command(BaseCommand):
                     option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
                     self.stdout.write(option.text+" successfully created.")
 
+    def update_questionnaire(self, questionnaire_id):
+      questionnaire_list = [
+                          {
+                            "questionnaire": {
+                              "title": ""
+                            },
+                            "questions": [
+                              {
+                                "text": "Do you think McDonald’s Birthday Party Package is a good value for money?",
+                                "type": 10,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "",
+                                    "color_code": "#e84c3d"
+                                  },
+                                  {
+                                    "text": "Not Sure",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "How would you rate McDonald's Birthday Gift? ",
+                                "type": 11,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Didn't like it at all",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  },
+                                  {
+                                    "text": "It was okay",
+                                    "text_urdu": "",
+                                    "color_code": "#90ec7c"
+                                  },
+                                  {
+                                    "text": "Liked it",
+                                    "text_urdu": "",
+                                    "color_code": "#f1d400"
+                                  },
+                                  {
+                                    "text": "Really Liked it",
+                                    "text_urdu": "",
+                                    "color_code": "#434347"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+
+      for questionnaire in questionnaire_list:
+            q = Questionnaire.objects.get(pk=questionnaire_id)
+            self.stdout.write(q.title)
+            for ques in questionnaire['questions']:
+                question = Question.objects.create(text=ques['text'], type=ques['type'], genreType=ques['genreType'], text_urdu=ques['text_urdu'], questionnaire=q)
+                self.stdout.write(question.text+" successfully created.")
+                for op in ques['options']:
+                    option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
+                    self.stdout.write(option.text+" successfully created.")
+
     def add_arguments(self, parser):
         parser.add_argument(
             '-branch_id',
             type=int,
             dest='branch_id',
             help='Add branch Questionnaire',
+        )
+        parser.add_argument(
+            '-questionnaire_id',
+            type=int,
+            dest='questionnaire_id',
+            help='Update branch Questionnaire',
         )
 
     def handle(self, *args, **options):
@@ -634,7 +712,12 @@ class Command(BaseCommand):
             print("branch id: ", branch)
             # self.create_questionnaire(branch)
 
+        if options['questionnaire_id']:
+            ques_id = options['questionnaire_id']
+            print("questionnaire id: ", ques_id)
+            self.update_questionnaire(ques_id)
+
         # self.create_patches()
         # self.create_management()
         # self.create_questions_options()
-        self.create_promotion()
+        # self.create_promotion()
