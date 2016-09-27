@@ -34,10 +34,10 @@ class QuestionView(APIView):
 
     @transaction.atomic
     def put(self, request, format=None):
-        id = get_data_param(request, 'id', None)
+        id = get_param(request, 'id', None)
 
         try:
-            question = Question.objects.get(pk=id)
+            question = Question.objects.get(pk=int(id))
             serializer = QuestionSerializer(question, data=request.data)
             if serializer.is_valid():
                 serializer.save()
