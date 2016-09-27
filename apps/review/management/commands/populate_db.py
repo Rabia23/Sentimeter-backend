@@ -439,6 +439,152 @@ class Command(BaseCommand):
                     option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
                     self.stdout.write(option.text+" successfully created.")
 
+    def update_promotion(self, promotion_id):
+        promotion_list = [
+                          {
+                            "promotion": {
+                              "title": "Beef Range"
+                            },
+                            "questions": [
+                              {
+                                "text": "Which burger did you have?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": ' ',
+                                "options": [
+                                  {
+                                    "text": "Spicy Jalapeño",
+                                    "text_urdu": ' ',
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "Mushroom Melt",
+                                    "text_urdu": ' ',
+                                    "color_code": "#e84c3d"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "How did you come to know about the promotion?",
+                                "type": 5,
+                                "genreType": 1,
+                                "text_urdu": "آپ کو پروموشن کے بارے میں کیسے پتا چلا؟",
+                                "options": [
+                                  {
+                                    "text": "Radio",
+                                    "text_urdu": "",
+                                    "color_code": "#E74D3D"
+                                  },
+                                  {
+                                    "text": "Fliers",
+                                    "text_urdu": "",
+                                    "color_code": "#F0C547"
+                                  },
+                                  {
+                                    "text": "Billboards",
+                                    "text_urdu": "",
+                                    "color_code": "#34495E"
+                                  },
+                                  {
+                                    "text": "Restaurants",
+                                    "text_urdu": "",
+                                    "color_code": "#9C59B8"
+                                  },
+                                  {
+                                    "text": "Internet/ Social Media",
+                                    "text_urdu": "",
+                                    "color_code": "#3598DC"
+                                  },
+                                  {
+                                    "text": "Newspapers/ Magazines",
+                                    "text_urdu": "",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Is it a good value for money?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "یہ پیسے کے لئے ایک اچھی قیمت ہے؟",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "ہاں",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  },
+                                  {
+                                    "text": "Not Sure",
+                                    "text_urdu": " ",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Are you satisfied with the taste?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "کیا آپ ذائقے سے مطمئن ہیں؟",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  },
+                                  {
+                                    "text": "Not Sure",
+                                    "text_urdu": " ",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              },
+                              {
+                                "text": "Are you satisfied with the product?",
+                                "type": 4,
+                                "genreType": 1,
+                                "text_urdu": "",
+                                "options": [
+                                  {
+                                    "text": "Yes",
+                                    "text_urdu": "آپ اس مصنوع سے مطمئن ہیں؟",
+                                    "color_code": "#f7ca17"
+                                  },
+                                  {
+                                    "text": "No",
+                                    "text_urdu": "نہیں",
+                                    "color_code": "#e84c3d"
+                                  },
+                                  {
+                                    "text": "Not Sure",
+                                    "text_urdu": " ",
+                                    "color_code": "#4CCC72"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+
+        for promo in promotion_list:
+            promotion = Promotion.objects.get(pk=promotion_id)
+            self.stdout.write(promotion.title)
+            for ques in promo['questions']:
+                question = Question.objects.create(text=ques['text'], type=ques['type'], genreType=ques['genreType'], text_urdu=ques['text_urdu'], promotion=promotion)
+                self.stdout.write(question.text+" successfully created.")
+                for op in ques['options']:
+                    option = Option.objects.create(text=op['text'], text_urdu=op['text_urdu'], question=question, color_code=op['color_code'])
+                    self.stdout.write(option.text+" successfully created.")
+
     def create_questionnaire(self, branch_id):
         questionnaire_list = [
                           {
@@ -627,6 +773,12 @@ class Command(BaseCommand):
             dest='branch_id',
             help='Add branch Questionnaire',
         )
+        parser.add_argument(
+            '-promotion_id',
+            type=int,
+            dest='promotion_id',
+            help='Update Promotion',
+        )
 
     def handle(self, *args, **options):
         if options['branch_id']:
@@ -634,7 +786,12 @@ class Command(BaseCommand):
             print("branch id: ", branch)
             # self.create_questionnaire(branch)
 
+        if options['promotion_id']:
+            promotion_id = options['promotion_id']
+            print("promotion id: ", promotion_id)
+            self.update_promotion(promotion_id)
+
         # self.create_patches()
         # self.create_management()
         # self.create_questions_options()
-        self.create_promotion()
+        # self.create_promotion()
