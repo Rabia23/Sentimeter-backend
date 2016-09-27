@@ -494,8 +494,13 @@ class TopConcernsView(ListModelMixin, HaystackGenericAPIView):
             #     concern["color_code"] = constants.COLORS_TOP_CONCERNS[count]
             #     count += 1
 
-            data = {'concern_count': len(concern_list), 'concern_list': concern_list}
-            return Response(response_json(True, "", None))
+            count = 0
+            concerns = []
+            for concern in Concern.objects.filter(is_active=True).order_by("-count")[:5]:
+                concerns.append(concern.to_color_dict(constants.COLORS_TOP_CONCERNS[count]))
+                count += 1
+            data = {'concern_count': len(concerns), 'concern_list': concerns}
+            return Response(response_json(True, data, None))
         except Exception as e:
             logging.exception("--------------------------------")
             return Response(response_json(False, None, constants.TEXT_OPERATION_UNSUCCESSFUL))

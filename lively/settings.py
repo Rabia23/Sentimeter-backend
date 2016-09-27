@@ -46,11 +46,12 @@ PROJECT_APPS = [
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
 
+#local haystack index name
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
         'URL': 'http://127.0.0.1:9200/',
-        'INDEX_NAME': 'haystack',
+        'INDEX_NAME': 'staging_index',
     },
 }
 
