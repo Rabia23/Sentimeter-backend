@@ -56,9 +56,9 @@ def save_feedback(data):
             feedback.mark_feedback_status()
             feedback.keyword_analysis()
             feedback.mark_segment()
-            feedback.mark_for_report()
 
             if feedback.is_negative() and feedback.not_empty():
+                feedback.mark_for_report()
                 feedback_json = {
                     "is_bad": feedback.is_bad(),
                     "branch_name": feedback.branch.name,
