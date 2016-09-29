@@ -20,7 +20,7 @@ def feedback_get(object_id):
 
 
 def get_converted_time(date):
-    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f+00").replace(tzinfo=timezone('UTC'))
+    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone('UTC'))
 
 
 def save_feedback(data):
